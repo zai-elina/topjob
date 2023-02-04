@@ -31,11 +31,19 @@ class Jobs(models.Model):
     salary = models.CharField(max_length=100)
     type = models.CharField(max_length=10,choices=TYPE_CHOICES, default=FULL_TIME)
     experience = models.CharField(max_length=10, choices=EXP_CHOICES, default=TIER1)
-    summary = models.TimeField()
-    description = models.TimeField()
-    logo = models.ImageField(default='default.png',upload_to='upload_images')
+    summary = models.TextField()
+    description = models.TextField()
+    logo = models.ImageField(upload_to='company_logo', blank=True)
     date_created = models.DateTimeField(default=timezone.now)
     owner = models.ForeignKey(User,on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} ищет {}'.format(self.company,self.title)
+
+    class Meta:
+        verbose_name ="Вакансия"
+        verbose_name_plural = "Вакансии"
+
+
+
+

@@ -1,0 +1,28 @@
+{% extends 'layout1.html' %}
+
+{% block content %}
+ <section class="section-hero overlay inner-page bg-image" style="background-image: url('/static/app/images/hero_1.jpg');" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Выход</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Выход</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+<section class="site-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 text-center">
+                <h2 class="mb-4 text-center">Вы вышли из своего профиля</h2>
+                <a href="{% url 'home_page' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block">Главная</a>
+                <a href="{% url 'login' %}" class="btn btn-primary border-width-2 d-none d-lg-inline-block"><span class="mr-2 icon-lock_outline"></span>Войти</a>
+          </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
