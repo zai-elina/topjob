@@ -1,0 +1,51 @@
+{% extends 'layout1.html' %}
+
+{% block content %}
+
+<section class="section-hero overlay inner-page bg-image" style="background-image: url('/static/app/images/hero_1.jpg');" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Профиль {{user.username}}</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Профиль</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <div class="m-5 row d-flex justify-content-center">
+
+      <div class="col-md-6">
+
+          <div class="card p-3 py-4">
+
+              <div class="text-center">
+                  <img src="https://via.placeholder.com/150" height="150" class="rounded-circle" alt="Фото профиля">
+              </div>
+
+              <div class="text-center mt-3">
+                  <span class="bg-secondary p-1 px-4 rounded text-white">{{user.username}}</span>
+                  <h5 class="mt-2 mb-0">{{user.first_name}} {{user.last_name}}</h5>
+                  <span>{{user.email}}</span>
+              </div>
+              </div>
+          </div>
+    <div class="col-md-4">
+            <div class="border-bottom">
+                <h4 class="mt-2 title mb-0">Что бы вы хотели сделать?</h4>
+            </div>
+            <div class="p-4 mt-10 mb-10">
+                <p><a href="#" class="btn btn-block btn-success">Заполнить/Обновить резюме</a></p>
+                <p><a href="#" class="btn btn-block btn-success">Искать работу</a></p>
+                <p><a href="#" class="btn btn-block btn-success">Создать вакансию</a></p>
+                <p><a href="#" class="btn btn-block btn-success">Читать посты</a></p>
+            </div>
+    </div>
+
+    </div>
+
+{% endblock %}

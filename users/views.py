@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import RegisterForm
+from django.contrib.auth.decorators import login_required
 
 def register(request):
     if request.method == 'GET':
@@ -20,3 +21,7 @@ def register(request):
             context = {'form': form}
             return render(request, 'register.html', context)
     return render(request, 'register.html', {})
+
+@login_required
+def profile(request):
+    return render(request,'profile.html',{})
