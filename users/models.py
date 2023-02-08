@@ -27,28 +27,102 @@ class Resume(models.Model):
         (DIVORCED,'Разведён(а)'),
     ]
 
+    IMAGES = [
+        'profile1.jpg', 'profile2.jpg','profile3.jpg','profile4.jpg','profile5.jpg',
+        'profile6.jpg','profile7.jpg','profile8.jpg',
+    ]
 
 
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-    uniqueId = models.CharField(null=True)
+    uniqueId = models.CharField(null=True, max_length=100,blank=True)
     image = models.ImageField(default='default.jpg', upload_to='profile_image')
     email_confirmed = models.BooleanField(default=False)
-    date_birth  = models.DateField()
-    sex = models.CharField(choices=SEX_CHOICES, default=OTHER)
-    material_status = models.CharField(choices=MATERIAL_CHOICES, default=SINGLE)
-    addressLine1 = models.CharField(null=True)
-    addressLine2 = models.CharField(null=True)
-    suburb = models.CharField(null=True)
-    city = models.CharField(null=True)
-    phoneNumber = models.CharField(null=True)
-    slug = models.SlugField(max_length=300,unique=True,blank=True,null=True)
+    date_birth  = models.DateField(blank=True,null=True)
+    sex = models.CharField(choices=SEX_CHOICES, default=OTHER,max_length=100)
+    material_status = models.CharField(choices=MATERIAL_CHOICES, default=SINGLE,max_length=100)
+    addressLine1 = models.CharField(null=True,max_length=200,blank=True)
+    addressLine2 = models.CharField(null=True,max_length=200,blank=True)
+    suburb = models.CharField(null=True,blank=True,max_length=100)
+    city = models.CharField(null=True,blank=True,max_length=100)
+    phoneNumber = models.CharField(null=True,blank=True,max_length=100)
+    slug = models.SlugField(max_length=500,unique=True,blank=True,null=True)
     date_created = models.DateTimeField(default=timezone.now)
-    last_updated = models.DateTimeField()
-    cover_letter =models.FileField(upload_to='resumes')
-    cv = models.FileField(upload_to='resumes')
+    last_updated = models.DateTimeField(blank=True,null=True)
+    cover_letter =models.FileField(upload_to='resumes',null=True,blank=True)
+    cv = models.FileField(upload_to='resumes',null=True,blank=True)
 
     def __str__(self):
         return '{} {} {}'.format(self.user.first_name,self.user.last_name, self.uniqueId)
 
     def get_absolute_url(self):
         return reverse('resume-detail', kwargs={'slug':self.slug})
+
+    def save(self,*args,**kwargs):
+        # Создание уникального идентификатора резюме
+        if self.uniqueId is None:
+            self.uniqueId = str(uuid4()).split('-')[0]
+            self.slug = slugify('{} {} {}'.format(self.user.first_name, self.user.last_name, self.uniqueId))
+
+        #фото профиля по умолчанию
+        if self.image == 'default.jpg':
+            self.image = random.choice(self.IMAGES)
+
+
+        self.slug = slugify('{} {} {}'.format(self.user.first_name, self.user.last_name, self.uniqueId))
+
+        super(Resume,self).save(*args,**kwargs)
+
+
+    class Meta:
+        verbose_name ="Резюме"
+        verbose_name_plural = "Резюме"
+
+
+class Education(models.Model):
+    LEVEL1 = 'Среднее образование'
+    LEVEL2 = 'Среднее профессиональное образование'
+    LEVEL3 = 'Бакалавриат высшего образования'
+    LEVEL4 = 'Специалитет высшего образования'
+    LEVEL5 = 'Магистратура высшего образования'
+    LEVEL6 = 'Аспирантура'
+    LEVEL7 = 'Докторская степень'
+
+    LEVEL_CHOICES = [
+        (LEVEL1 , 'Среднее образование'),
+        (LEVEL2 , 'Среднее профессиональное образование'),
+        (LEVEL3 , 'Бакалавриат высшего образования'),
+        (LEVEL4 , 'Специалитет высшего образования'),
+        (LEVEL5 , 'Магистратура высшего образования'),
+        (LEVEL6 , 'Аспирантура'),
+        (LEVEL7 , 'Докторская степень'),
+    ]
+
+    institution = models.CharField(max_length=200,null=True)
+    qualification = models.CharField(null=True,max_length=200)
+    level = models.CharField(choices=LEVEL_CHOICES,default=LEVEL1,max_length=200)
+    start_date = models.DateField()
+    graduated = models.DateField()
+    major_subject = models.CharField(max_length=200,null=True)
+    resume = models.ForeignKey(Resume,on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name ="Образование"
+        verbose_name_plural = "Образования"
+
+    def __str__(self):
+        return '{} - {} {}'.format(self.qualification,self.resume.user.first_name,self.resume.user.last_name)
+
+class Experience(models.Model):
+    company = models.CharField(null=True,max_length=200)
+    position = models.CharField(null=True,max_length=200)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    experience = models.TextField()
+    skills = models.TextField()
+    resume = models.ForeignKey(Resume,on_delete=models.CASCADE)
+
+    def __str__(self):
+        return '{} в {}'.format(self.position, self.company)
+    class Meta:
+        verbose_name ="Опыт работы"
+        verbose_name_plural = "Опыты работы"

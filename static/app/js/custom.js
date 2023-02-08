@@ -156,6 +156,7 @@ jQuery(function($) {
 
 
 	// navigation
+
   var OnePageNavigation = function() {
     var navToggler = $('.site-menu-toggle');
    	$("body").on("click", ".main-menu li a[href^='#'], .smoothscroll[href^='#'], .site-mobile-menu .site-nav-wrap li a", function(e) {
@@ -212,7 +213,6 @@ jQuery(function($) {
 	    nav:true,
 	    autoplay: true,
 	    items:1,
-	    nav: false,
 	    smartSpeed: 1000
 		});
 

@@ -2,7 +2,14 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-# Создаём класс формы
+from .models import Resume,Education,Experience
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
+# Создаём класс формы для регистрации
 class RegisterForm(UserCreationForm):
     email = forms.EmailField(max_length=100,
                              required=True,
@@ -34,3 +41,46 @@ class RegisterForm(UserCreationForm):
         model = User
         # Свойство назначения полей
         fields = ('username','first_name', 'last_name','email', 'password1', 'password2',)
+
+
+
+class ResumeForm(forms.ModelForm):
+    MALE = 'Мужчина'
+    FEMALE = 'Женщина'
+    OTHER = 'Другое'
+    MARRIED = 'Женат/Замужем'
+    SINGLE = 'Одинок(а)'
+    WIDOWED = 'Вдовец/Вдова'
+    DIVORCED = 'Разведён(а)'
+
+    SEX_CHOICES = [
+        (MALE, 'Мужчина'),
+        (FEMALE, 'Женщина'),
+        (OTHER, 'Другое'),
+    ]
+    MATERIAL_CHOICES = [
+        (MARRIED, 'Женат/Замужем'),
+        (SINGLE, 'Одинок(а)'),
+        (WIDOWED, 'Вдовец/Вдова'),
+        (DIVORCED, 'Разведён(а)'),
+    ]
+
+    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class':'form-control'}))
+    date_birth = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Введите дату рождения:'}))
+    sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
+    material_status =forms.ChoiceField(choices=MATERIAL_CHOICES,widget=forms.Select(attrs={'class':'nice-select rounded'}))
+    addressLine1 = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите адрес проживания:'}))
+    addressLine2 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите адрес прописки:'}))
+    suburb = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите название республики, области или края:'}))
+    city = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите город:'}))
+    phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
+    cover_letter =forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
+    cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
+
+
+    class Meta:
+        model = Resume
+        fields=[
+            'image','date_birth','sex','material_status','addressLine1',
+            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv',
+        ]

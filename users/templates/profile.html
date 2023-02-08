@@ -1,8 +1,11 @@
 {% extends 'layout1.html' %}
-
+{% block meta %}
+    <title>Профиль</title>
+    <meta name="description" content="" />
+{% endblock %}
 {% block content %}
-
-<section class="section-hero overlay inner-page bg-image" style="background-image: url('/static/app/images/hero_1.jpg');" id="home-section">
+{% load static %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
         <div class="row">
           <div class="col-md-7">
@@ -39,7 +42,11 @@
                 <h4 class="mt-2 title mb-0">Что бы вы хотели сделать?</h4>
             </div>
             <div class="p-4 mt-10 mb-10">
-                <p><a href="#" class="btn btn-block btn-success">Заполнить/Обновить резюме</a></p>
+                {% if user.resume %}
+                <p><a href="#" class="btn btn-block btn-success">Посмотреть резюме</a></p>
+                {% else %}
+                <p><a href="{% url 'create-resume' %}" class="btn btn-block btn-success">Создать резюме</a></p>
+                {% endif %}
                 <p><a href="#" class="btn btn-block btn-success">Искать работу</a></p>
                 <p><a href="#" class="btn btn-block btn-success">Создать вакансию</a></p>
                 <p><a href="#" class="btn btn-block btn-success">Читать посты</a></p>
