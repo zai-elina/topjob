@@ -19,6 +19,21 @@
         </div>
       </div>
     </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
 
     <section class="site-section">
       <div class="container">
@@ -55,7 +70,7 @@
               </div>
               <div class="row form-group">
                   <div class="col-md-12 mb-3 mb-md-0">
-                    <label class="text-black">Имя</label>
+                    <label class="text-black">Логин</label>
                     {{form.username}}
                   </div>
                   {% if form.username.errors %}

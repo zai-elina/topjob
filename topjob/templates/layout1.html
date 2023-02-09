@@ -34,7 +34,6 @@
 
 
 <div class="site-wrap">
-
     <div class="site-mobile-menu site-navbar-target">
       <div class="site-mobile-menu-header">
         <div class="site-mobile-menu-close mt-3">
@@ -102,22 +101,6 @@
         </div>
       </div>
     </header>
-
-  {% if messages %}
-  {% for message in messages %}
-
-  {% if message.tags == 'error' %}
-  <div class="alert alert-danger">
-    {{message}}
-  </div>
-  {% else %}
-  <div class="alert alert-{{message.tags}}">
-    {{message}}
-  </div>
-  {% endif %}
-
-  {% endfor %}
-  {% endif %}
 
     {% block content %}
 

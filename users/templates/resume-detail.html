@@ -1,0 +1,92 @@
+{% extends 'layout1.html' %}
+{% block meta %}
+    <title>Резюме {{object.user.username}}</title>
+    <meta name="description" content="" />
+{% endblock %}
+
+{% block content %}
+{% load static %}
+ <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Резюме {{object.user.username}}</h1>
+            <div class="custom-breadcrumbs">
+                <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
+                <span class="text-white"><strong>Резюме</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+ </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
+
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center m-4">
+           <div class="col-md-6">
+                  <div class="card p-3 py-4">
+
+                      <div class="text-center">
+                          <img src="{{object.image.url}}" height="150" class="rounded-circle" alt="{{object.user.first_name}} {{object.user.last_name}}">
+                      </div>
+
+                      <div class="text-center mt-3">
+                          <span class="bg-secondary p-1 px-4 rounded text-white">{{object.user.username}}</span>
+                          <h5 class="mt-2 mb-0">{{object.user.first_name}} {{object.user.last_name}}</h5>
+                          <span>{{object.user.email}}</span>
+                      </div>
+                  </div>
+              </div>
+        </div>
+
+        <div class="row">
+
+        <div class="col-lg-6 col-md-6 pt-5">
+            <div class="bg-light p-3 border rounded mb-4">
+              <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Основная информация</h3>
+              <ul class="list-unstyled pl-3 mb-0">
+                <li class="mb-2"><strong class="text-black">Дата рождения:</strong> {{object.date_birth}}</li>
+                <li class="mb-2"><strong class="text-black">Пол:</strong> {{object.sex}}</li>
+                <li class="mb-2"><strong class="text-black">Семейное положение:</strong> {{object.material_status}}</li>
+                <li class="mb-2"><strong class="text-black">Телефон:</strong> {{object.phoneNumber}}</li>
+                <li class="mb-2"><strong class="text-black">Последнее обновление:</strong> {{object.last_updated}}</li>
+                  <li class="mb-2"><strong class="text-black">Сопроводительное письмо:</strong> <a href="{{object.cover_letter.url}}" download>Скачать</a></li>
+              </ul>
+            </div>
+        </div>
+
+
+            <div class="col-lg-6 col-md-6 pt-5">
+            <div class="bg-light p-3 border rounded mb-4">
+              <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Контактная информация</h3>
+              <ul class="list-unstyled pl-3 mb-0">
+                <li class="mb-2"><strong class="text-black">Адрес проживания:</strong> {{object.addressLine1}}</li>
+                <li class="mb-2"><strong class="text-black">Адрес прописки:</strong> {{object.addressLine2}}</li>
+                <li class="mb-2"><strong class="text-black">Республики, область или край:</strong> {{object.suburb}}</li>
+                <li class="mb-2"><strong class="text-black">Город:</strong> {{object.city}}</li>
+                <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
+              </ul>
+            </div>
+        </div>
+
+        </div>
+    </div>
+</section>
+{% endblock %}

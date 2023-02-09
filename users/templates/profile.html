@@ -18,6 +18,21 @@
         </div>
       </div>
     </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
 
 
     <div class="m-5 row d-flex justify-content-center">
@@ -27,7 +42,11 @@
           <div class="card p-3 py-4">
 
               <div class="text-center">
-                  <img src="https://via.placeholder.com/150" height="150" class="rounded-circle" alt="Фото профиля">
+                  {% if user.resume %}
+                  <img src="{{user.resume.image.url}}" height="150" class="rounded-circle" alt="Фото {{user.first_name}} {{user.last_name}}">
+                  {% else %}
+                  <img src="https://via.placeholder.com/150" height="150" class="rounded-circle" alt="Фото {{user.first_name}} {{user.last_name}}">
+                  {% endif %}
               </div>
 
               <div class="text-center mt-3">
@@ -43,7 +62,7 @@
             </div>
             <div class="p-4 mt-10 mb-10">
                 {% if user.resume %}
-                <p><a href="#" class="btn btn-block btn-success">Посмотреть резюме</a></p>
+                <p><a href="{% url 'resume-detail' user.resume.slug %}" class="btn btn-block btn-success">Посмотреть резюме</a></p>
                 {% else %}
                 <p><a href="{% url 'create-resume' %}" class="btn btn-block btn-success">Создать резюме</a></p>
                 {% endif %}

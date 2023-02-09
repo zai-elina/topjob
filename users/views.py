@@ -3,6 +3,8 @@ from django.contrib import messages
 from .forms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
+from django.views.generic import DetailView
+from datetime import datetime
 
 def register(request):
     if request.method == 'GET':
@@ -14,8 +16,8 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Вы успешно зарегистрировались")
             user = form.cleaned_data.get('username')
+            messages.success(request, "Вы успешно зарегистрировались, " + user + " !Пожалуйста, зайдите в свой аккаунт.")
             return redirect('login')
         else:
             messages.error(request, "Ошибка регистрации")
@@ -49,3 +51,6 @@ def create_resume(request):
 
     return render(request,'create-resume.html',{})
 
+class ResumeDetailView(DetailView):
+    model = Resume
+    template_name = 'resume-detail.html'

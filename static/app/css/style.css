@@ -1284,9 +1284,9 @@ h1, h2, h3, h4 {
   text-decoration: none; }
 
 .site-footer {
-  padding: 7rem 0;
+  padding: 2rem 0;
   position: relative;
-  background: #555; }
+  background: #556B2F; }
   @media (max-width: 991.98px) {
     .site-footer {
       padding: 2rem 0; } }
