@@ -140,3 +140,15 @@ STATICFILES_DIRS = [(os.path.join(BASE_DIR,'static'))]
 
 LOGIN_REDIRECT_URL = 'profile'
 LOGIN_URL = 'login'
+
+
+#Настройка почты
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_USE_TLS =False
+EMAIL_USE_SSL=True
+
+EMAIL_HOST_USER = 'elinazainull1na@yandex.ru'
+EMAIL_HOST_PASSWORD = 'xtytllkfgkboysrk'
+DEFAULT_FROM_EMAIL = 'elinazainull1na@yandex.ru'

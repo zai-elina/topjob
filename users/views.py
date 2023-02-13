@@ -1,10 +1,17 @@
+from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.contrib import messages
+from django.template.loader import get_template
+
 from .forms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
+
+from django.conf import settings
+from django.views.static import serve
+import os
 
 def register(request):
     if request.method == 'GET':
@@ -54,3 +61,25 @@ def create_resume(request):
 class ResumeDetailView(DetailView):
     model = Resume
     template_name = 'resume-detail.html'
+
+
+def test_email(request):
+    email={}
+    email['title']='Тестовое сообщение'
+    email['subtitle']='Тест для себя'
+    email['message'] = 'Сообщение отправлено с помощью Django'
+
+    subject ='[TOPJOB] тест почты'
+    from_email = settings.EMAIL_HOST_USER
+    to_email = ['8gelina@gmail.com']
+    text_content= """
+    {}
+    {} ,
+    Поддержка TOPJOB
+    """.format(email['subtitle'],email['message'])
+    html_c = get_template('email.html')
+    d = {'email':email}
+    html_content = html_c.render(d)
+
+    msg =EmailMultiAlternatives(subject,text_content,from_email,to_email)
+    msg.attach_alternative(html_content,'text/html')
