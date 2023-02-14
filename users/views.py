@@ -1,17 +1,12 @@
-from django.core.mail import EmailMultiAlternatives
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.template.loader import get_template
-
+from .email_func import WelcomeEmail,sendEmail, ForgotPassword
 from .forms import *
 from .models import *
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
 
-from django.conf import settings
-from django.views.static import serve
-import os
 
 def register(request):
     if request.method == 'GET':
@@ -23,6 +18,13 @@ def register(request):
         form = RegisterForm(request.POST)
         if form.is_valid():
             form.save()
+
+            #отправка email
+            to_email = form.cleaned_data.get('email')
+            welcome = WelcomeEmail()
+            sendEmail(welcome.email,welcome.subject,[to_email])
+
+
             user = form.cleaned_data.get('username')
             messages.success(request, "Вы успешно зарегистрировались, " + user + " !Пожалуйста, зайдите в свой аккаунт.")
             return redirect('login')
@@ -63,23 +65,37 @@ class ResumeDetailView(DetailView):
     template_name = 'resume-detail.html'
 
 
-def test_email(request):
-    email={}
-    email['title']='Тестовое сообщение'
-    email['subtitle']='Тест для себя'
-    email['message'] = 'Сообщение отправлено с помощью Django'
+def forgot_password(request):
+    if request.method == "POST":
+        form = ForgotForm(request.POST)
+        if form.is_valid():
+            user_email = request.POST['email'].lower().replace(' ','')
 
-    subject ='[TOPJOB] тест почты'
-    from_email = settings.EMAIL_HOST_USER
-    to_email = ['8gelina@gmail.com']
-    text_content= """
-    {}
-    {} ,
-    Поддержка TOPJOB
-    """.format(email['subtitle'],email['message'])
-    html_c = get_template('email.html')
-    d = {'email':email}
-    html_content = html_c.render(d)
+            user = User.objects.get(email= user_email)
+            if user is not None:
+                new_pass = str(uuid4()).split('-')[4]
+                forgot = ForgotPassword(new_pass)
 
-    msg =EmailMultiAlternatives(subject,text_content,from_email,to_email)
-    msg.attach_alternative(html_content,'text/html')
+                to_email = user.email
+                e_mail = forgot.email()
+                sendEmail(e_mail,forgot.subject,[to_email])
+
+                user.set_password(new_pass)
+                user.save()
+
+                messages.success(request,'Ваш старый пароль был удалён, мы прислали новый пароль вам на почту')
+                return redirect('login')
+            else:
+                messages.error(request,'Нет пользователя с данной почтой')
+                return redirect('home_page')
+        else:
+            messages.error(request,'Ошибка запроса')
+            context = {'form':form}
+            return render(request,'forgot.html',context)
+
+    if request.method == "GET":
+        form =ForgotForm()
+        context = {'form':form}
+        return render(request,'forgot.html',context)
+
+    return render(request,'forgot.html',{})

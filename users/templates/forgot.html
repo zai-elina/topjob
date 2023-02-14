@@ -1,7 +1,7 @@
 {% extends 'layout1.html' %}
 
 {% block meta %}
-    <title>Вход</title>
+    <title>Изменить пароль</title>
     <meta name="description" content="" />
 {% endblock %}
 
@@ -11,10 +11,10 @@
       <div class="container">
         <div class="row">
           <div class="col-md-7">
-            <h1 class="text-white font-weight-bold">Вход</h1>
+            <h1 class="text-white font-weight-bold">Забыли пароль?</h1>
             <div class="custom-breadcrumbs">
               <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
-              <span class="text-white"><strong>Вход</strong></span>
+              <span class="text-white"><strong>Изменение пароля</strong></span>
             </div>
           </div>
         </div>
@@ -39,29 +39,29 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-6">
-            <h2 class="mb-4">Войти в TOPJOB</h2>
+            <h2 class="mb-4">Изменить пароль</h2>
             <form class="p-4 border rounded" method="POST">
                 {% csrf_token %}
               <div class="row form-group">
                 <div class="col-md-12 mb-3 mb-md-0">
-                  <label class="text-black">Логин</label>
-                  {{form.username}}
+                  <label class="text-black">Почта</label>
+                  {{form.email}}
                 </div>
-              </div>
-              <div class="row form-group mb-4">
-                <div class="col-md-12 mb-3 mb-md-0">
-                  <label class="text-black">Пароль</label>
-                    {{form.password}}
-                </div>
+                   {% if form.email.errors %}
+                  {% for error in form.email.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                  {% endif %}
               </div>
 
               <div class="row form-group">
                 <div class="col-md-12">
-                  <input type="submit" value="Войти" class="btn px-4 btn-primary text-white">
+                  <input type="submit" value="Изменить пароль" class="btn px-4 btn-primary text-white">
                 </div>
               </div>
-                <a href="{% url 'register' %}" class="link-secondary mr-3">Зарегистрироваться</a>
-                <a href="{% url 'forgot' %}" class="link-secondary">Забыли пароль</a>
+                <a href="{% url 'login' %}" class="link-secondary">Войти</a>
             </form>
 
           </div>

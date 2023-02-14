@@ -84,3 +84,14 @@ class ResumeForm(forms.ModelForm):
             'image','date_birth','sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv',
         ]
+
+
+class ForgotForm(forms.ModelForm):
+    email = forms.EmailField(max_length=100,
+                             required=True,
+                             help_text='Введите почту',
+                             widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Почта'}))
+
+    class Meta:
+        model =User
+        fields =['email',]
