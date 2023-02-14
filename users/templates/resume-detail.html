@@ -90,6 +90,120 @@
 
         <div class="mb-5">
               <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-book mr-3"></span>Образование</h3>
+<!--                 Button trigger modal-->
+                <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addEducation">
+                  Добавить образование
+                </button>
+
+
+<!--                 Modal-->
+                <div class="modal fade" id="addEducation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST">
+                        {% csrf_token %}
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить образование</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Название учебного заведения <span class="text-danger">*</span> </label>
+                                    {{edu_form.institution}}
+                                </div>
+                                {% if edu_form.institution.errors %}
+                                  {% for error in edu_form.institution.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Квалификация<span class="text-danger">*</span> </label>
+                                    {{edu_form.qualification}}
+                                </div>
+                                {% if edu_form.qualification.errors %}
+                                  {% for error in edu_form.qualification.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Уровень образования <span class="text-danger">*</span> </label>
+                                    {{edu_form.level}}
+                                </div>
+                                {% if edu_form.level.errors %}
+                                  {% for error in edu_form.level.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Дата начала <span class="text-danger">*</span> </label>
+                                    {{edu_form.start_date}}
+                                </div>
+                                {% if edu_form.start_date.errors %}
+                                  {% for error in edu_form.start_date.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Дата окончания обучения <span class="text-danger">*</span> </label>
+                                    {{edu_form.graduated }}
+                                </div>
+                                {% if edu_form.graduated.errors %}
+                                  {% for error in edu_form.graduated.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Название вашего направления <span class="text-danger">*</span> </label>
+                                    {{edu_form.direction}}
+                                </div>
+                                {% if edu_form.direction.errors %}
+                                  {% for error in edu_form.direction.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                      </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+
+
 
         </div>
         <div class="mb-5">
@@ -99,4 +213,6 @@
 
     </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
 {% endblock %}

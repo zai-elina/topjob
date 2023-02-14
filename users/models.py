@@ -98,6 +98,7 @@ class Education(models.Model):
     LEVEL5 = 'Магистратура высшего образования'
     LEVEL6 = 'Аспирантура'
     LEVEL7 = 'Докторская степень'
+    LEVEL8 = 'Сертификат'
 
     LEVEL_CHOICES = [
         (LEVEL1 , 'Среднее образование'),
@@ -107,6 +108,7 @@ class Education(models.Model):
         (LEVEL5 , 'Магистратура высшего образования'),
         (LEVEL6 , 'Аспирантура'),
         (LEVEL7 , 'Докторская степень'),
+        (LEVEL8 , 'Сертификат'),
     ]
 
     institution = models.CharField(max_length=200,null=True)
@@ -114,7 +116,7 @@ class Education(models.Model):
     level = models.CharField(choices=LEVEL_CHOICES,default=LEVEL1,max_length=200)
     start_date = models.DateField()
     graduated = models.DateField()
-    major_subject = models.CharField(max_length=200,null=True)
+    direction = models.CharField(max_length=200,null=True)
     resume = models.ForeignKey(Resume,on_delete=models.CASCADE)
 
     class Meta:

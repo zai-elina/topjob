@@ -60,9 +60,39 @@ def create_resume(request):
 
     return render(request,'create-resume.html',{})
 
-class ResumeDetailView(DetailView):
-    model = Resume
-    template_name = 'resume-detail.html'
+def resume_detail(request,slug):
+    obj = Resume.objects.get(slug=slug)
+
+    educations = Education.objects.filter(resume=obj)
+    context ={}
+    context['object'] = obj
+    context['education']=educations
+
+    if request.method == "POST":
+        edu_form = EducationForm(request.POST)
+        if edu_form.is_valid():
+            new = edu_form.save(commit=False)
+            new.resume = obj
+            new.save()
+
+            messages.success(request,'Резюме обновлено')
+            return redirect('resume-detail',slug=slug)
+        else:
+            messages.error(request,'Ошибка запроса')
+            context['edu_form']=edu_form
+            return render(request,'resume-detail.html',context)
+
+    if request.method == 'GET':
+        edu_form = EducationForm()
+        context['edu_form'] = edu_form
+        return render(request, 'resume-detail.html', context)
+
+    return render(request, 'resume-detail.html', context)
+
+
+
+
+
 
 
 def forgot_password(request):

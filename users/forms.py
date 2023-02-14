@@ -84,7 +84,53 @@ class ResumeForm(forms.ModelForm):
             'image','date_birth','sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv',
         ]
+class EducationForm(forms.ModelForm):
+    LEVEL1 = 'Среднее образование'
+    LEVEL2 = 'Среднее профессиональное образование'
+    LEVEL3 = 'Бакалавриат высшего образования'
+    LEVEL4 = 'Специалитет высшего образования'
+    LEVEL5 = 'Магистратура высшего образования'
+    LEVEL6 = 'Аспирантура'
+    LEVEL7 = 'Докторская степень'
+    LEVEL8 = 'Сертификат'
 
+    LEVEL_CHOICES = [
+        (LEVEL1, 'Среднее образование'),
+        (LEVEL2, 'Среднее профессиональное образование'),
+        (LEVEL3, 'Бакалавриат высшего образования'),
+        (LEVEL4, 'Специалитет высшего образования'),
+        (LEVEL5, 'Магистратура высшего образования'),
+        (LEVEL6, 'Аспирантура'),
+        (LEVEL7, 'Докторская степень'),
+        (LEVEL8, 'Сертификат'),
+    ]
+
+    institution = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Название учебного заведения'}))
+    qualification = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Квалификация'}))
+    level = forms.ChoiceField(choices=LEVEL_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
+    start_date = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Дата начала'}))
+    graduated = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Дата окончания обучения'}))
+    direction = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Название вашего направления'}))
+
+    class Meta:
+        model = Education
+        fields = [
+            'institution' ,'qualification' ,'level','start_date' ,'graduated' ,'direction',
+        ]
+
+class ExperienceForm(forms.ModelForm):
+    company = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Компания, в которой работали'}))
+    position = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Должность'}))
+    start_date = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Дата начала'}))
+    end_date = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Дата конца'}))
+    experience =forms.CharField(required=True, widget=forms.Textarea(attrs={'class':'form-control','placeholder':'Опишите свой опыт'}))
+    skills = forms.CharField(required=True, widget=forms.Textarea(attrs={'class':'form-control','placeholder':'Ваши навыки'}))
+
+    class Meta:
+        model = Experience
+        fields = [
+            'company' ,'position' ,'start_date' ,'end_date' ,'experience' ,'skills',
+        ]
 
 class ForgotForm(forms.ModelForm):
     email = forms.EmailField(max_length=100,
