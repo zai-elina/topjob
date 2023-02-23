@@ -112,11 +112,11 @@ class Education(models.Model):
     ]
 
     institution = models.CharField(max_length=200,null=True)
-    qualification = models.CharField(null=True,max_length=200)
+    faculty = models.CharField(null=True,max_length=200)
     level = models.CharField(choices=LEVEL_CHOICES,default=LEVEL1,max_length=200)
     start_date = models.DateField()
     graduated = models.DateField()
-    direction = models.CharField(max_length=200,null=True)
+    specialization = models.CharField(max_length=200,null=True)
     resume = models.ForeignKey(Resume,on_delete=models.CASCADE)
 
     class Meta:

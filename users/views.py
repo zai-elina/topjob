@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .email_func import WelcomeEmail,sendEmail, ForgotPassword
 from .forms import *
@@ -60,15 +60,19 @@ def create_resume(request):
 
     return render(request,'create-resume.html',{})
 
+
+
 def resume_detail(request,slug):
     obj = Resume.objects.get(slug=slug)
 
     educations = Education.objects.filter(resume=obj)
+    experiences = Experience.objects.filter(resume=obj)
     context ={}
     context['object'] = obj
-    context['education']=educations
+    context['educations']=educations
+    context['experiences'] = experiences
 
-    if request.method == "POST":
+    if request.method == "POST" and 'btnEducation' in request.POST:
         edu_form = EducationForm(request.POST)
         if edu_form.is_valid():
             new = edu_form.save(commit=False)
@@ -82,15 +86,44 @@ def resume_detail(request,slug):
             context['edu_form']=edu_form
             return render(request,'resume-detail.html',context)
 
+
+    if request.method == "POST" and 'btnExperience' in request.POST:
+        exp_form = ExperienceForm(request.POST)
+        if exp_form.is_valid():
+            new = exp_form.save(commit=False)
+            new.resume = obj
+            new.save()
+
+            messages.success(request,'Резюме обновлено')
+            return redirect('resume-detail',slug=slug)
+        else:
+            messages.error(request,'Ошибка запроса')
+            context['exp_form']=exp_form
+            return render(request,'resume-detail.html',context)
+
+
+
     if request.method == 'GET':
         edu_form = EducationForm()
         context['edu_form'] = edu_form
+        exp_form = ExperienceForm()
+        context['exp_form'] = exp_form
         return render(request, 'resume-detail.html', context)
+
+
 
     return render(request, 'resume-detail.html', context)
 
 
+def delete_exp(request,slug,pk):
+    exp = Experience.objects.filter(pk=pk)
+    exp.delete()
+    return redirect('resume-detail',slug=slug)
 
+def delete_ed(request,slug,pk):
+    ed = Education.objects.filter(pk=pk)
+    ed.delete()
+    return redirect('resume-detail',slug=slug)
 
 
 
@@ -129,3 +162,6 @@ def forgot_password(request):
         return render(request,'forgot.html',context)
 
     return render(request,'forgot.html',{})
+
+
+

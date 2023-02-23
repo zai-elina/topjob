@@ -124,11 +124,24 @@
 
                              <div class="col-lg-12">
                                 <div class="form-group position-relative">
-                                    <label>Квалификация<span class="text-danger">*</span> </label>
-                                    {{edu_form.qualification}}
+                                    <label>Факультет<span class="text-danger">*</span> </label>
+                                    {{edu_form.faculty }}
                                 </div>
-                                {% if edu_form.qualification.errors %}
-                                  {% for error in edu_form.qualification.errors %}
+                                {% if edu_form.faculty.errors %}
+                                  {% for error in edu_form.faculty.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Специализация <span class="text-danger">*</span> </label>
+                                    {{edu_form.specialization}}
+                                </div>
+                                {% if edu_form.specialization.errors %}
+                                  {% for error in edu_form.specialization.errors %}
                                       <div class="alert alert-danger">
                                         <strong>{{ error|escape }}</strong>
                                       </div>
@@ -178,13 +191,162 @@
                                   {% endif %}
                             </div>
 
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                        <button type="submit" class="btn btn-primary" name="btnEducation">Сохранить</button>
+                      </div>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+
+
+                {% if educations %}
+                {% for education in educations %}
+                <div class="col-lg-12 mt-4 pt-2">
+                    <div class="component-wrapper rounded shadow">
+                        <div class="p-4 border-bottom bg-light">
+                            <h4 class="title">{{education.institution}}</h4>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Уровень:</b> {{education.level}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                 <div class="col">
+                                    <p><b>Факультет:</b> {{education.faculty}}</p>
+                                </div>
+                                <div class="col">
+                                    <p><b>Специализация:</b> {{education.specialization}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Дата начала:</b> {{education.start_date}}</p>
+                                </div>
+
+                                <div class="col">
+                                    <p><b>Дата окончания:</b> {{education.graduated}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'delete-ed' slug=object.user.resume.slug pk=education.pk%}" class="btn-dark text-decoration-none p-2">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+        </div>
+
+
+
+
+        <div class="mb-5">
+              <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-rocket mr-3"></span>Опыт работы</h3>
+                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addExperience">
+                  Добавить опыт работы
+                </button>
+
+
+<!--                 Modal-->
+                <div class="modal fade" id="addExperience" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="POST">
+                        {% csrf_token %}
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="addExperiencebutton">Добавить опыт работы</h1>
+                        <button type="button" name='view' class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Название компании <span class="text-danger">*</span> </label>
+                                    {{exp_form.company}}
+                                </div>
+                                {% if exp_form.company.errors %}
+                                  {% for error in exp_form.company.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
                              <div class="col-lg-12">
                                 <div class="form-group position-relative">
-                                    <label>Название вашего направления <span class="text-danger">*</span> </label>
-                                    {{edu_form.direction}}
+                                    <label>Должность <span class="text-danger">*</span> </label>
+                                    {{exp_form.position }}
                                 </div>
-                                {% if edu_form.direction.errors %}
-                                  {% for error in edu_form.direction.errors %}
+                                {% if exp_form.position.errors %}
+                                  {% for error in exp_form.position.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Ваш опыт <span class="text-danger">*</span> </label>
+                                    {{exp_form.experience}}
+                                </div>
+                                {% if exp_form.experience.errors %}
+                                  {% for error in exp_form.experience.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Ваши навыки <span class="text-danger">*</span> </label>
+                                    {{exp_form.skills}}
+                                </div>
+                                {% if exp_form.skills.errors %}
+                                  {% for error in exp_form.skills.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Дата начала <span class="text-danger">*</span> </label>
+                                    {{exp_form.start_date}}
+                                </div>
+                                {% if exp_form.start_date.errors %}
+                                  {% for error in exp_form.start_date.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                  {% endif %}
+                            </div>
+
+                             <div class="col-lg-12">
+                                <div class="form-group position-relative">
+                                    <label>Дата окончания <span class="text-danger">*</span> </label>
+                                    {{exp_form.end_date }}
+                                </div>
+                                {% if exp_form.end_date.errors %}
+                                  {% for error in exp_form.end_date.errors %}
                                       <div class="alert alert-danger">
                                         <strong>{{ error|escape }}</strong>
                                       </div>
@@ -196,7 +358,7 @@
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-primary">Сохранить</button>
+                        <button type="submit" class="btn btn-primary" name="btnExperience">Сохранить</button>
                       </div>
                         </form>
                     </div>
@@ -204,11 +366,51 @@
                 </div>
 
 
+                {% if experiences %}
+                {% for exp in experiences %}
+                <div class="col-lg-12 mt-4 pt-2">
+                    <div class="component-wrapper rounded shadow">
 
-        </div>
-        <div class="mb-5">
-              <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-rocket mr-3"></span>Опыт работы</h3>
+                        <div class="p-4 border-bottom bg-light">
+                            <h4 class="title">{{exp.company}}</h4>
+                        </div>
 
+                        <div class="p-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Должность:</b> {{exp.position}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                 <div class="col">
+                                    <p><b>Опыт:</b> {{exp.experience}}</p>
+                                </div>
+                                <div class="col">
+                                    <p><b>Навыки:</b> {{exp.skills}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Дата начала:</b> {{exp.start_date}}</p>
+                                </div>
+
+                                <div class="col">
+                                    <p><b>Дата окончания:</b> {{exp.end_date}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <a href="{% url 'delete-exp' slug=object.user.resume.slug pk=exp.pk%}" class="btn-dark text-decoration-none p-2">Удалить</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% endif %}
         </div>
 
     </div>

@@ -106,16 +106,16 @@ class EducationForm(forms.ModelForm):
     ]
 
     institution = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Название учебного заведения'}))
-    qualification = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Квалификация'}))
+    faculty = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Факультет'}))
     level = forms.ChoiceField(choices=LEVEL_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
     start_date = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Дата начала'}))
     graduated = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Дата окончания обучения'}))
-    direction = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Название вашего направления'}))
+    specialization = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control','placeholder':'Специализация'}))
 
     class Meta:
         model = Education
         fields = [
-            'institution' ,'qualification' ,'level','start_date' ,'graduated' ,'direction',
+            'institution' ,'faculty' ,'level','start_date' ,'graduated' ,'specialization',
         ]
 
 class ExperienceForm(forms.ModelForm):
