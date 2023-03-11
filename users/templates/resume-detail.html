@@ -235,11 +235,17 @@
                                     <p><b>Дата окончания:</b> {{education.graduated}}</p>
                                 </div>
                             </div>
+
+
                             <div class="row">
-                                <div class="col">
-                                    <a href="{% url 'delete-ed' slug=object.user.resume.slug pk=education.pk%}" class="btn-dark text-decoration-none p-2">Удалить</a>
-                                </div>
+                              <div class="col">
+                                <a
+                                  href="{% url 'delete-ed' object.user.resume.slug education.pk%}"
+                                  class="btn-dark text-decoration-none p-2"
+                                  >Удалить</a>
+                              </div>
                             </div>
+
                         </div>
 
                     </div>
@@ -399,11 +405,17 @@
                                     <p><b>Дата окончания:</b> {{exp.end_date}}</p>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col">
-                                    <a href="{% url 'delete-exp' slug=object.user.resume.slug pk=exp.pk%}" class="btn-dark text-decoration-none p-2">Удалить</a>
-                                </div>
+                              <div class="col">
+                                <a
+                                  href="{% url 'delete-exp' slug=object.user.resume.slug pk=exp.pk%}"
+                                  class="btn-dark text-decoration-none p-2"
+                                  >Удалить</a
+                                >
+                              </div>
                             </div>
+
                         </div>
 
                     </div>
