@@ -60,13 +60,13 @@
             </div>
             <div class="p-4 mt-10 mb-10">
                 {% if user.resume %}
-                <p><a href="{% url 'resume-detail' user.resume.slug %}" class="btn btn-block btn-success">Посмотреть резюме</a></p>
+                <p><a href="{% url 'resume-detail' user.resume.slug %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Посмотреть резюме</a></p>
                 {% else %}
-                <p><a href="{% url 'create-resume' %}" class="btn btn-block btn-success">Создать резюме</a></p>
+                <p><a href="{% url 'create-resume' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Создать резюме</a></p>
                 {% endif %}
-                <p><a href="#" class="btn btn-block btn-success">Искать работу</a></p>
-                <p><a href="#" class="btn btn-block btn-success">Создать вакансию</a></p>
-                <p><a href="#" class="btn btn-block btn-success">Читать посты</a></p>
+                <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;">Искать работу</a></p>
+                <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;">Создать вакансию</a></p>
+                <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;">Читать посты</a></p>
             </div>
     </div>
 

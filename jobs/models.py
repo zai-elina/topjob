@@ -103,7 +103,6 @@ class Jobs(models.Model):
     description = models.TextField(null=True,blank=True)
     requirements = models.TextField(null=True,blank=True)
     duties = models.TextField(null=True,blank=True)
-    enquiries = models.TextField(null=True, blank=True)
     applications = models.TextField(null=True,blank=True)
     note = models.TextField(null=True,blank=True)
     dateCreated = models.DateTimeField(default=timezone.now)

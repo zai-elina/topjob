@@ -42,7 +42,7 @@
                   </select>
                 </div>
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                  <button type="submit" class="btn btn-primary btn-lg btn-block text-white btn-search"><span class="icon-search icon mr-2"></span>Search Job</button>
+                  <button type="submit" class="btn btn-lg btn-block text-white btn-search btn-color"><span class="icon-search icon mr-2"></span>Search Job</button>
                 </div>
               </div>
               <div class="row">
@@ -114,11 +114,6 @@
     <section class="site-section">
       <div class="container">
 
-        <div class="row mb-5 justify-content-center">
-          <div class="col-md-7 text-center">
-            <h2 class="section-title mb-2">43,167 Job Listed</h2>
-          </div>
-        </div>
 
         <ul class="job-listings mb-5">
           {% for item in jobs %}
@@ -133,12 +128,19 @@
                 <h2>{{ item.title }}</h2>
                 <strong>{{ item.company.title }}</strong>
               </div>
+              {% if item.location %}
               <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
                 <span class="icon-room"></span> {{item.location}}
               </div>
+              {% endif %}
+              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                <span class="icon-money"></span> {{item.salary}}
+              </div>
+              {% if item.type %}
               <div class="job-listing-meta">
                 <span class="badge badge-danger">{{item.type}} </span>
               </div>
+              {% endif %}
             </div>
 
           </li>
