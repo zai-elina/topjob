@@ -1,0 +1,47 @@
+{% extends 'layout1.html' %}
+
+{% block meta %}
+    <title>Topjob Категории</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Подай заявку Topjob</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <a href="/jobs">Вакансии</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Категории</strong></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+ <section class="site-section services-section bg-light block__62849" id="next-section">
+      <div class="container">
+
+        <div class="row">
+            {% for category in category_list %}
+          <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
+
+            <a href="{% url 'category-detail' category.slug %}" class="block__16443 text-center d-block h-100">
+              <img src="{{ category.categoryImage.url }}" alt="{{category.title}}" style="width: 100px">
+              <h3>{{category.title}}</h3>
+              <p>{{category.description}}</p>
+            </a>
+
+          </div>
+            {% endfor %}
+        </div>
+
+      </div>
+    </section>
+
+{% endblock %}

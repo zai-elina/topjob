@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'app/fonts/line-icons/style.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'app/css/animate.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css">
 
     <!-- Основные стили -->
     <link rel="stylesheet" href="{% static 'app/css/style.css' %}">
@@ -55,27 +56,20 @@
               <li><a href="/" class="nav-link active">Главная</a></li>
               <li><a href="#">О нас</a></li>
               <li class="has-children">
-                <a href="{% url 'job-list' %}">Список работ</a>
+                <a href="{% url 'category-list' %}">Категории</a>
                 <ul class="dropdown">
-                  <li><a href="#">Отдельные профессии</a></li>
-                  <li><a href="#">Создать вакансию</a></li>
+                  <li><a href="{% url 'job-list' %}">Все вакансии</a></li>
                 </ul>
               </li>
-              <li class="has-children">
-                <a href="#">Pages</a>
-                <ul class="dropdown">
-                  <li><a href="#">Services</a></li>
-                  <li><a href="#">Service Single</a></li>
-                  <li><a href="#">Blog Single</a></li>
-                  <li><a href="#">Portfolio</a></li>
-                  <li><a href="#">Portfolio Single</a></li>
-                  <li><a href="#">Testimonials</a></li>
-                  <li><a href="#">Frequently Ask Questions</a></li>
-                  <li><a href="#">Gallery</a></li>
-                </ul>
-              </li>
+              <li><a href="#">Создать вакансию</a></li>
               <li><a href="#">Блог</a></li>
-              <li><a href="#">Контакты</a></li>
+              {% if request.user.is_authenticated %}
+                {% if user.resume %}
+                  <li><a href="{% url 'resume-detail' user.resume.slug %}">Посмотреть резюме</a></li>
+                {% else %}
+                  <li><a href="{% url 'create-resume' %}">Создать резюме</a></li>
+                {% endif %}
+              {% endif %}
               {% if request.user.is_authenticated %}
                 <li class="d-lg-none btn-color"><a href="{% url 'logout' %}">Выйти</a></li>
               {% else %}
@@ -115,36 +109,18 @@
 
       <div class="container">
         <div class="row mb-5">
+
           <div class="col-6 col-md-3 mb-4 mb-md-0">
-            <h3>Search Trending</h3>
+            <h3>Меню</h3>
             <ul class="list-unstyled">
-              <li><a href="#">Web Design</a></li>
-              <li><a href="#">Graphic Design</a></li>
-              <li><a href="#">Web Developers</a></li>
-              <li><a href="#">Python</a></li>
-              <li><a href="#">HTML5</a></li>
-              <li><a href="#">CSS3</a></li>
+              <li><a href="#">Вакансии</a></li>
+              <li><a href="#">Категории профессий</a></li>
+              <li><a href="#">О нас</a></li>
+              <li><a href="#">Войти</a></li>
             </ul>
           </div>
           <div class="col-6 col-md-3 mb-4 mb-md-0">
-            <h3>Company</h3>
-            <ul class="list-unstyled">
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Career</a></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Resources</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-3 mb-4 mb-md-0">
-            <h3>Support</h3>
-            <ul class="list-unstyled">
-              <li><a href="#">Support</a></li>
-              <li><a href="#">Privacy</a></li>
-              <li><a href="#">Terms of Service</a></li>
-            </ul>
-          </div>
-          <div class="col-6 col-md-3 mb-4 mb-md-0">
-            <h3>Contact Us</h3>
+            <h3>Контакты</h3>
             <div class="footer-social">
               <a href="#"><span class="icon-facebook"></span></a>
               <a href="#"><span class="icon-twitter"></span></a>
@@ -175,5 +151,6 @@
     <script src="{% static 'app/js/custom.js' %}"></script>
 
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   </body>
 </html>

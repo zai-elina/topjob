@@ -36,8 +36,8 @@
                 <h2>{{job.title}}</h2>
                 <div>
                   <span class="ml-0 mr-2 mb-2"><span class="icon-briefcase mr-2"></span>{{job.company.title}}</span>
-                  {% if job.location %}
-                  <span class="m-2"><span class="icon-room mr-2"></span>{{job.location}}</span>
+                  {% if job.city %}
+                  <span class="m-2"><span class="icon-room mr-2"></span>{{job.city}}</span>
                   {% endif %}
                   {% if job.type %}
                   <span class="m-2"><span class="icon-clock-o mr-2"></span><span class="text-primary">{{job.type}}</span></span>
@@ -108,8 +108,8 @@
                   {% if job.experience %}
                 <li class="mb-2"><strong class="text-black">Опыт работы:</strong> {{job.experience}}</li>
                   {% endif %}
-                {% if job.location %}
-                <li class="mb-2"><strong class="text-black">Расположение:</strong>{{job.location}}</li>
+                {% if job.city%}
+                <li class="mb-2"><strong class="text-black">Расположение:</strong>{{job.city}}</li>
                 {% endif %}
                   {% if job.salary %}
                 <li class="mb-2"><strong class="text-black">Зарплата:</strong>{{job.salary}}</li>
