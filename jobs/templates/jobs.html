@@ -17,7 +17,7 @@
               <h1 class="text-white font-weight-bold">Начни искать работу своей мечты</h1>
               <p>Работа, которую мы делаем охотно, исцеляет боли.</p>
             </div>
-           <form method="POST" class="search-jobs-form">
+           <form method="POST" class="search-jobs-form" name='search'">
               {% csrf_token %}
               <div class="row mb-5">
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
@@ -68,7 +68,7 @@
     </section>
 
 <section class="site-section" id="next">
-      <div class="container">
+      <div class="container" id="block">
 
         <div class="row mb-5 justify-content-center">
           <div class="col-md-7 text-center">
@@ -130,5 +130,7 @@
       </div>
     </section>
     {% endif %}
+
+
 
 {% endblock %}

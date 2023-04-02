@@ -4,6 +4,39 @@ from django.db.models import Q
 from .models import *
 from .jobforms import *
 
+def searching(search,type,region):
+    jobs = []
+    if len(search.split()) > 1:
+        search_list = search.split()
+        val_list = []
+        for i in search_list:
+            if (type != '' and region != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type,
+                                       region=region)
+            elif (type != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type)
+            elif (region != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search),
+                                       region=region)
+            else:
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search))
+            for j in result:
+                val_list.append(j)
+        [jobs.append(i) for i in val_list if i not in jobs]
+        return jobs
+    else:
+        if (type != '' and region != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
+                                       region=region)
+        elif (type != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
+        elif (region != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
+                                       region=region)
+        else:
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
+        return jobs_list
+
 def home(request):
     form = SearchForm()
     context = {}
@@ -35,22 +68,17 @@ def home(request):
             type = form.cleaned_data.get('type')
             region = form.cleaned_data.get('region')
 
-            if(type != '' and region!=''):
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),type=type,region=region)
-            elif (type != ''):
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),type=type)
-            elif (region!=''):
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),region=region)
-            else:
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search))
+            context['jobs'] = searching(search, type, region)
 
-            return render(request, 'jobs.html', {'jobs': jobs})
+            return render(request, 'jobs.html', context)
         else:
             messages.error(request,'Ошибка запроса')
             context['form'] = form
             return render(request, 'index.html', context)
 
     return render(request, 'index.html', context)
+
+
 
 def job_list(request):
     form = SearchForm()
@@ -67,17 +95,8 @@ def job_list(request):
             type = form.cleaned_data.get('type')
             region = form.cleaned_data.get('region')
 
-            if (type != '' and region != ''):
-                jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
-                                           region=region)
-            elif (type != ''):
-                jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
-            elif (region != ''):
-                jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
-                                           region=region)
-            else:
-                jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
-            context['jobs'] = jobs_list
+            context['jobs'] = searching(search,type,region)
+
             return render(request, 'jobs.html', context)
         else:
             messages.error(request, 'Ошибка запроса')
@@ -109,15 +128,7 @@ def category_detail(request, slug):
             type = form.cleaned_data.get('type')
             region = form.cleaned_data.get('region')
 
-            if(type != '' and region!=''):
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),type=type,region=region,category=category)
-            elif (type != ''):
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),type=type,category=category)
-            elif (region!=''):
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),region=region,category=category)
-            else:
-                jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),category=category)
-            context['jobs'] = jobs
+            context['jobs'] = searching(search,type,region)
             return render(request, 'category-detail.html', context)
         else:
             messages.error(request,'Ошибка запроса')
@@ -130,3 +141,4 @@ def category_list(request):
     categ_list = Category.objects.all()
 
     return render(request, 'category-list.html', {'category_list': categ_list})
+
