@@ -175,7 +175,45 @@ def delete_ed(request,slug,pk):
     ed.delete()
     return redirect('resume-detail',slug=slug)
 
+def edit_education(request,slug,pk):
+    ed = Education.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = EducationForm(request.POST,instance=ed)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request,'Изменения внесены')
+            return redirect('resume-detail',slug=slug)
+        else:
+            messages.error(request,'Ошибка заполнения')
+            context = {'edu_form':form}
+            return render(request,'edit-education.html',context)
+    if request.method == 'GET':
+        form = EducationForm(instance=ed)
+        context = {'edu_form':form}
+        return render(request,'edit-education.html',context)
 
+    return render(request,'edit-education.html',{})
+
+def edit_exp(request,slug,pk):
+    ex = Experience.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = ExperienceForm(request.POST,instance=ex)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request,'Изменения внесены')
+            return redirect('resume-detail',slug=slug)
+        else:
+            messages.error(request,'Ошибка заполнения')
+            context = {'form':form}
+            return render(request,'edit-exp.html',context)
+    if request.method == 'GET':
+        form = ExperienceForm(instance=ex)
+        context = {'form':form}
+        return render(request,'edit-exp.html',context)
+
+    return render(request,'edit-exp.html',{})
 
 
 def forgot_password(request):

@@ -106,7 +106,7 @@
                         {% csrf_token %}
                       <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Добавить образование</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close icon-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -245,6 +245,10 @@
                                   href="{% url 'delete-ed' object.user.resume.slug education.pk%}"
                                   class="btn-dark text-decoration-none p-2"
                                   >Удалить</a>
+                                  <a
+                                  href="{% url 'edit-ed' object.user.resume.slug education.pk%}"
+                                  class="btn-dark text-decoration-none p-2"
+                                  >Редактировать</a>
                               </div>
                             </div>
 
@@ -255,6 +259,8 @@
                 {% endfor %}
 
                 {% endif %}
+
+
         </div>
 
 
@@ -275,7 +281,7 @@
                         {% csrf_token %}
                       <div class="modal-header">
                         <h1 class="modal-title fs-5" id="addExperiencebutton">Добавить опыт работы</h1>
-                        <button type="button" name='view' class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" name='view' class="btn-close icon-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -415,6 +421,10 @@
                                   class="btn-dark text-decoration-none p-2"
                                   >Удалить</a
                                 >
+                                  <a
+                                  href="{% url 'edit-exp' slug=object.user.resume.slug pk=exp.pk%}"
+                                  class="btn-dark text-decoration-none p-2"
+                                  >Редактировать</a>
                               </div>
                             </div>
 
