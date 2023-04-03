@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.contrib.auth.models import User
 
 from .models import Resume,Education,Experience
@@ -11,6 +11,11 @@ class DateInput(forms.DateInput):
 
 # Создаём класс формы для регистрации
 class RegisterForm(UserCreationForm):
+    KIND = [
+        ('Соискатель', 'Соискатель'),
+        ('Работодатель', 'Работодатель'),
+    ]
+
     email = forms.EmailField(max_length=100,
                              required=True,
                              help_text='Введите почту',
@@ -36,11 +41,37 @@ class RegisterForm(UserCreationForm):
                                 help_text='Введите пароль ещё раз',
                                 widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Повторный пароль'}))
 
+    kind = forms.ChoiceField(required=True,choices=KIND, widget=forms.Select(attrs={'class':'nice-select rounded'}))
+
     class Meta:
         # Свойство модели User
         model = User
         # Свойство назначения полей
-        fields = ('username','first_name', 'last_name','email', 'password1', 'password2',)
+        fields = ('username','first_name', 'last_name','email', 'password1', 'password2','kind')
+
+
+class ProfileChangeForm(UserChangeForm):
+    email = forms.EmailField(max_length=100,
+                             required=True,
+                             help_text='Введите почту',
+                             widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(max_length=100,
+                                 required=True,
+                                 help_text='Введите имя',
+                                 widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=100,
+                                required=True,
+                                help_text='Введите фамилию',
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))
+    username = forms.CharField(max_length=200,
+                               required=True,
+                               help_text='Логин',
+                               widget=forms.TextInput(attrs={'class': 'form-control'}))
+    class Meta:
+        model = User
+        fields = ('username','first_name', 'last_name','email')
+
+
 
 
 
@@ -84,6 +115,8 @@ class ResumeForm(forms.ModelForm):
             'image','date_birth','sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv',
         ]
+
+
 class EducationForm(forms.ModelForm):
     LEVEL1 = 'Среднее образование'
     LEVEL2 = 'Среднее профессиональное образование'

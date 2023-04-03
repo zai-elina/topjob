@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
 
+def update_user_data(user):
+    Profile.objects.update_or_create(user=user, defaults={'kind': user.kind},)
+
 
 def register(request):
     if request.method == 'GET':
@@ -17,7 +20,12 @@ def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+
+            user.kind = form.cleaned_data.get('kind')
+            update_user_data(user)
+
+            user.save()
 
             #отправка email
             to_email = form.cleaned_data.get('email')
@@ -60,6 +68,26 @@ def create_resume(request):
 
     return render(request,'create-resume.html',{})
 
+@login_required
+def edit_user(request):
+    if request.method == 'POST':
+        form = ProfileChangeForm(request.POST,instance=request.user)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            messages.success(request,'Изменения внесены')
+            return redirect('profile')
+        else:
+            messages.error(request,'Ошибка заполнения')
+            context = {'form':form}
+            return render(request,'edit-profile.html',context)
+    if request.method == 'GET':
+        form = ProfileChangeForm(instance=request.user)
+        context = {'form':form}
+        return render(request,'edit-profile.html',context)
+
+    return render(request,'edit-profile.html',{})
 
 
 def resume_detail(request,slug):

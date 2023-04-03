@@ -18,6 +18,20 @@ def slugify(s):
     """
     return django_slugify(''.join(alphabet.get(w, w) for w in s.lower()))
 
+
+class Profile(models.Model):
+    KIND = [
+        ('Соискатель', 'Соискатель'),
+        ('Работодатель', 'Работодатель'),
+    ]
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    kind = models.CharField(choices=KIND,default='Соискатель',max_length=30)
+
+    class Meta:
+        verbose_name ="Профиль"
+        verbose_name_plural = "Профили"
+
 class Resume(models.Model):
     MALE = 'Мужчина'
     FEMALE = 'Женщина'

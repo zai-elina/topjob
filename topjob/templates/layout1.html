@@ -51,20 +51,32 @@
               <li><a href="/" class="nav-link active">Главная</a></li>
               <li><a href="#">О нас</a></li>
               <li class="has-children">
-                <a href="{% url 'category-list' %}">Категории</a>
+                <a href="{% url 'job-list' %}">Вакансии</a>
                 <ul class="dropdown">
                   <li><a href="{% url 'job-list' %}">Все вакансии</a></li>
+                  <li><a href="{% url 'category-list' %}">Категории</a></li>
                 </ul>
               </li>
-              <li><a href="#">Создать вакансию</a></li>
               <li><a href="#">Блог</a></li>
+
               {% if request.user.is_authenticated %}
-                {% if user.resume %}
+                {% if request.user.profile.kind == "Соискатель" %}
+                  {% if user.resume %}
                   <li><a href="{% url 'resume-detail' user.resume.slug %}">Посмотреть резюме</a></li>
+                  {% else %}
+                <li><a href="{% url 'create-resume' %}">Создать резюме</a></li>
+                  {% endif %}
                 {% else %}
-                  <li><a href="{% url 'create-resume' %}">Создать резюме</a></li>
+                <li class="has-children">
+                <a href="#">Список вакансий</a>
+                <ul class="dropdown">
+                  <li><a href="#">Создать вакансию</a></li>
+                  <li><a href="#">Заявители</a></li>
+                </ul>
+              </li>
                 {% endif %}
               {% endif %}
+
               {% if request.user.is_authenticated %}
                 <li class="d-lg-none btn-color"><a href="{% url 'logout' %}">Выйти</a></li>
               {% else %}

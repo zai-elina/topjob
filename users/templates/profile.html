@@ -51,22 +51,32 @@
                   <span class="bg-secondary p-1 px-4 rounded text-white">{{user.username}}</span>
                   <h5 class="mt-2 mb-0">{{user.first_name}} {{user.last_name}}</h5>
                   <span>{{user.email}}</span>
+                  <div><span>{{user.profile.kind}}</span></div>
               </div>
               </div>
+
           </div>
+
     <div class="col-md-4">
             <div class="border-bottom">
                 <h4 class="mt-2 title mb-0">Что бы вы хотели сделать?</h4>
             </div>
             <div class="p-4 mt-10 mb-10">
+                {% if request.user.profile.kind == "Соискатель" %}
                 {% if user.resume %}
                 <p><a href="{% url 'resume-detail' user.resume.slug %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Посмотреть резюме</a></p>
                 {% else %}
                 <p><a href="{% url 'create-resume' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Создать резюме</a></p>
                 {% endif %}
                 <p><a href="{% url 'job-list' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Искать работу</a></p>
-                <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;">Создать вакансию</a></p>
                 <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;">Читать посты</a></p>
+                <p><a href="{% url 'edit'%}" class="btn btn-block btn-success" style="background-color: #DEB887;">Редактировать профиль</a></p>
+                {% else %}
+                <p><a href="" class="btn btn-block btn-success" style="background-color: #DEB887;">Создать вакансию</a></p>
+                <p><a href="" class="btn btn-block btn-success" style="background-color: #DEB887;">Список вакансий</a></p>
+                <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;">Отклики на вакансии</a></p>
+                <p><a href="{% url 'edit' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Редактировать профиль</a></p>
+                {% endif %}
             </div>
     </div>
 
