@@ -1,0 +1,115 @@
+{% extends 'layout1.html' %}
+{% block meta %}
+    <title>Редактирование</title>
+    <meta name="description" content="" />
+{% endblock %}
+{% block content %}
+{% load static %}
+    <!-- HOME -->
+    <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Редактирование</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Редактирование</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
+
+    <section class="site-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-6 mb-5">
+            <h2 class="mb-4">Редактирование</h2>
+            <form class="p-4 border rounded" method="POST">
+            {% csrf_token %}
+                <div class="row form-group">
+                  <div class="col-md-12 mb-3 mb-md-0">
+                    <label class="text-black">Имя</label>
+                    {{form.first_name}}
+                  </div>
+                  {% if form.first_name.errors %}
+                  {% for error in form.first_name.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+                <div class="row form-group">
+                  <div class="col-md-12 mb-3 mb-md-0">
+                    <label class="text-black" >Фамилия</label>
+                    {{ form.last_name }}
+                  </div>
+                  {% if form.last_name.errors %}
+                  {% for error in form.last_name.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                  {% endif %}
+              </div>
+              <div class="row form-group">
+                  <div class="col-md-12 mb-3 mb-md-0">
+                    <label class="text-black">Логин</label>
+                    {{form.username}}
+                  </div>
+                  {% if form.username.errors %}
+                  {% for error in form.username.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+              <div class="row form-group">
+                <div class="col-md-12 mb-3 mb-md-0">
+                  <label class="text-black" >Почта</label>
+                  {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                  {% for error in form.email.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                  {% endif %}
+              </div>
+
+
+
+              <div class="row form-group">
+                <div class="col-md-12">
+                  <input type="submit" value="Изменить" class="btn px-4 btn-primary text-white btn-color">
+                </div>
+              </div>
+                <a href="{% url 'forgot' %}" class="link-secondary">Забыли пароль</a>
+
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+   {% endblock %}
