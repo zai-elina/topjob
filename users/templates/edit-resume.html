@@ -1,0 +1,242 @@
+{% extends 'layout1.html' %}
+{% block meta %}
+    <title>Cоздание резюме</title>
+    <meta name="description" content="" />
+{% endblock %}
+
+{% block content %}
+{% load static %}
+ <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Редактировать резюме</h1>
+            <div class="custom-breadcrumbs">
+                <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
+                <span class="text-white"><strong>Редактировать резюме</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+ </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
+
+<section class="section">
+    <div class="container">
+        <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            <div class="row">
+               <div class="col-lg-12">
+                   <h5 class="text-dark  mt-4">Основная информация:</h5>
+               </div>
+                <div class="col-12 mt-3">
+                    <div class="custom-form p-4 border rounded">
+
+                        <div class="col-md-12">
+                            {% if form.errors %}
+                                {% for field in form %}
+                                    {% for error in field.errors %}
+                                        <div class="alert alert-danger">
+                                             <strong>{{ error|escape }}</strong>
+                                            <strong>{{ field|escape }}</strong>
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+
+                                {% for error in form.non_field_errors %}
+                                    <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <div class="form-group app-label">
+                                    <label class="text-muted">Фото</label>
+                                    {{form.image}}
+                                </div>
+                                {% if form.image.errors %}
+                                  {% for error in form.image.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Пол<span class="text-danger">*</span>:</label>
+                                    {{form.sex}}
+                                </div>
+                                {% if form.sex.errors %}
+                                  {% for error in form.sex.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Семейное положение<span class="text-danger">*</span>:</label>
+                                    {{form.material_status}}
+                                </div>
+                                {% if form.material_status.errors %}
+                                  {% for error in form.material_status.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <h5 class="text-dark">Адрес:</h5>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <div class="custom-form p-4 border rounded">
+                        <div class="row">
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Адрес проживания <span class="text-danger">*</span>:</label>
+                                    {{form.addressLine1}}
+                                </div>
+                                {% if form.addressLine1.errors %}
+                                  {% for error in form.addressLine1.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Адрес прописки:</label>
+                                    {{form.addressLine2}}
+                                </div>
+                                {% if form.addressLine2.errors %}
+                                  {% for error in form.addressLine2.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Республика/область/край:<span class="text-danger">*</span>:</label>
+                                    {{form.suburb}}
+                                </div>
+                                {% if form.suburb.errors %}
+                                  {% for error in form.suburb.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Город:<span class="text-danger">*</span>:</label>
+                                    {{form.city}}
+                                </div>
+                                {% if form.city.errors %}
+                                  {% for error in form.city.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Номер телефона:<span class="text-danger">*</span>:</label>
+                                    {{form.phoneNumber}}
+                                </div>
+                                {% if form.phoneNumber.errors %}
+                                  {% for error in form.phoneNumber.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                             <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Сопроводительное письмо:<span class="text-danger">*</span>:</label>
+                                    {{form.cover_letter}}
+                                </div>
+                                {% if form.cover_letter.errors %}
+                                  {% for error in form.cover_letter.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Документ-резюме:<span class="text-danger">*</span>:</label>
+                                    {{form.cv}}
+                                </div>
+                                {% if form.cv.errors %}
+                                  {% for error in form.cv.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12 m-4">
+                    <input type="submit" class="submitBtn btn btn-primary btn-color" value="Сохранить">
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

@@ -89,6 +89,28 @@ def edit_user(request):
 
     return render(request,'edit-profile.html',{})
 
+@login_required
+def edit_resume(request,slug):
+    instance = Resume.objects.get(slug=slug)
+    if request.method == 'POST':
+        form = ResumeEditForm(request.POST,instance=instance)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.last_updated = timezone.now()
+            obj.save()
+            messages.success(request,'Изменения внесены')
+            return redirect('resume-detail',slug=slug)
+        else:
+            messages.error(request,'Ошибка заполнения')
+            context = {'form':form}
+            return render(request,'edit-resume.html',context)
+    if request.method == 'GET':
+        form = ResumeEditForm(instance=instance)
+        context = {'form':form}
+        return render(request,'edit-resume.html',context)
+
+    return render(request,'edit-resume.html',{})
+
 
 def resume_detail(request,slug):
     obj = Resume.objects.get(slug=slug)

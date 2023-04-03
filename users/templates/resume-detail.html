@@ -66,14 +66,14 @@
                 <li class="mb-2"><strong class="text-black">Пол:</strong> {{object.sex}}</li>
                 <li class="mb-2"><strong class="text-black">Семейное положение:</strong> {{object.material_status}}</li>
                 <li class="mb-2"><strong class="text-black">Телефон:</strong> {{object.phoneNumber}}</li>
+                  {% if object.last_updated %}
                 <li class="mb-2"><strong class="text-black">Последнее обновление:</strong> {{object.last_updated}}</li>
+                  {% endif %}
                   <li class="mb-2"><strong class="text-black">Сопроводительное письмо:</strong> <a href="{{object.cover_letter.url}}" download>Скачать</a></li>
               </ul>
             </div>
         </div>
-
-
-            <div class="col-lg-6 col-md-6 pt-5">
+        <div class="col-lg-6 col-md-6 pt-5">
             <div class="bg-light p-3 border rounded mb-4">
               <h3 class="mt-3 h5 pl-3 mb-3 " style="color: #DEB887;">Контактная информация</h3>
               <ul class="list-unstyled pl-3 mb-0">
@@ -84,7 +84,9 @@
                 <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
               </ul>
             </div>
+
         </div>
+             <p><a href="{% url 'edit-resume' object.slug %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Редактировать резюме</a></p>
 
         </div>
 
