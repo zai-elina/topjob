@@ -86,11 +86,19 @@
             </div>
 
         </div>
-             <p><a href="{% url 'edit-resume' object.slug %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Редактировать резюме</a></p>
+            {% if object.skills %}
+            <div class="col-lg-8">
+            <div class="mb-5">
+              <h3 class="h5 d-flex align-items-center mb-4 " style="color: #DEB887;"><span class="icon-align-left mr-3" ></span>Основные навыки</h3>
+              <p>{{object.skills|linebreaks}}</p>
+            </div>
+            </div>
+            {% endif %}
 
         </div>
 
         <div class="mb-5">
+            <p class="col-md-3"><a href="{% url 'edit-resume' object.slug %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Редактировать резюме</a></p>
               <h3 class="h5 d-flex align-items-center mb-4" style="color: #DEB887;"><span class="icon-book mr-3"></span>Образование</h3>
 <!--                 Button trigger modal-->
                 <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#addEducation">

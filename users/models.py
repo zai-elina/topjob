@@ -141,6 +141,7 @@ class Resume(models.Model):
     last_updated = models.DateTimeField(blank=True,null=True)
     cover_letter =models.FileField(upload_to='resumes',null=True,blank=True)
     cv = models.FileField(upload_to='resumes',null=True,blank=True)
+    skills = models.TextField()
 
     def __str__(self):
         return '{} {} {}'.format(self.user.first_name,self.user.last_name, self.uniqueId)

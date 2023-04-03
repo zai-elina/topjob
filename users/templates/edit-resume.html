@@ -230,6 +230,20 @@
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <div class="from-group app-label">
+                    <label class="text-muted">Основные навыки:</label>
+                    {{form.skills}}
+                </div>
+                {% if form.skills.errors %}
+                  {% for error in form.skills.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
+
 
             <div class="row">
                 <div class="col-12 m-4">

@@ -168,13 +168,15 @@ class ResumeForm(forms.ModelForm):
     phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
     cover_letter =forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
+    skills = forms.CharField(required=True,
+                             widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши навыки'}))
 
 
     class Meta:
         model = Resume
         fields=[
             'image','date_birth','sex','material_status','addressLine1',
-            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv',
+            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv','skills'
         ]
 
 class ResumeEditForm(forms.ModelForm):
@@ -272,13 +274,15 @@ class ResumeEditForm(forms.ModelForm):
     phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
     cover_letter =forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
+    skills = forms.CharField(required=True,
+                             widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши навыки'}))
 
 
     class Meta:
         model = Resume
         fields=[
             'image','sex','material_status','addressLine1',
-            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv',
+            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv', 'skills'
         ]
 
 class EducationForm(forms.ModelForm):
