@@ -48,7 +48,7 @@ class Category(models.Model):
     seoKeywords = models.CharField(null=True, blank=True, max_length=500)
 
     def __str__(self):
-        return '{} - {}'.format(self.title,self.uniqueId)
+        return '{}'.format(self.title)
 
     class Meta:
         verbose_name ="Категория"
@@ -159,12 +159,12 @@ class Jobs(models.Model):
     uniqueId = models.CharField(max_length=100,null=True,blank=True)
     type = models.CharField(max_length=100,choices=TYPE_CHOICES, default=FULL_TIME)
     experience = models.CharField(max_length=100, choices=EXP_CHOICES, default=TIER1)
-    summary = models.TextField(null=True,blank=True)
+    summary = models.TextField(null=True)
     description = models.TextField(null=True,blank=True)
     requirements = models.TextField(null=True,blank=True)
     duties = models.TextField(null=True,blank=True)
-    applications = models.TextField(null=True,blank=True)
-    note = models.TextField(null=True,blank=True)
+    applications = models.TextField(null=True)
+    note = models.TextField(null=True)
     dateCreated = models.DateTimeField(default=timezone.now)
     closingDate = models.DateField(null=True,blank=True)
     datePosted = models.DateField(null=True,blank=True)

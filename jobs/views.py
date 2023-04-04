@@ -153,7 +153,7 @@ def create_company(request):
             obj.user = request.user
             obj.save()
             messages.success(request,'Компания добавлена')
-            return redirect('profile')
+            return redirect('create-job')
         else:
             messages.error(request,'Ошибка заполнения')
             context = {'form':form}
@@ -163,9 +163,28 @@ def create_company(request):
         context = {'form':form}
         return render(request,'create-company.html',context)
 
-    return render(request,'create-resume.html',{})
+    return render(request,'create-company.html',{})
 
 @login_required
 def create_job(request):
     if not Company.objects.filter(user=request.user):
         return redirect('create-company')
+    if request.method == 'POST':
+        form = JobForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            company = Company.objects.get(user=request.user)
+            obj.datePosted = timezone.now()
+            obj.company = company
+            obj.save()
+            messages.success(request,'Вакансия добавлена')
+            return redirect('profile')
+        else:
+            messages.error(request,'Ошибка заполнения')
+            context = {'form':form}
+            return render(request,'create-job.html',context)
+    if request.method == 'GET':
+        form = JobForm()
+        context = {'form':form}
+        return render(request,'create-job.html',context)
+    return render(request, 'create-job.html', {})
