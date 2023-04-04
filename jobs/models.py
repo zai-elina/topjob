@@ -172,6 +172,7 @@ class Jobs(models.Model):
     seoDescription = models.CharField(null=True,blank=True,max_length=500)
     seoKeywords = models.CharField(null=True,blank=True,max_length=500)
     urlLink = models.CharField(null=True,blank=True,max_length=500)
+    filled = models.BooleanField(default=False)
 
     def __str__(self):
         return '{} - {} - {}'.format(self.company,self.title,self.region)

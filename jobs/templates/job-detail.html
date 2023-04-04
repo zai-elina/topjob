@@ -40,7 +40,7 @@
                   <span class="m-2"><span class="icon-room mr-2"></span>{{job.city}}</span>
                   {% endif %}
                   {% if job.type %}
-                  <span class="m-2"><span class="icon-clock-o mr-2"></span><span class="text-primary">{{job.type}}</span></span>
+                  <span class="m-2"><span class="icon-clock-o mr-2"></span><span class="text-primary"  style="color: #DEB887;">{{job.type}}</span></span>
                   {% endif %}
                 </div>
               </div>
@@ -52,7 +52,7 @@
                 <a href="#" class="btn btn-block btn-light btn-md"><span class="icon-heart-o mr-2 text-danger"></span>Сохранить</a>
               </div>
               <div class="col-6">
-                <a href="#" class="btn btn-block btn-primary btn-md">Отозваться</a>
+                <a href="#" class="btn btn-block btn-primary btn-md btn-color">Отозваться</a>
               </div>
             </div>
           </div>
@@ -61,28 +61,28 @@
           <div class="col-lg-8">
             {% if job.description %}
             <div class="mb-5">
-              <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-align-left mr-3"></span>Описании работы</h3>
+              <h3 class="h5 d-flex align-items-center mb-4"  style="color: #DEB887;"><span class="icon-align-left mr-3"></span>Описании работы</h3>
               <p>{{job.description|linebreaks}}</p>
             </div>
             {% endif %}
 
             {% if job.duties %}
             <div class="mb-5">
-              <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-rocket mr-3"></span>Обязанности</h3>
+              <h3 class="h5 d-flex align-items-center mb-4"  style="color: #DEB887;"><span class="icon-rocket mr-3"></span>Обязанности</h3>
               <p>{{job.duties|linebreaks}}</p>
             </div>
             {% endif %}
 
             {% if job.requirements %}
             <div class="mb-5">
-              <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-object-group mr-3"></span>Требования к соискателю</h3>
+              <h3 class="h5 d-flex align-items-center mb-4"  style="color: #DEB887;"><span class="icon-object-group mr-3"></span>Требования к соискателю</h3>
               <p>{{job.requirements|linebreaks}}</p>
             </div>
             {% endif %}
 
             {% if job.note %}
             <div class="mb-5">
-              <h3 class="h5 d-flex align-items-center mb-4 text-primary"><span class="icon-turned_in mr-3"></span>Примечание</h3>
+              <h3 class="h5 d-flex align-items-center mb-4"  style="color: #DEB887;"><span class="icon-turned_in mr-3"></span>Примечание</h3>
               <p>{{job.note|linebreaks}}</p>
             </div>
             {% endif %}
@@ -92,14 +92,14 @@
                 <a href="#" class="btn btn-block btn-light btn-md"><span class="icon-heart-o mr-2 text-danger"></span>Сохранить</a>
               </div>
               <div class="col-6">
-                <a href="#" class="btn btn-block btn-primary btn-md">Отозваться</a>
+                <a href="#" class="btn btn-block btn-primary btn-md btn-color">Отозваться</a>
               </div>
             </div>
 
           </div>
           <div class="col-lg-4">
             <div class="bg-light p-3 border rounded mb-4">
-              <h3 class="text-primary  mt-3 h5 pl-3 mb-3 ">Краткое описание</h3>
+              <h3 class="mt-3 h5 pl-3 mb-3 " style="color: #DEB887;">Краткое описание</h3>
               <ul class="list-unstyled pl-3 mb-0">
                 <li class="mb-2"><strong class="text-black">Опубликовано:</strong> {{job.dateCreated}}</li>
                 {% if job.type %}

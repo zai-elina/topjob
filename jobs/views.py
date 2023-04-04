@@ -188,3 +188,13 @@ def create_job(request):
         context = {'form':form}
         return render(request,'create-job.html',context)
     return render(request, 'create-job.html', {})
+
+
+@login_required
+def published_jobs(request):
+    company = Company.objects.get(user=request.user)
+    jobs = Jobs.objects.filter(company=company)
+    context={}
+
+    context['jobs'] = jobs
+    return render(request, 'published-jobs.html', context)

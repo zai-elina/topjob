@@ -9,4 +9,5 @@ urlpatterns = [
     path('jobs/category/<slug:slug>/',views.category_detail,name='category-detail'),
     path('create-company/',views.create_company,name='create-company'),
     path('create-job/',views.create_job,name='create-job'),
+    path('published-jobs/',views.published_jobs,name='published-jobs'),
 ]
