@@ -195,4 +195,16 @@ class Jobs(models.Model):
         super(Jobs,self).save(*args,**kwargs)
 
 
+class Applicant(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Jobs, on_delete=models.CASCADE, related_name='applicants')
+    created_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return '{} - {}'.format(self.user,self.job)
+
+    class Meta:
+        verbose_name ="Заявитель"
+        verbose_name_plural = "Заявители"
+
 

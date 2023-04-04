@@ -198,3 +198,18 @@ def published_jobs(request):
 
     context['jobs'] = jobs
     return render(request, 'published-jobs.html', context)
+
+
+@login_required
+def add_respond(request,slug):
+    context={}
+    user = request.user
+    job= Jobs.objects.get(slug=slug)
+    context['job'] = job
+
+    Applicant.objects.create(user=user,job=job)
+    messages.success(request, 'Вы откликнулись')
+
+
+    return render(request, "job-detail.html",context )
+

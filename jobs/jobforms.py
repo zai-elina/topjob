@@ -217,3 +217,7 @@ class JobForm(forms.ModelForm):
         self.fields['summary'].required = False
         self.fields['note'].required = False
 
+class ApplyJobForm(forms.ModelForm):
+    class Meta:
+        model = Applicant
+        fields = ('job',)

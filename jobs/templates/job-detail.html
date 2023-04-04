@@ -8,6 +8,8 @@
 
 {% block content %}
 {% load static %}
+{% load is_already_applied %}
+
  <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
         <div class="row">
@@ -22,7 +24,21 @@
         </div>
       </div>
  </section>
+{% if messages %}
+  {% for message in messages %}
 
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
 
  <section class="site-section">
       <div class="container">
@@ -40,22 +56,27 @@
                   <span class="m-2"><span class="icon-room mr-2"></span>{{job.city}}</span>
                   {% endif %}
                   {% if job.type %}
-                  <span class="m-2"><span class="icon-clock-o mr-2"></span><span class="text-primary"  style="color: #DEB887;">{{job.type}}</span></span>
+                  <span class="m-2"><span class="icon-clock-o mr-2"></span><span   style="color: #DEB887;">{{job.type}}</span></span>
                   {% endif %}
                 </div>
               </div>
             </div>
           </div>
+          {% if request.user.profile.kind == "Соискатель" %}
           <div class="col-lg-4">
             <div class="row">
               <div class="col-6">
                 <a href="#" class="btn btn-block btn-light btn-md"><span class="icon-heart-o mr-2 text-danger"></span>Сохранить</a>
               </div>
+              {% is_already_applied job request.user as is_applied %}
+              {% if not is_applied %}
               <div class="col-6">
-                <a href="#" class="btn btn-block btn-primary btn-md btn-color">Отозваться</a>
+                <a href="{% url 'respond' job.slug %}" class="btn btn-block btn-primary btn-md btn-color">Отозваться</a>
               </div>
+              {% endif %}
             </div>
           </div>
+          {% endif %}
         </div>
         <div class="row">
           <div class="col-lg-8">
@@ -87,14 +108,18 @@
             </div>
             {% endif %}
 
+            {% if request.user.profile.kind == "Соискатель" %}
             <div class="row mb-5">
               <div class="col-6">
                 <a href="#" class="btn btn-block btn-light btn-md"><span class="icon-heart-o mr-2 text-danger"></span>Сохранить</a>
               </div>
+              {% if not is_applied %}
               <div class="col-6">
                 <a href="#" class="btn btn-block btn-primary btn-md btn-color">Отозваться</a>
               </div>
+              {% endif %}
             </div>
+            {% endif %}
 
           </div>
           <div class="col-lg-4">
