@@ -5,7 +5,8 @@ from django.template.defaultfilters import slugify
 from uuid import uuid4
 
 class Company(models.Model):
-    title = models.CharField(max_length=200, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200, null=True, blank=True,unique=True)
     description = models.TextField(null=True, blank=True)
     uniqueId = models.CharField(max_length=100, null=True, blank=True)
     companyLogo = models.ImageField(default='default.png',upload_to='company_logo')
@@ -167,7 +168,6 @@ class Jobs(models.Model):
     dateCreated = models.DateTimeField(default=timezone.now)
     closingDate = models.DateField(null=True,blank=True)
     datePosted = models.DateField(null=True,blank=True)
-    owner = models.ForeignKey(User,on_delete=models.CASCADE)
     slug = models.SlugField(null=True,blank=True,unique=True,max_length=500)
     seoDescription = models.CharField(null=True,blank=True,max_length=500)
     seoKeywords = models.CharField(null=True,blank=True,max_length=500)

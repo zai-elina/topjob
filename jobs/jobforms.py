@@ -87,3 +87,13 @@ class SearchForm(forms.ModelForm):
         super(SearchForm, self).__init__(*args, **kwargs)
         self.fields['type'].required = False
         self.fields['region'].required = False
+
+
+class CompanyForm(forms.ModelForm):
+    title = forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control form-control-lg','placeholder':'Название компании'}))
+    description = forms.CharField(required=True, widget=forms.Textarea(attrs={'class':'form-control','placeholder':'Описание компании'}))
+    companyLogo = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class':'form-control'}))
+
+    class Meta:
+        model = Company
+        fields = ['title','description','companyLogo']

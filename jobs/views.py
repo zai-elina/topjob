@@ -1,8 +1,9 @@
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.db.models import Q
 from .models import *
 from .jobforms import *
+from django.contrib.auth.decorators import login_required
 
 def searching(search,type,region):
     jobs = []
@@ -142,3 +143,29 @@ def category_list(request):
 
     return render(request, 'category-list.html', {'category_list': categ_list})
 
+
+@login_required
+def create_company(request):
+    if request.method == 'POST':
+        form = CompanyForm(request.POST,request.FILES)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            messages.success(request,'Компания добавлена')
+            return redirect('profile')
+        else:
+            messages.error(request,'Ошибка заполнения')
+            context = {'form':form}
+            return render(request,'create-company.html',context)
+    if request.method == 'GET':
+        form = CompanyForm()
+        context = {'form':form}
+        return render(request,'create-company.html',context)
+
+    return render(request,'create-resume.html',{})
+
+@login_required
+def create_job(request):
+    if not Company.objects.filter(user=request.user):
+        return redirect('create-company')
