@@ -1,0 +1,71 @@
+{% extends 'layout1.html' %}
+{% block meta %}
+    <title>Список опубликованных вакансий</title>
+    <meta name="description" content="" />
+{% endblock %}
+
+{% block content %}
+{% load static %}
+ <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Заявители на вакансию {{ job_title }}</h1>
+            <div class="custom-breadcrumbs">
+                <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'published-jobs' %}">Список опубликованных вакансий</a> <span class="mx-2 slash">/</span>
+                <span class="text-white"><strong>Заявители</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+ </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
+
+    <section>
+        <div class="container">
+            <div class="row">
+                {% for applicant in applicants %}
+                <div class="col-md-6">
+
+                  <div class="card p-3 py-4 mt-3 mb-5">
+
+                      <div class="text-center">
+                          {% if applicant.user.resume %}
+                          <img src="{{applicant.user.resume.image.url}}" height="150" class="rounded-circle" alt="Фото {{applicant.user.first_name}} {{applicant.user.last_name}}">
+                          {% else %}
+                          <img src="{% static 'app/images/profile.png' %}" height="150" class="rounded-circle" alt="Фото {{applicant.user.first_name}} {{applicant.user.last_name}}">
+                          {% endif %}
+
+                      </div>
+
+                      <div class="text-center mt-3">
+                          <h5 class="mt-2 mb-0">{{applicant.user.first_name}} {{applicant.user.last_name}}</h5>
+                          <span>{{applicant.user.email}}</span>
+                          <div><a href="#" class="btn btn-primary btn-color">Написать</a></div>
+                      </div>
+                      </div>
+
+                 </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

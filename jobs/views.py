@@ -213,3 +213,14 @@ def add_respond(request,slug):
 
     return render(request, "job-detail.html",context )
 
+@login_required
+def get_applicants(request,slug):
+    job = Jobs.objects.get(slug=slug)
+    applicants = Applicant.objects.filter(job=job)
+
+    context = {}
+    context['applicants'] = applicants
+    context['job_title'] = job.title
+
+    return render(request, 'applicants-list.html', context)
+

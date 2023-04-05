@@ -73,7 +73,7 @@
                                     <td>{{ job.dateCreated }}</td>
                                     <td>{{ job.closingDate }}</td>
                                     <td>
-                                        <a href=""
+                                        <a href="{% url 'get-applicants' job.slug %}"
                                            class="btn btn-success btn-color">
                                             <i class="fa fa-users">{{job.applicants.count}}</i>
                                         </a>
