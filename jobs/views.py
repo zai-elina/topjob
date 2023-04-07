@@ -198,6 +198,27 @@ def create_job(request):
 
 
 @login_required
+def edit_job(request,slug):
+    job =Jobs.objects.get(slug=slug)
+    if request.method == 'POST':
+        form = JobForm(request.POST, instance=job)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.save()
+            messages.success(request, 'Изменения внесены')
+            return redirect('published-jobs')
+        else:
+            messages.error(request, 'Ошибка заполнения')
+            context = {'form': form}
+            return render(request, 'edit-job.html', context)
+    if request.method == 'GET':
+        form = JobForm(instance=job)
+        context = {'form': form}
+        return render(request, 'edit-job.html', context)
+
+    return render(request, 'edit-job.html', {})
+
+@login_required
 def published_jobs(request):
     company = Company.objects.get(user=request.user)
     jobs = Jobs.objects.filter(company=company)
@@ -263,7 +284,5 @@ def resume_view(request,slug_job,slug_resume):
     context['educations'] = educations
     context['experiences'] = experiences
     context['job_slug'] = job.slug
-
-
 
     return render(request, 'resume-view.html', context)

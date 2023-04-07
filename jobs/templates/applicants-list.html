@@ -40,6 +40,9 @@
     <section>
         <div class="container">
             <div class="row">
+                {% if applicants.count == 0 %}
+                <h1 class="font-weight-bold m-5">Пока никто не отозвался на вакансию</h1>
+                {% endif %}
                 {% for applicant in applicants %}
                 <div class="col-md-6">
 
