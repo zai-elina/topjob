@@ -15,7 +15,7 @@
                 <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
                 <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
                 <a href="{% url 'published-jobs' %}">Список опубликованных вакансий</a> <span class="mx-2 slash">/</span>
-                <span class="text-white"><strong>Заявители</strong></span>
+                <span class="text-white"><strong>Все заявители</strong></span>
             </div>
           </div>
         </div>
@@ -58,6 +58,9 @@
                           <h5 class="mt-2 mb-0">{{applicant.user.first_name}} {{applicant.user.last_name}}</h5>
                           <span>{{applicant.user.email}}</span>
                           <div><a href="#" class="btn btn-primary btn-color">Написать</a></div>
+                          {% if applicant.user.resume %}
+                          <div><a href="{% url 'resume-view' job_slug applicant.user.resume.slug %}">Резюме</a></div>
+                          {% endif %}
                       </div>
                       </div>
 

@@ -5,6 +5,13 @@ from .models import *
 from .jobforms import *
 from django.contrib.auth.decorators import login_required
 
+from django.apps import apps
+Resume = apps.get_model('users', 'Resume')
+Education = apps.get_model('users', 'Education')
+Experience = apps.get_model('users', 'Experience')
+
+
+
 def searching(search,type,region):
     jobs = []
     if len(search.split()) > 1:
@@ -178,7 +185,7 @@ def create_job(request):
             obj.company = company
             obj.save()
             messages.success(request,'Вакансия добавлена')
-            return redirect('profile')
+            return redirect('published-jobs')
         else:
             messages.error(request,'Ошибка заполнения')
             context = {'form':form}
@@ -194,6 +201,11 @@ def create_job(request):
 def published_jobs(request):
     company = Company.objects.get(user=request.user)
     jobs = Jobs.objects.filter(company=company)
+
+    for job in jobs:
+        if job.closingDate <= timezone.now().date():
+            Jobs.objects.filter(slug=job.slug).delete()
+
     context={}
 
     context['jobs'] = jobs
@@ -221,6 +233,37 @@ def get_applicants(request,slug):
     context = {}
     context['applicants'] = applicants
     context['job_title'] = job.title
+    context['job_slug'] = job.slug
 
     return render(request, 'applicants-list.html', context)
 
+@login_required
+def delete_job(request,slug):
+    job = Jobs.objects.get(slug=slug)
+    job.delete()
+    return  redirect('published-jobs')
+
+@login_required
+def job_filled(request,slug):
+    job = Jobs.objects.get(slug=slug)
+    job.filled = not job.filled
+    job.save()
+
+    return redirect('published-jobs')
+
+
+def resume_view(request,slug_job,slug_resume):
+    job = Jobs.objects.get(slug=slug_job)
+    obj = Resume.objects.get(slug=slug_resume)
+    educations = Education.objects.filter(resume=obj)
+    experiences = Experience.objects.filter(resume=obj)
+
+    context = {}
+    context['object'] = obj
+    context['educations'] = educations
+    context['experiences'] = experiences
+    context['job_slug'] = job.slug
+
+
+
+    return render(request, 'resume-view.html', context)

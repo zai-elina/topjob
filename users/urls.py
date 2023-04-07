@@ -6,6 +6,7 @@ urlpatterns = [
     path('profile/',views.profile, name='profile'),
     path('users/create/',views.create_resume, name='create-resume'),
     path('users/view/<slug:slug>/', views.resume_detail, name='resume-detail'),
+    path('users/view/<slug:slug>/delete', views.resume_delete, name='resume-delete'),
     path('users/view/<slug:slug>/<int:pk>/delete-exp', views.delete_exp, name='delete-exp'),
     path('users/view/<slug:slug>/<int:pk>/delete-education', views.delete_ed, name='delete-ed'),
     path('users/view/<slug:slug>/<int:pk>/edit-education',views.edit_education,name='edit-ed'),

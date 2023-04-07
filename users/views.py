@@ -111,7 +111,7 @@ def edit_resume(request,slug):
 
     return render(request,'edit-resume.html',{})
 
-
+@login_required
 def resume_detail(request,slug):
     obj = Resume.objects.get(slug=slug)
 
@@ -164,17 +164,23 @@ def resume_detail(request,slug):
 
     return render(request, 'resume-detail.html', context)
 
+@login_required
+def resume_delete(request,slug):
+    obj = Resume.objects.filter(slug=slug)
+    obj.delete()
+    return redirect('profile')
 
+@login_required
 def delete_exp(request,slug,pk):
     exp = Experience.objects.filter(pk=pk)
     exp.delete()
     return redirect('resume-detail',slug=slug)
-
+@login_required
 def delete_ed(request,slug,pk):
     ed = Education.objects.filter(pk=pk)
     ed.delete()
     return redirect('resume-detail',slug=slug)
-
+@login_required
 def edit_education(request,slug,pk):
     ed = Education.objects.get(pk=pk)
     if request.method == 'POST':
@@ -194,7 +200,7 @@ def edit_education(request,slug,pk):
         return render(request,'edit-education.html',context)
 
     return render(request,'edit-education.html',{})
-
+@login_required
 def edit_exp(request,slug,pk):
     ex = Experience.objects.get(pk=pk)
     if request.method == 'POST':

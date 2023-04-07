@@ -1,0 +1,192 @@
+{% extends 'layout1.html' %}
+{% block meta %}
+    <title>Резюме {{object.user.username}}</title>
+    <meta name="description" content="" />
+{% endblock %}
+
+{% block content %}
+{% load static %}
+ <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Резюме {{object.user.username}}</h1>
+            <div class="custom-breadcrumbs">
+                <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'published-jobs' %}">Список опубликованных вакансий</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'get-applicants' job_slug %}">Заявители</a> <span class="mx-2 slash">/</span>
+                <span class="text-white"><strong>Резюме {{object.user.username}}</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+ </section>
+
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center m-4">
+           <div class="col-md-6">
+                  <div class="card p-3 py-4">
+
+                      <div class="text-center">
+                          <img src="{{object.image.url}}" height="150" class="rounded-circle" alt="{{object.user.first_name}} {{object.user.last_name}}">
+                      </div>
+
+                      <div class="text-center mt-3">
+                          <span class="bg-secondary p-1 px-4 rounded text-white">{{object.user.username}}</span>
+                          <h5 class="mt-2 mb-0">{{object.user.first_name}} {{object.user.last_name}}</h5>
+                          <span>{{object.user.email}}</span>
+                      </div>
+                  </div>
+              </div>
+        </div>
+
+        <div class="row">
+
+        <div class="col-lg-6 col-md-6 pt-5">
+            <div class="bg-light p-3 border rounded mb-4">
+              <h3 class="mt-3 h5 pl-3 mb-3" style="color: #DEB887;">Основная информация</h3>
+              <ul class="list-unstyled pl-3 mb-0">
+                <li class="mb-2"><strong class="text-black">Дата рождения:</strong> {{object.date_birth}}</li>
+                <li class="mb-2"><strong class="text-black">Пол:</strong> {{object.sex}}</li>
+                <li class="mb-2"><strong class="text-black">Семейное положение:</strong> {{object.material_status}}</li>
+                <li class="mb-2"><strong class="text-black">Телефон:</strong> {{object.phoneNumber}}</li>
+                  {% if object.last_updated %}
+                <li class="mb-2"><strong class="text-black">Последнее обновление:</strong> {{object.last_updated}}</li>
+                  {% endif %}
+                  <li class="mb-2"><strong class="text-black">Сопроводительное письмо:</strong> <a href="{{object.cover_letter.url}}" download>Скачать</a></li>
+              </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 pt-5">
+            <div class="bg-light p-3 border rounded mb-4">
+              <h3 class="mt-3 h5 pl-3 mb-3 " style="color: #DEB887;">Контактная информация</h3>
+              <ul class="list-unstyled pl-3 mb-0">
+                <li class="mb-2"><strong class="text-black">Адрес проживания:</strong> {{object.addressLine1}}</li>
+                <li class="mb-2"><strong class="text-black">Адрес прописки:</strong> {{object.addressLine2}}</li>
+                <li class="mb-2"><strong class="text-black">Республики, область или край:</strong> {{object.suburb}}</li>
+                <li class="mb-2"><strong class="text-black">Город:</strong> {{object.city}}</li>
+                <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
+              </ul>
+            </div>
+
+        </div>
+            {% if object.skills %}
+            <div class="col-lg-8">
+            <div class="mb-5">
+              <h3 class="h5 d-flex align-items-center mb-4 " style="color: #DEB887;"><span class="icon-align-left mr-3" ></span>Основные навыки</h3>
+              <p>{{object.skills|linebreaks}}</p>
+            </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <div class="mb-5">
+              <h3 class="h5 d-flex align-items-center mb-4" style="color: #DEB887;"><span class="icon-book mr-3"></span>Образование</h3>
+
+
+                {% if educations %}
+                {% for education in educations %}
+                <div class="col-lg-12 mt-4 pt-2">
+                    <div class="component-wrapper rounded shadow">
+                        <div class="p-4 border-bottom bg-light">
+                            <h4 class="title">{{education.institution}}</h4>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Уровень:</b> {{education.level}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                 <div class="col">
+                                    <p><b>Факультет:</b> {{education.faculty}}</p>
+                                </div>
+                                <div class="col">
+                                    <p><b>Специализация:</b> {{education.specialization}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Дата начала:</b> {{education.start_date}}</p>
+                                </div>
+
+                                <div class="col">
+                                    <p><b>Дата окончания:</b> {{education.graduated}}</p>
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+
+
+        </div>
+
+
+
+
+        <div class="mb-5">
+              <h3 class="h5 d-flex align-items-center mb-4" style="color: #DEB887;"><span class="icon-rocket mr-3"></span>Опыт работы</h3>
+
+
+
+
+                {% if experiences %}
+                {% for exp in experiences %}
+                <div class="col-lg-12 mt-4 pt-2">
+                    <div class="component-wrapper rounded shadow">
+
+                        <div class="p-4 border-bottom bg-light">
+                            <h4 class="title">{{exp.company}}</h4>
+                        </div>
+
+                        <div class="p-4">
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Должность:</b> {{exp.position}}</p>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                 <div class="col">
+                                    <p><b>Опыт:</b> {{exp.experience}}</p>
+                                </div>
+                                <div class="col">
+                                    <p><b>Навыки:</b> {{exp.skills}}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p><b>Дата начала:</b> {{exp.start_date}}</p>
+                                </div>
+
+                                <div class="col">
+                                    <p><b>Дата окончания:</b> {{exp.end_date}}</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+                {% endfor %}
+
+                {% endif %}
+        </div>
+
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+{% endblock %}

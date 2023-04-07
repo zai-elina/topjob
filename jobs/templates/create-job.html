@@ -68,7 +68,7 @@
                         <div class="row mt-4">
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Название</label>
+                                    <label class="text-muted">Название<span class="text-danger">*</span></label>
                                     {{form.title}}
                                 </div>
                                 {% if form.title.errors %}
@@ -81,7 +81,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Категория</label>
+                                    <label class="text-muted">Категория<span class="text-danger">*</span></label>
                                     <br>
                                     {{form.category}}
                                 </div>
@@ -95,7 +95,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Город</label>
+                                    <label class="text-muted">Город<span class="text-danger">*</span></label>
                                     {{form.city}}
                                 </div>
                                 {% if form.city.errors %}
@@ -108,7 +108,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Регион, край, область</label>
+                                    <label class="text-muted">Регион, край, область<span class="text-danger">*</span></label>
                                     {{form.region}}
                                 </div>
                                 {% if form.region.errors %}
@@ -122,7 +122,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Заработная плата</label>
+                                    <label class="text-muted">Заработная плата<span class="text-danger">*</span></label>
                                     <br>
                                     {{form.salary}}
                                 </div>
@@ -136,7 +136,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Форма занятости</label>
+                                    <label class="text-muted">Форма занятости<span class="text-danger">*</span></label>
                                     <br>
                                     {{form.type}}
                                 </div>
@@ -151,7 +151,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Опыт работы</label>
+                                    <label class="text-muted">Опыт работы<span class="text-danger">*</span></label>
                                     {{form.experience}}
                                 </div>
                                 {% if form.experience.errors %}
@@ -179,7 +179,7 @@
 
                             <div class="col-md-8">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Подробное описание :</label>
+                                    <label class="text-muted">Подробное описание <span class="text-danger">*</span>:</label>
                                     {{form.description}}
                                 </div>
                                 {% if form.description.errors %}
@@ -193,7 +193,7 @@
 
                             <div class="col-md-8">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Требования :</label>
+                                    <label class="text-muted">Требования <span class="text-danger">*</span>:</label>
                                     {{form.requirements}}
                                 </div>
                                 {% if form.requirements.errors %}
@@ -207,7 +207,7 @@
 
                             <div class="col-md-8">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Обязанности:</label>
+                                    <label class="text-muted">Обязанности <span class="text-danger">*</span>:</label>
                                     {{form.duties}}
                                 </div>
                                 {% if form.duties.errors %}
