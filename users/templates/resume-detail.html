@@ -69,7 +69,9 @@
                   {% if object.last_updated %}
                 <li class="mb-2"><strong class="text-black">Последнее обновление:</strong> {{object.last_updated}}</li>
                   {% endif %}
+                  {% if object.cover_letter %}
                   <li class="mb-2"><strong class="text-black">Сопроводительное письмо:</strong> <a href="{{object.cover_letter.url}}" download>Скачать</a></li>
+                {% endif %}
               </ul>
             </div>
         </div>
@@ -81,7 +83,9 @@
                 <li class="mb-2"><strong class="text-black">Адрес прописки:</strong> {{object.addressLine2}}</li>
                 <li class="mb-2"><strong class="text-black">Республики, область или край:</strong> {{object.suburb}}</li>
                 <li class="mb-2"><strong class="text-black">Город:</strong> {{object.city}}</li>
-                <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
+                {% if object.cv %}
+                  <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
+              {% endif %}
               </ul>
             </div>
 

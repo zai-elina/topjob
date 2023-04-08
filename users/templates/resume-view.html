@@ -55,7 +55,9 @@
                   {% if object.last_updated %}
                 <li class="mb-2"><strong class="text-black">Последнее обновление:</strong> {{object.last_updated}}</li>
                   {% endif %}
+                 {% if object.cover_letter %}
                   <li class="mb-2"><strong class="text-black">Сопроводительное письмо:</strong> <a href="{{object.cover_letter.url}}" download>Скачать</a></li>
+                {% endif %}
               </ul>
             </div>
         </div>
@@ -67,8 +69,9 @@
                 <li class="mb-2"><strong class="text-black">Адрес прописки:</strong> {{object.addressLine2}}</li>
                 <li class="mb-2"><strong class="text-black">Республики, область или край:</strong> {{object.suburb}}</li>
                 <li class="mb-2"><strong class="text-black">Город:</strong> {{object.city}}</li>
-                <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
-              </ul>
+                  {% if object.cv %}
+                  <li class="mb-2"><strong class="text-black">Резюме в виде документа:</strong> <a href="{{object.cv.url}}" download>Скачать</a></li>
+              {% endif %}</ul>
             </div>
 
         </div>
@@ -84,10 +87,11 @@
         </div>
 
         <div class="mb-5">
+            {% if educations %}
               <h3 class="h5 d-flex align-items-center mb-4" style="color: #DEB887;"><span class="icon-book mr-3"></span>Образование</h3>
 
 
-                {% if educations %}
+
                 {% for education in educations %}
                 <div class="col-lg-12 mt-4 pt-2">
                     <div class="component-wrapper rounded shadow">
@@ -137,12 +141,13 @@
 
 
         <div class="mb-5">
+            {% if experiences %}
               <h3 class="h5 d-flex align-items-center mb-4" style="color: #DEB887;"><span class="icon-rocket mr-3"></span>Опыт работы</h3>
 
 
 
 
-                {% if experiences %}
+
                 {% for exp in experiences %}
                 <div class="col-lg-12 mt-4 pt-2">
                     <div class="component-wrapper rounded shadow">
