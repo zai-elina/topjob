@@ -27,6 +27,14 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     kind = models.CharField(choices=KIND,default='Соискатель',max_length=30)
+    slug = models.SlugField(unique=True)
+
+    def save(self,*args,**kwargs):
+        if self.slug is None:
+            uniqueId = str(uuid4()).split('-')[0]
+            self.slug = slugify('{}-{}'.format(self.user.name,uniqueId))
+
+        super(Profile,self).save(*args,**kwargs)
 
     class Meta:
         verbose_name ="Профиль"

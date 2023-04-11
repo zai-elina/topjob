@@ -6,6 +6,7 @@
 
 {% block content %}
 {% load static %}
+{% load is_already_applied %}
  <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
         <div class="row">
@@ -60,7 +61,12 @@
                       <div class="text-center mt-3">
                           <h5 class="mt-2 mb-0">{{applicant.user.first_name}} {{applicant.user.last_name}}</h5>
                           <span>{{applicant.user.email}}</span>
-                          <div><a href="#" class="btn btn-primary btn-color">Написать</a></div>
+                          {% is_already_write user.profile.slug applicant.user.profile.slug as is_write %}
+                          {% if not is_write %}
+                          <div><a href="{% url 'create-chat' user.profile.slug applicant.user.profile.slug %}" class="btn btn-primary btn-color">Написать</a></div>
+                          {% else %}
+                          <div><a href="{% url 'create-chat' user.profile.slug applicant.user.profile.slug %}" class="btn btn-primary btn-color">Перейти в диалог</a></div>
+                          {% endif %}
                           {% if applicant.user.resume %}
                           <div><a href="{% url 'resume-view' job_slug applicant.user.resume.slug %}">Резюме</a></div>
                           {% endif %}

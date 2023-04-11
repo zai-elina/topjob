@@ -14,6 +14,8 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import channels.layers
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -40,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'jobs.apps.JobsConfig',
     'users.apps.UsersConfig',
+    'chat.apps.ChatConfig',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -72,6 +76,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'topjob.wsgi.application'
 
+ASGI_APPLICATION = 'topjob.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
