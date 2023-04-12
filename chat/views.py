@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from .models import *
 
 
-def chat_message(request,slug):
-    obj = ChatRoom.objects.get(slug=slug)
-    context={}
-    context['object'] = obj
-    return render(request,'chat.html',context)
+def chat_message(request):
+    # obj = ChatRoom.objects.get(slug=slug)
+    # context={}
+    # context['object'] = obj
+    return render(request,'chat.html')
 
 def chat_list(request):
     return render(request,'chat-list.html')
