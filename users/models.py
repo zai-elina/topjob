@@ -6,6 +6,8 @@ from django.urls import reverse
 import random
 from django.template.defaultfilters import slugify as django_slugify
 
+from jobs.models import Jobs
+
 alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i',
             'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
             'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e', 'ю': 'yu',
@@ -155,7 +157,6 @@ class Resume(models.Model):
     slug = models.SlugField(max_length=500,unique=True,blank=True,null=True)
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(blank=True,null=True)
-    cover_letter =models.FileField(upload_to='resumes',null=True,blank=True)
     cv = models.FileField(upload_to='resumes',null=True,blank=True)
     skills = models.TextField()
 
@@ -233,3 +234,8 @@ class Experience(models.Model):
     class Meta:
         verbose_name ="Опыт работы"
         verbose_name_plural = "Опыты работы"
+
+
+class Favorite(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    job = models.ForeignKey(Jobs, null=False, blank=False, on_delete=models.CASCADE)

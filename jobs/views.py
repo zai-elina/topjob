@@ -6,6 +6,9 @@ from .jobforms import *
 from django.contrib.auth.decorators import login_required
 
 from django.apps import apps
+
+from users.models import Favorite
+
 Resume = apps.get_model('users', 'Resume')
 Education = apps.get_model('users', 'Education')
 Experience = apps.get_model('users', 'Experience')
@@ -49,7 +52,7 @@ def home(request):
     form = SearchForm()
     context = {}
 
-    jobs_list = Jobs.objects.all()
+    jobs_list = Jobs.objects.filter(filled=False)
     context['jobs_count'] = len(jobs_list)
     users = User.objects.all()
     company = Company.objects.all()
@@ -91,10 +94,10 @@ def home(request):
 def job_list(request):
     form = SearchForm()
     context={}
-    jobs_list = Jobs.objects.order_by('dateCreated')
+    jobs_list = Jobs.objects.filter(filled=False).order_by('dateCreated')
 
     context['form'] = form
-    context['jobs'] = jobs_list;
+    context['jobs'] = jobs_list
 
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -116,8 +119,12 @@ def job_list(request):
 
 def job_detail(request, slug):
     job = Jobs.objects.get(slug=slug)
+    context ={}
+    context['applicants'] = len(Applicant.objects.filter(job=job))
+    context['favorite'] = len(Favorite.objects.filter(job=job))
+    context['job'] = job
 
-    return render(request, 'job-detail.html', {'job': job})
+    return render(request, 'job-detail.html', context)
 
 def category_detail(request, slug):
     form = SearchForm()
@@ -242,6 +249,8 @@ def add_respond(request,slug):
 
     Applicant.objects.create(user=user,job=job)
     messages.success(request, 'Вы откликнулись')
+    context['applicants'] = len(Applicant.objects.filter(job=job))
+    context['favorite'] = len(Favorite.objects.filter(job=job))
 
 
     return render(request, "job-detail.html",context )

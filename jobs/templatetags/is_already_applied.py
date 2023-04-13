@@ -6,6 +6,7 @@ from ..models import Applicant
 register = template.Library()
 
 from chat.models import Thread
+from users.models import Favorite
 
 
 @register.simple_tag(name='is_already_applied')
@@ -15,6 +16,16 @@ def is_already_applied(job, user):
         return True
     else:
         return False
+
+
+@register.simple_tag(name='is_already_liked')
+def is_already_liked(job, user):
+    liked = Favorite.objects.filter(job=job, user=user)
+    if liked:
+        return True
+    else:
+        return False
+
 
 @register.simple_tag(name='is_already_write')
 def is_already_write(first_user, second_user):

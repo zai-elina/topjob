@@ -75,6 +75,7 @@ function formatDay(day){
 }
 
 function new_message(message, sent_by_id,thread_id,name,image) {
+
 	if ($.trim(message) === '') {
 		return false;
 	}
@@ -83,6 +84,8 @@ function new_message(message, sent_by_id,thread_id,name,image) {
 
     let message_element;
     let chat_id = 'chat_' + thread_id;
+
+
     if (sent_by_id == USER_ID){
        message_element = `<li class="d-flex justify-content-end mb-4">
             <div class="card">
@@ -129,6 +132,7 @@ function new_message(message, sent_by_id,thread_id,name,image) {
             </div>
           </li>`
     }
+
 
 
     let message_body = $('.messages-wrapper[chat-id="' + chat_id + '"] .msg_card_body')

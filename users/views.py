@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
 
+from jobs.models import Applicant,Jobs
+
 
 def register(request):
     if request.method == 'GET':
@@ -312,4 +314,25 @@ def forgot_password(request):
     return render(request,'forgot.html',{})
 
 
+@login_required
+def add_to_favorites(request,job_id):
+    job = Jobs.objects.get(id=job_id)
+    Favorite.objects.get_or_create(job=job, user=request.user)
+    context={}
+    context['job'] = job
+    context['applicants'] = len(Applicant.objects.filter(job=job))
+    context['favorite'] = len(Favorite.objects.filter(job=job))
 
+    return render(request, "job-detail.html",context)
+
+@login_required
+def delete_in_favorites(request,job_id):
+    job = Jobs.objects.get(id=job_id)
+    Favorite.objects.filter(job=job, user=request.user).delete()
+
+    context = {}
+    context['job'] = job
+    context['applicants'] = len(Applicant.objects.filter(job=job))
+    context['favorite'] = len(Favorite.objects.filter(job=job))
+
+    return render(request, "job-detail.html",context)

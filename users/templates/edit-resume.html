@@ -183,23 +183,9 @@
                                 {% endif %}
                             </div>
 
-                             <div class="col-md-6">
-                                <div class="from-group app-label">
-                                    <label class="text-muted">Сопроводительное письмо:<span class="text-danger">*</span>:</label>
-                                    {{form.cover_letter}}
-                                </div>
-                                {% if form.cover_letter.errors %}
-                                  {% for error in form.cover_letter.errors %}
-                                      <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                      </div>
-                                  {% endfor %}
-                                {% endif %}
-                            </div>
-
                             <div class="col-md-6">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Документ-резюме:<span class="text-danger">*</span>:</label>
+                                    <label class="text-muted">Развернутая профессиональная биография:<span class="text-danger">*</span>:</label>
                                     {{form.cv}}
                                 </div>
                                 {% if form.cv.errors %}

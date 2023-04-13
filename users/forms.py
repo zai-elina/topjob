@@ -169,7 +169,6 @@ class ResumeForm(forms.ModelForm):
     suburb = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class':'selectpicker bg-white p-2 rounded','title':'Регион','id':'selectorreg'}))
     city = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите город:'}))
     phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
-    cover_letter =forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     skills = forms.CharField(required=True,
                              widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши навыки'}))
@@ -179,7 +178,7 @@ class ResumeForm(forms.ModelForm):
         model = Resume
         fields=[
             'date_birth','sex','material_status','addressLine1',
-            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv','skills'
+            'addressLine2','suburb','city','phoneNumber','cv','skills'
         ]
 
 class ResumeEditForm(forms.ModelForm):
@@ -275,7 +274,6 @@ class ResumeEditForm(forms.ModelForm):
     suburb = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class':'selectpicker bg-white p-2 rounded','title':'Регион','id':'selectorreg'}))
     city = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите город:'}))
     phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
-    cover_letter =forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     skills = forms.CharField(required=True,
                              widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши навыки'}))
@@ -285,7 +283,7 @@ class ResumeEditForm(forms.ModelForm):
         model = Resume
         fields=[
             'sex','material_status','addressLine1',
-            'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv', 'skills'
+            'addressLine2','suburb','city','phoneNumber','cv', 'skills'
         ]
 
 class EducationForm(forms.ModelForm):
