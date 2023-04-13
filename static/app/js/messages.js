@@ -58,7 +58,8 @@ socket.onmessage = async function(e){
     let sent_by_id = data['sent_by']
     let thread_id = data['thread_id']
     let name = data['name']
-    new_message(message, sent_by_id,thread_id,name)
+    let image = data['image']
+    new_message(message, sent_by_id,thread_id,name,image)
 }
 
 socket.onerror = async function(e){
@@ -73,7 +74,7 @@ function formatDay(day){
     return days[day];
 }
 
-function new_message(message, sent_by_id,thread_id,name) {
+function new_message(message, sent_by_id,thread_id,name,image) {
 	if ($.trim(message) === '') {
 		return false;
 	}
@@ -99,7 +100,7 @@ function new_message(message, sent_by_id,thread_id,name) {
 
             </div>
             <img
-              src=""
+              src="${image}"
               alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
               width="60"
@@ -108,7 +109,7 @@ function new_message(message, sent_by_id,thread_id,name) {
     } else {
         message_element = `<li class="d-flex justify-content-start mb-4">
             <img
-              src=""
+              src="${image}"
               alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
               width="60"

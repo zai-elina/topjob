@@ -5,9 +5,10 @@ from asgiref.sync import sync_to_async
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import User
 
+
 from .models import *
 
-
+from users.models import Profile
 
 class ChatConsumer(AsyncConsumer):
     async def websocket_connect(self, event):
@@ -54,12 +55,16 @@ class ChatConsumer(AsyncConsumer):
 
 
         user_name = '{} {}'.format(sent_by_user.last_name,sent_by_user.first_name)
+        profile = await self.get_profile(sent_by_user)
+        image = str(profile.image.url)
+
 
         response = {
             'message': msg,
             'sent_by': self_user.id,
             'thread_id': thread_id,
             'name': user_name,
+            'image':image,
         }
 
         await self.channel_layer.group_send(
@@ -104,6 +109,16 @@ class ChatConsumer(AsyncConsumer):
     @database_sync_to_async
     def get_thread(self, user_id):
         qs = Thread.objects.filter(id=user_id)
+
+        if qs.exists():
+            obj = qs.first()
+        else:
+            obj = None
+        return obj
+
+    @database_sync_to_async
+    def get_profile(self, user):
+        qs = Profile.objects.filter(user=user)
 
         if qs.exists():
             obj = qs.first()
