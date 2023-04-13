@@ -65,7 +65,7 @@
                           {% if not is_write %}
                           <div><a href="{% url 'create-chat' user.id applicant.user.id %}" class="btn btn-primary btn-color">Написать</a></div>
                           {% else %}
-                          <div><a href="#" class="btn btn-primary btn-color">Перейти в диалог</a></div>
+                          <div><a href="{% url 'chat'%}" class="btn btn-primary btn-color">Перейти в диалог</a></div>
                           {% endif %}
                           {% if applicant.user.resume %}
                           <div><a href="{% url 'resume-view' job_slug applicant.user.resume.slug %}">Резюме</a></div>

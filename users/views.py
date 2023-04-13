@@ -21,11 +21,18 @@ def register(request):
         if form.is_valid():
             user = form.save()
 
-            profile = Profile.objects.create(
-                user=user,
-                kind=form.cleaned_data['kind'],
-                image=request.FILES['image'],
-            )
+            if 'image' in request.FILES:
+                profile = Profile.objects.create(
+                    user=user,
+                    kind=form.cleaned_data['kind'],
+                    image=request.FILES['image'],
+                )
+            else:
+                profile = Profile.objects.create(
+                    user=user,
+                    kind=form.cleaned_data['kind'],
+                )
+
             profile.save()
 
             #отправка email
@@ -104,8 +111,9 @@ def edit_user(request):
             obj = form.save(commit=False)
             obj.user = request.user
             profile = Profile.objects.get(user=obj.user)
-            profile.image = request.FILES['image']
-            profile.save()
+            if 'image' in request.FILES:
+                profile.image = request.FILES['image']
+                profile.save()
             obj.save()
             messages.success(request,'Изменения внесены')
             return redirect('profile')
@@ -129,9 +137,9 @@ def delete_user(request):
         messages.success(request, "Профиль удален")
     except User.DoesNotExist:
         messages.error(request, "Пользователя нет")
-        return render(request, 'index.html')
+        return redirect('login')
 
-    return render(request, 'index.html')
+    return redirect('login')
 
 
 

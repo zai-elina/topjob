@@ -1,7 +1,9 @@
 let input_message = document.getElementById('input-message')
-// let message_body = document.querySelector('.msg_card_body')
-let send_message_form = document.getElementById('send-message-form')
+let send_message_form = $('#send-message-form')
 const USER_ID = document.getElementById('logged-in-user').value
+$(window).load(function() {
+  $(".msg_card_body").animate({ scrollTop: $('.msg_card_body').prop("scrollHeight") }, 1000);
+});
 
 let loc = window.location
 let wsStart = 'ws://'
@@ -31,8 +33,8 @@ function get_active_thread_id(){
 
 socket.onopen = async function(e){
     console.log('open', e);
-     send_message_form.addEventListener('submit', function (e){
-        e.preventDefault()
+     send_message_form.on('submit', function (e){
+        e.preventDefault();
         let message = input_message.value;
         let send_to = get_active_other_user_id()
         let thread_id = get_active_thread_id()
@@ -55,7 +57,8 @@ socket.onmessage = async function(e){
     let message = data['message']
     let sent_by_id = data['sent_by']
     let thread_id = data['thread_id']
-    new_message(message, sent_by_id,thread_id)
+    let name = data['name']
+    new_message(message, sent_by_id,thread_id,name)
 }
 
 socket.onerror = async function(e){
@@ -65,49 +68,56 @@ socket.onerror = async function(e){
 socket.onclose = async function(e){
     console.log('close', e)
 }
+const days = ["Вср","Пон","Вт","Ср","Чт","Пт","Сб"];
+function formatDay(day){
+    return days[day];
+}
 
-
-function new_message(message, sent_by_id,thread_id) {
+function new_message(message, sent_by_id,thread_id,name) {
 	if ($.trim(message) === '') {
 		return false;
 	}
+    let time =new Date();
+    time = `${time.getDate()} ${formatDay(time.getDay())}, ${time.getHours()}:${time.getMinutes()}`
+
     let message_element;
     let chat_id = 'chat_' + thread_id;
     if (sent_by_id == USER_ID){
        message_element = `<li class="d-flex justify-content-end mb-4">
-            <div class="card w-100">
+            <div class="card">
               <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0 ">lara</p>
+                <p class="fw-bold mb-0">${name}</p>
                 <p class="text-muted small mb-0">
-                  <i class="far fa-clock"></i> 13 mins ago
+                  <i class="far fa-clock"></i> ${time}
                 </p>
               </div>
               <div class="card-body">
                 <p class="mb-0 ">
                   ${message}
-                </p>
+                  </p>
               </div>
+
             </div>
             <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-5.webp"
+              src=""
               alt="avatar"
-              class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong"
+              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
               width="60"
             />
           </li>`
     } else {
         message_element = `<li class="d-flex justify-content-start mb-4">
             <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+              src=""
               alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
               width="60"
             />
             <div class="card">
               <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0 ">Brad Pitt</p>
+                <p class="fw-bold mb-0 ">${name}</p>
                 <p class="text-muted small mb-0">
-                  <i class="far fa-clock"></i> 10 mins ago
+                  <i class="far fa-clock"></i> ${time}
                 </p>
               </div>
               <div class="card-body">
@@ -122,10 +132,8 @@ function new_message(message, sent_by_id,thread_id) {
 
     let message_body = $('.messages-wrapper[chat-id="' + chat_id + '"] .msg_card_body')
 	message_body.append($(message_element))
-    message_body.animate({
-        scrollTop: $(document).height()
-    }, 100);
-	input_message.val(null);
+    $(".msg_card_body").animate({ scrollTop: $('.msg_card_body').prop("scrollHeight") }, 1000);
+	input_message.value = '';
 }
 
 

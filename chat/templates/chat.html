@@ -43,7 +43,7 @@
                 <a href="#!" class="d-flex justify-content-between">
                   <div class="d-flex flex-row">
                     <img
-                      src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-8.webp"
+                      src="{% if thread.first_person == user %}{{ thread.second_person.profile.image.url }}{% else %}{{ thread.first_person.profile.image.url }}{% endif %}"
                       alt="avatar"
                       class="rounded-circle d-flex align-self-center me-3 shadow-1-strong"
                       width="60"
@@ -69,24 +69,20 @@
         </div>
       </div>
 
-      {% for thread in threads %}
-      <div class="col-md-6 col-lg-7 col-xl-8 messages-wrapper {% if forloop.first %}hide is_active{% else %}hide{% endif %}" chat-id="chat_{{ thread.id }}" other-user-id="
+
+      <div class="col-md-6 col-lg-7 col-xl-8 " style="background-color: antiquewhite">
+        {% for thread in threads %}
+        <div class="messages-wrapper {% if forloop.first %}hide is_active{% else %}hide{% endif %}" chat-id="chat_{{ thread.id }}" other-user-id="
                                         {% if thread.first_person == user %}
                                             {{ thread.second_person.id }}
                                         {% else %}
                                             {{ thread.first_person.id }}
                                         {% endif %}
-                                    " style="background-color: antiquewhite">
+                                    " >
         <ul class="list-unstyled  msg_card_body" style="overflow-y:auto; height: 500px">
           {% for chat in thread.chatmessage_thread.all %}
           {% if chat.user == user %}
           <li class="d-flex justify-content-end mb-4">
-            <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
-              alt="avatar"
-              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
-              width="60"
-            />
             <div class="card">
               <div class="card-header d-flex justify-content-between p-3">
                 <p class="fw-bold mb-0">{{chat.user.last_name}} {{chat.user.first_name}}</p>
@@ -99,12 +95,19 @@
                   {{chat.message}}
                   </p>
               </div>
+
             </div>
+            <img
+              src="{{chat.user.profile.image.url}}"
+              alt="avatar"
+              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
+              width="60"
+            />
           </li>
           {% else %}
           <li class="d-flex justify-content-start mb-4">
             <img
-              src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/avatar-6.webp"
+              src="{{chat.user.profile.image.url}}"
               alt="avatar"
               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong"
               width="60"
@@ -126,6 +129,8 @@
           {% endif %}
         {% endfor %}
         </ul>
+      </div>
+        {% endfor %}
         <form action="" id="send-message-form">
             <div class="form-outline">
               <textarea
@@ -141,7 +146,7 @@
           </button>
           </form>
       </div>
-      {% endfor %}
+
     </div>
   </div>
 </section>

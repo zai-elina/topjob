@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 from .models import *
 
 
+
 class ChatConsumer(AsyncConsumer):
     async def websocket_connect(self, event):
         print('connected', event)
@@ -50,10 +51,15 @@ class ChatConsumer(AsyncConsumer):
 
         other_user_chat_room = f'user_chatroom_{send_to_id}'
         self_user = self.scope['user']
+
+
+        user_name = '{} {}'.format(sent_by_user.last_name,sent_by_user.first_name)
+
         response = {
             'message': msg,
             'sent_by': self_user.id,
             'thread_id': thread_id,
+            'name': user_name,
         }
 
         await self.channel_layer.group_send(
