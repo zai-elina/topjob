@@ -50,8 +50,8 @@
                   <div class="card p-3 py-4 mt-3 mb-5">
 
                       <div class="text-center">
-                          {% if applicant.user.resume %}
-                          <img src="{{applicant.user.resume.image.url}}" height="150" class="rounded-circle" alt="Фото {{applicant.user.first_name}} {{applicant.user.last_name}}">
+                          {% if applicant.user.profile.image %}
+                          <img src="{{applicant.user.profile.image.url}}" height="150" class="rounded-circle" alt="Фото {{applicant.user.first_name}} {{applicant.user.last_name}}">
                           {% else %}
                           <img src="{% static 'app/images/profile.png' %}" height="150" class="rounded-circle" alt="Фото {{applicant.user.first_name}} {{applicant.user.last_name}}">
                           {% endif %}

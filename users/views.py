@@ -1,3 +1,5 @@
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .email_func import WelcomeEmail,sendEmail, ForgotPassword
@@ -7,9 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
 
-def update_user_data(user):
-    Profile.objects.update_or_create(user=user, defaults={'kind': user.kind},)
-
 
 def register(request):
     if request.method == 'GET':
@@ -18,14 +17,16 @@ def register(request):
         return render(request,'register.html', context)
 
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST,request.FILES)
         if form.is_valid():
             user = form.save()
 
-            user.kind = form.cleaned_data.get('kind')
-            update_user_data(user)
-
-            user.save()
+            profile = Profile.objects.create(
+                user=user,
+                kind=form.cleaned_data['kind'],
+                image=request.FILES['image'],
+            )
+            profile.save()
 
             #отправка email
             to_email = form.cleaned_data.get('email')
@@ -41,6 +42,33 @@ def register(request):
             context = {'form': form}
             return render(request, 'register.html', context)
     return render(request, 'register.html', {})
+
+
+
+def login_user(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+
+            user = authenticate(username=username, password=password)
+            if user and user.is_active:
+                login(request, user)
+                return redirect('profile')
+            else:
+                if not User.objects.filter(username=username):
+                    messages.error(request, 'Пользователь с введенным логином не существует')
+                else:
+                    messages.error(request, 'Неправильный пароль')
+                return render(request, 'login.html', {'form': form})
+        else:
+            messages.error(request, 'Ошибка ввода')
+            return render(request, 'login.html', {'form': form})
+    else:
+        form = LoginForm()
+        return render(request, 'login.html', {'form': form})
+
 
 @login_required
 def profile(request):
@@ -71,10 +99,13 @@ def create_resume(request):
 @login_required
 def edit_user(request):
     if request.method == 'POST':
-        form = ProfileChangeForm(request.POST,instance=request.user)
+        form = ProfileChangeForm(request.POST,request.FILES,instance=request.user)
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
+            profile = Profile.objects.get(user=obj.user)
+            profile.image = request.FILES['image']
+            profile.save()
             obj.save()
             messages.success(request,'Изменения внесены')
             return redirect('profile')
@@ -88,6 +119,21 @@ def edit_user(request):
         return render(request,'edit-profile.html',context)
 
     return render(request,'edit-profile.html',{})
+
+
+@login_required
+def delete_user(request):
+    try:
+        u = User.objects.get(username = request.user)
+        u.delete()
+        messages.success(request, "Профиль удален")
+    except User.DoesNotExist:
+        messages.error(request, "Пользователя нет")
+        return render(request, 'index.html')
+
+    return render(request, 'index.html')
+
+
 
 @login_required
 def edit_resume(request,slug):

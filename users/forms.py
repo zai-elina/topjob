@@ -16,6 +16,8 @@ class RegisterForm(UserCreationForm):
         ('Работодатель', 'Работодатель'),
     ]
 
+    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
+
     email = forms.EmailField(max_length=100,
                              required=True,
                              help_text='Введите почту',
@@ -47,10 +49,11 @@ class RegisterForm(UserCreationForm):
         # Свойство модели User
         model = User
         # Свойство назначения полей
-        fields = ('username','first_name', 'last_name','email', 'password1', 'password2','kind')
+        fields = ('image','username','first_name', 'last_name','email', 'password1', 'password2','kind')
 
 
 class ProfileChangeForm(UserChangeForm):
+    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))
     email = forms.EmailField(max_length=100,
                              required=True,
                              help_text='Введите почту',
@@ -69,7 +72,7 @@ class ProfileChangeForm(UserChangeForm):
                                widget=forms.TextInput(attrs={'class': 'form-control'}))
     class Meta:
         model = User
-        fields = ('username','first_name', 'last_name','email')
+        fields = ('image','username','first_name', 'last_name','email')
 
 
 class ResumeForm(forms.ModelForm):
@@ -157,7 +160,7 @@ class ResumeForm(forms.ModelForm):
         (DIVORCED, 'Разведён(а)'),
     ]
 
-    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class':'form-control'}))
+
     date_birth = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Введите дату рождения:'}))
     sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
     material_status =forms.ChoiceField(choices=MATERIAL_CHOICES,widget=forms.Select(attrs={'class':'nice-select rounded'}))
@@ -175,7 +178,7 @@ class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
         fields=[
-            'image','date_birth','sex','material_status','addressLine1',
+            'date_birth','sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv','skills'
         ]
 
@@ -264,7 +267,7 @@ class ResumeEditForm(forms.ModelForm):
         (DIVORCED, 'Разведён(а)'),
     ]
 
-    image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class':'form-control'}))
+
     sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
     material_status =forms.ChoiceField(choices=MATERIAL_CHOICES,widget=forms.Select(attrs={'class':'nice-select rounded'}))
     addressLine1 = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите адрес проживания:'}))
@@ -281,7 +284,7 @@ class ResumeEditForm(forms.ModelForm):
     class Meta:
         model = Resume
         fields=[
-            'image','sex','material_status','addressLine1',
+            'sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber', 'cover_letter','cv', 'skills'
         ]
 
@@ -342,3 +345,18 @@ class ForgotForm(forms.ModelForm):
     class Meta:
         model =User
         fields =['email',]
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=200,
+                               required=True,
+                               help_text='Логин',
+                               widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Логин'}))
+    password = forms.CharField(
+        required=True,
+        help_text='Введите пароль',
+        widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Пароль'}))
+
+    class Meta:
+        model =User
+        fields =['username','password']

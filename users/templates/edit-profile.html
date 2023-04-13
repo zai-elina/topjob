@@ -40,8 +40,19 @@
         <div class="row justify-content-center">
           <div class="col-lg-6 mb-5">
             <h2 class="mb-4">Редактирование</h2>
-            <form class="p-4 border rounded" method="POST">
+            <form class="p-4 border rounded" method="POST"  enctype="multipart/form-data">
             {% csrf_token %}
+                <div class="form-group app-label">
+                    <label class="text-muted">Фото</label>
+                    {{form.image}}
+                </div>
+                {% if form.image.errors %}
+                  {% for error in form.image.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
                 <div class="row form-group">
                   <div class="col-md-12 mb-3 mb-md-0">
                     <label class="text-black">Имя</label>

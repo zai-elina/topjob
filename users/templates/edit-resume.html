@@ -68,20 +68,6 @@
                         </div>
 
                         <div class="row mt-4">
-                            <div class="col-md-6">
-                                <div class="form-group app-label">
-                                    <label class="text-muted">Фото</label>
-                                    {{form.image}}
-                                </div>
-                                {% if form.image.errors %}
-                                  {% for error in form.image.errors %}
-                                      <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                      </div>
-                                  {% endfor %}
-                                {% endif %}
-                            </div>
-
 
                             <div class="col-md-6">
                                 <div class="from-group app-label">

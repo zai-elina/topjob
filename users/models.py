@@ -25,14 +25,27 @@ class Profile(models.Model):
         ('Работодатель', 'Работодатель'),
     ]
 
+    IMAGES = [
+        'profile1.jpg', 'profile2.jpg', 'profile3.jpg', 'profile4.jpg', 'profile5.jpg',
+        'profile6.jpg', 'profile7.jpg', 'profile8.jpg',
+    ]
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     kind = models.CharField(choices=KIND,default='Соискатель',max_length=30)
     slug = models.SlugField(unique=True)
+    image = models.ImageField(default='default.jpg', upload_to='profile_image')
+    uniqueId = models.CharField(null=True, max_length=100, blank=True)
 
     def save(self,*args,**kwargs):
-        if self.slug is None:
-            uniqueId = str(uuid4()).split('-')[0]
-            self.slug = slugify('{}-{}'.format(self.user.name,uniqueId))
+        if self.uniqueId is None:
+            self.uniqueId = str(uuid4()).split('-')[0]
+            self.slug = slugify('{} {}'.format(self.user.username, self.uniqueId))
+
+        self.slug = slugify('{} {}'.format(self.user.username, self.uniqueId))
+
+            # фото профиля по умолчанию
+        if self.image == 'default.jpg':
+            self.image = random.choice(self.IMAGES)
 
         super(Profile,self).save(*args,**kwargs)
 
@@ -126,15 +139,10 @@ class Resume(models.Model):
         (DIVORCED,'Разведён(а)'),
     ]
 
-    IMAGES = [
-        'profile1.jpg', 'profile2.jpg','profile3.jpg','profile4.jpg','profile5.jpg',
-        'profile6.jpg','profile7.jpg','profile8.jpg',
-    ]
 
 
     user = models.OneToOneField(User, on_delete = models.CASCADE)
     uniqueId = models.CharField(null=True, max_length=100,blank=True)
-    image = models.ImageField(default='default.jpg', upload_to='profile_image')
     email_confirmed = models.BooleanField(default=False)
     date_birth  = models.DateField(blank=True,null=True)
     sex = models.CharField(choices=SEX_CHOICES, default=OTHER,max_length=100)
@@ -163,9 +171,6 @@ class Resume(models.Model):
             self.uniqueId = str(uuid4()).split('-')[0]
             self.slug = slugify('{} {} {}'.format(self.user.first_name, self.user.last_name, self.uniqueId))
 
-        #фото профиля по умолчанию
-        if self.image == 'default.jpg':
-            self.image = random.choice(self.IMAGES)
 
 
         self.slug = slugify('{} {} {}'.format(self.user.first_name, self.user.last_name, self.uniqueId))
