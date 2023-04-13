@@ -14,8 +14,11 @@
             <div class="custom-breadcrumbs">
                 <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
                 <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
-                <a href="{% url 'published-jobs' %}">Список опубликованных вакансий</a> <span class="mx-2 slash">/</span>
-                <a href="{% url 'get-applicants' job_slug %}">Заявители</a> <span class="mx-2 slash">/</span>
+                {% if request.user.is_authenticated %}
+                  {% if request.user.profile.kind != "Соискатель" %}
+                  <a href="{% url 'published-jobs' %}">Список опубликованных вакансий</a> <span class="mx-2 slash">/</span>
+                  {% endif %}
+                {% endif %}
                 <span class="text-white"><strong>Резюме {{object.user.username}}</strong></span>
             </div>
           </div>
@@ -35,6 +38,7 @@
 
                       <div class="text-center mt-3">
                           <span class="bg-secondary p-1 px-4 rounded text-white">{{object.user.username}}</span>
+                          <h5 class="mt-2 mb-0">{{object.profession}}</h5>
                           <h5 class="mt-2 mb-0">{{object.user.first_name}} {{object.user.last_name}}</h5>
                           <span>{{object.user.email}}</span>
                       </div>

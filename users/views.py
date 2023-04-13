@@ -390,3 +390,10 @@ def applies_job(request):
         context['applies'] = appl
 
     return render(request, 'apply-job.html', context)
+
+def resume_list(request):
+    resume = Resume.objects.all().order_by('date_created')
+    context={}
+    context['resume_list'] = resume
+
+    return render(request, 'resume-list.html', context)

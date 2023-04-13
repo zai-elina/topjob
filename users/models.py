@@ -144,6 +144,7 @@ class Resume(models.Model):
 
 
     user = models.OneToOneField(User, on_delete = models.CASCADE)
+    profession = models.CharField(null=True, max_length=100,blank=True)
     uniqueId = models.CharField(null=True, max_length=100,blank=True)
     email_confirmed = models.BooleanField(default=False)
     date_birth  = models.DateField(blank=True,null=True)

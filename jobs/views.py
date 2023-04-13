@@ -282,8 +282,7 @@ def job_filled(request,slug):
     return redirect('published-jobs')
 
 
-def resume_view(request,slug_job,slug_resume):
-    job = Jobs.objects.get(slug=slug_job)
+def resume_view(request,slug_resume):
     obj = Resume.objects.get(slug=slug_resume)
     educations = Education.objects.filter(resume=obj)
     experiences = Experience.objects.filter(resume=obj)
@@ -292,6 +291,5 @@ def resume_view(request,slug_job,slug_resume):
     context['object'] = obj
     context['educations'] = educations
     context['experiences'] = experiences
-    context['job_slug'] = job.slug
 
     return render(request, 'resume-view.html', context)

@@ -160,7 +160,7 @@ class ResumeForm(forms.ModelForm):
         (DIVORCED, 'Разведён(а)'),
     ]
 
-
+    profession = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Ваша профессия:'}))
     date_birth = forms.DateField(required=True, widget=DateInput(attrs={'class':'form-control','placeholder':'Введите дату рождения:'}))
     sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
     material_status =forms.ChoiceField(choices=MATERIAL_CHOICES,widget=forms.Select(attrs={'class':'nice-select rounded'}))
@@ -177,7 +177,7 @@ class ResumeForm(forms.ModelForm):
     class Meta:
         model = Resume
         fields=[
-            'date_birth','sex','material_status','addressLine1',
+            'profession','date_birth','sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber','cv','skills'
         ]
 
@@ -266,7 +266,8 @@ class ResumeEditForm(forms.ModelForm):
         (DIVORCED, 'Разведён(а)'),
     ]
 
-
+    profession = forms.CharField(required=True, widget=forms.TextInput(
+        attrs={'class': 'form-control resume', 'placeholder': 'Ваша профессия:'}))
     sex = forms.ChoiceField(choices=SEX_CHOICES, widget=forms.Select(attrs={'class':'nice-select rounded'}))
     material_status =forms.ChoiceField(choices=MATERIAL_CHOICES,widget=forms.Select(attrs={'class':'nice-select rounded'}))
     addressLine1 = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите адрес проживания:'}))
@@ -282,7 +283,7 @@ class ResumeEditForm(forms.ModelForm):
     class Meta:
         model = Resume
         fields=[
-            'sex','material_status','addressLine1',
+            'profession','sex','material_status','addressLine1',
             'addressLine2','suburb','city','phoneNumber','cv', 'skills'
         ]
 

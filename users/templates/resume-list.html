@@ -1,0 +1,129 @@
+{% extends 'layout1.html' %}
+
+{% block meta %}
+    <title>Резюме</title>
+    <meta name="description" content="" />
+{% endblock %}
+
+{% block content %}
+{% load static %}
+
+ <section class="section-hero home-section overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+
+      <div class="container">
+        <div class="row align-items-center justify-content-center">
+          <div class="col-md-12">
+            <div class="mb-5 text-center">
+              <h1 class="text-white font-weight-bold">Поиск кандидатов</h1>
+            </div>
+           <form method="POST" class="search-jobs-form" name='search'>
+              {% csrf_token %}
+              <div class="row mb-5">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  {{form.title}}
+                </div>
+
+                {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  {{form.type}}
+                </div>
+                {% if form.type.errors %}
+                {% for error in form.type.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  {{form.region}}
+                </div>
+                {% if form.region.errors %}
+                {% for error in form.region.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <button type="submit" class="btn btn-primary btn-lg btn-block text-white btn-search btn-color"><span class="icon-search icon mr-2"></span>Найти</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <a href="#next" class="scroll-button smoothscroll">
+        <span class=" icon-keyboard_arrow_down"></span>
+      </a>
+    </section>
+
+<section class="site-section" id="next">
+      <div class="container" id="block">
+
+        <div class="row mb-5 justify-content-center">
+          <div class="col-md-7 text-center">
+            <h2 class="section-title mb-2">{{resume_list|length}} резюме</h2>
+          </div>
+        </div>
+
+        <ul class="job-listings mb-5">
+          {% for resume in resume_list %}
+          <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+            <a href="{% url 'resume-view' resume.slug %}"></a>
+            <div class="job-listing-logo">
+              <img src="{{resume.user.profile.image.url}}" alt="{{resume.profession}}" class="img-fluid">
+            </div>
+
+            <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+              <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                <h2>{{resume.profession}}</h2>
+              </div>
+              {% if resume.suburb %}
+              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                <span class="icon-room"></span> {{resume.suburb}}
+              </div>
+              {% endif %}
+              {% if resume.city %}
+              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                <span class="icon-location_city"></span> {{resume.city}}
+              </div>
+              {% endif %}
+            </div>
+
+          </li>
+          {% endfor %}
+        </ul>
+
+
+
+      </div>
+    </section>
+
+    {% if not request.user.is_authenticated %}
+    <section class="py-5 bg-image overlay-primary fixed overlay" style="background-image: url('images/hero_1.jpg');">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h2 class="text-white">Ищешь работу?</h2>
+            <p class="mb-0 text-white lead">Регистрируйся и смотри актуальные предложения</p>
+          </div>
+          <div class="col-md-3 ml-auto">
+            <a href="{% url 'register' %}" class="btn btn-warning btn-block btn-lg">Зарегистрироваться</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+
+
+{% endblock %}

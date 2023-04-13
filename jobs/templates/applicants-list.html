@@ -68,7 +68,7 @@
                           <div><a href="{% url 'chat'%}" class="btn btn-primary btn-color">Перейти в диалог</a></div>
                           {% endif %}
                           {% if applicant.user.resume %}
-                          <div><a href="{% url 'resume-view' job_slug applicant.user.resume.slug %}">Резюме</a></div>
+                          <div><a href="{% url 'resume-view' applicant.user.resume.slug %}">Резюме</a></div>
                           {% endif %}
                       </div>
                       </div>

@@ -20,4 +20,5 @@ urlpatterns = [
     path('delete_in_favorites/<int:job_id>', views.delete_in_favorites, name='delete_in_favorites'),
     path('favorites/', views.favorites_job, name='favorites-job'),
     path('applies/', views.applies_job, name='applies-job'),
+    path('resume-list/',views.resume_list,name='resume-list'),
 ]
