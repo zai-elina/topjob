@@ -1680,3 +1680,12 @@ h1, h2, h3, h4 {
 .btn-color:hover{
   background-color: #DEB887;
 }
+.active-contact{
+  background-color: #eee;
+}
+.is_active{
+  display: block !important;
+}
+.hide{
+  display: none;
+}

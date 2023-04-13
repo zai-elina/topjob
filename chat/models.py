@@ -1,23 +1,37 @@
+from django.contrib.auth.models import User
 from django.db import models
-from uuid import uuid4
-from django.template.defaultfilters import slugify
+from django.db.models import Q
 
 
-class  ChatRoom(models.Model):
-    uniqueId = models.CharField(null=True, max_length=100, blank=True)
-    name = models.CharField(max_length=100,unique=True)
-    slug = models.SlugField(unique=True)
-
-    def save(self,*args,**kwargs):
-        if self.uniqueId is None:
-            self.uniqueId = str(uuid4()).split('-')[0]
-            self.slug = slugify('{} {}'.format(self.name, self.uniqueId))
+class ThreadManager(models.Manager):
+    def by_user(self, **kwargs):
+        user = kwargs.get('user')
+        lookup = Q(first_person=user) | Q(second_person=user)
+        qs = self.get_queryset().filter(lookup).distinct()
+        return qs
 
 
-        self.slug = slugify('{} {}'.format(self.name, self.uniqueId))
+class Thread(models.Model):
+    first_person = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True,related_name='thread_first_person')
+    second_person = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True,
+                                     related_name='thread_second_person')
+    updated = models.DateTimeField(auto_now=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
 
-        super(ChatRoom,self).save(*args,**kwargs)
+    objects = ThreadManager()
 
     class Meta:
-        verbose_name = "Чат"
-        verbose_name_plural = "Чаты"
+        unique_together = ['first_person', 'second_person']
+        verbose_name = "Диалог"
+        verbose_name_plural = "Диалоги"
+
+
+class ChatMessage(models.Model):
+    thread = models.ForeignKey(Thread, null=True, blank=True, on_delete=models.CASCADE, related_name='chatmessage_thread')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Сообщение"
+        verbose_name_plural = "Сообщения"

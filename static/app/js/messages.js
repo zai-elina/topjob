@@ -1,5 +1,5 @@
 let input_message = document.getElementById('input-message')
-let message_body = document.querySelector('.msg_card_body')
+// let message_body = document.querySelector('.msg_card_body')
 let send_message_form = document.getElementById('send-message-form')
 const USER_ID = document.getElementById('logged-in-user').value
 
@@ -13,21 +13,35 @@ let endpoint = wsStart + loc.host + loc.pathname
 
 var socket = new WebSocket(endpoint)
 
+
+
+function get_active_other_user_id(){
+    let other_user_id = $('.messages-wrapper.is_active').attr('other-user-id')
+    other_user_id = $.trim(other_user_id)
+    return other_user_id
+}
+
+
+function get_active_thread_id(){
+    let chat_id = $('.messages-wrapper.is_active').attr('chat-id')
+    let thread_id = chat_id.replace('chat_', '')
+    return thread_id
+}
+
+
 socket.onopen = async function(e){
     console.log('open', e);
      send_message_form.addEventListener('submit', function (e){
         e.preventDefault()
         let message = input_message.value;
-        let  send_to;
-        if(USER_ID == 7){
-            send_to = 8
-        } else{
-            send_to = 7
-        }
+        let send_to = get_active_other_user_id()
+        let thread_id = get_active_thread_id()
+
         let data = {
             'message': message,
             'sent_by':USER_ID,
             'send_to':send_to,
+            'thread_id': thread_id,
         }
         data = JSON.stringify(data)
         socket.send(data)
@@ -40,7 +54,8 @@ socket.onmessage = async function(e){
     let data =JSON.parse(e.data)
     let message = data['message']
     let sent_by_id = data['sent_by']
-    newMessage(message, sent_by_id)
+    let thread_id = data['thread_id']
+    new_message(message, sent_by_id,thread_id)
 }
 
 socket.onerror = async function(e){
@@ -52,16 +67,17 @@ socket.onclose = async function(e){
 }
 
 
-function newMessage(message, sent_by_id) {
+function new_message(message, sent_by_id,thread_id) {
 	if ($.trim(message) === '') {
 		return false;
 	}
     let message_element;
+    let chat_id = 'chat_' + thread_id;
     if (sent_by_id == USER_ID){
        message_element = `<li class="d-flex justify-content-end mb-4">
             <div class="card w-100">
               <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0 ">Lara Croft</p>
+                <p class="fw-bold mb-0 ">lara</p>
                 <p class="text-muted small mb-0">
                   <i class="far fa-clock"></i> 13 mins ago
                 </p>
@@ -104,8 +120,23 @@ function newMessage(message, sent_by_id) {
     }
 
 
-
-	message_body.innerHTML += message_element
-    message_body.scrollTop = message_body.scrollHeight;
-	input_message.value='';
+    let message_body = $('.messages-wrapper[chat-id="' + chat_id + '"] .msg_card_body')
+	message_body.append($(message_element))
+    message_body.animate({
+        scrollTop: $(document).height()
+    }, 100);
+	input_message.val(null);
 }
+
+
+
+$('.contact-li').on('click', function (){
+    $('.contacts .active-contact').removeClass('active-contact')
+    $(this).addClass('active-contact')
+
+    // message wrappers
+    let chat_id = $(this).attr('chat-id')
+    $('.messages-wrapper.is_active').removeClass('is_active')
+    $('.messages-wrapper[chat-id="' + chat_id +'"]').addClass('is_active')
+})
+
