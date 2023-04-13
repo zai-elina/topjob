@@ -48,13 +48,19 @@
 
           <nav class="mx-auto site-navigation">
             <ul class="site-menu js-clone-nav d-none d-xl-block ml-0 pl-0">
-              <li><a href="/" class="nav-link active">Главная</a></li>
+              <li><a href="/" class="nav-link">Главная</a></li>
               <li><a href="#">О нас</a></li>
               <li class="has-children">
                 <a href="{% url 'job-list' %}">Вакансии</a>
                 <ul class="dropdown">
                   <li><a href="{% url 'job-list' %}">Все вакансии</a></li>
                   <li><a href="{% url 'category-list' %}">Категории</a></li>
+                  {% if request.user.is_authenticated %}
+                  {% if request.user.profile.kind == "Соискатель" %}
+                  <li><a href="{% url 'favorites-job' %}">Сохраненные вакансии</a></li>
+                  <li><a href="{% url 'applies-job' %}">Отклики</a></li>
+                  {% endif %}
+                  {% endif %}
                 </ul>
               </li>
               <li><a href="#">Блог</a></li>
@@ -64,17 +70,18 @@
                   {% if user.resume %}
                   <li><a href="{% url 'resume-detail' user.resume.slug %}">Посмотреть резюме</a></li>
                   {% else %}
-                <li><a href="{% url 'create-resume' %}">Создать резюме</a></li>
+                  <li><a href="{% url 'create-resume' %}">Создать резюме</a></li>
                   {% endif %}
                 {% else %}
                 <li class="has-children">
-                <a href="#">Список вакансий</a>
+                <a href="{% url 'published-jobs' %}">Список вакансий</a>
                 <ul class="dropdown">
-                  <li><a href="#">Создать вакансию</a></li>
+                  <li><a href="{% url 'create-job' %}">Создать вакансию</a></li>
                   <li><a href="{% url 'published-jobs' %}">Заявители</a></li>
                 </ul>
               </li>
                 {% endif %}
+                <li><a href="{% url 'chat' %}">Диалоги</a></li>
               {% endif %}
 
               {% if request.user.is_authenticated %}

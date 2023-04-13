@@ -8,8 +8,11 @@ from .models import *
 from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
+from django.db.models import Q
 
 from jobs.models import Applicant,Jobs
+
+from jobs.jobforms import SearchForm
 
 
 def register(request):
@@ -336,3 +339,54 @@ def delete_in_favorites(request,job_id):
     context['favorite'] = len(Favorite.objects.filter(job=job))
 
     return render(request, "job-detail.html",context)
+
+def searching(search,type,region):
+    jobs = []
+    if len(search.split()) > 1:
+        search_list = search.split()
+        val_list = []
+        for i in search_list:
+            if (type != '' and region != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type,
+                                       region=region)
+            elif (type != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type)
+            elif (region != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search),
+                                       region=region)
+            else:
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search))
+            for j in result:
+                val_list.append(j)
+        [jobs.append(i) for i in val_list if i not in jobs]
+        return jobs
+    else:
+        if (type != '' and region != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
+                                       region=region)
+        elif (type != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
+        elif (region != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
+                                       region=region)
+        else:
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
+        return jobs_list
+
+@login_required
+def favorites_job(request):
+    fav = Favorite.objects.filter(user=request.user)
+    context={}
+    if fav:
+        context['favorites'] = fav
+
+    return render(request, 'favorite-job.html', context)
+
+@login_required
+def applies_job(request):
+    appl = Applicant.objects.filter(user=request.user)
+    context={}
+    if appl:
+        context['applies'] = appl
+
+    return render(request, 'apply-job.html', context)

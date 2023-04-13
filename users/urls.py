@@ -18,4 +18,6 @@ urlpatterns = [
     path('edit-resume/<slug:slug>',views.edit_resume,name='edit-resume'),
     path('add_to_favorites/<int:job_id>', views.add_to_favorites, name='add_to_favorites'),
     path('delete_in_favorites/<int:job_id>', views.delete_in_favorites, name='delete_in_favorites'),
+    path('favorites/', views.favorites_job, name='favorites-job'),
+    path('applies/', views.applies_job, name='applies-job'),
 ]
