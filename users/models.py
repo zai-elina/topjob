@@ -238,5 +238,8 @@ class Experience(models.Model):
 
 
 class Favorite(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     job = models.ForeignKey(Jobs, null=False, blank=False, on_delete=models.CASCADE)
+    class Meta:
+        verbose_name ="Избранные"
+        verbose_name_plural = "Избран"

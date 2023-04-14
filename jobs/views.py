@@ -44,7 +44,7 @@ def searching(search,type,region):
             jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
         elif (region != ''):
             jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
-                                       region=region)
+                               region=region)
         else:
             jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
         return jobs_list
@@ -97,22 +97,6 @@ def job_list(request):
     context={}
 
 
-    # if request.method == 'POST':
-    #     form = SearchForm(request.POST)
-    #     if form.is_valid():
-    #         search = form.cleaned_data.get('title')
-    #         type = form.cleaned_data.get('type')
-    #         region = form.cleaned_data.get('region')
-    #
-    #         context['jobs'] = searching(search,type,region)
-    #
-    #         return render(request, 'jobs.html', context)
-    #     else:
-    #         messages.error(request, 'Ошибка запроса')
-    #         context['form'] = form
-    #         return render(request, 'jobs.html', context)
-
-
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = SearchForm(request.POST)
         if form.is_valid():
@@ -157,34 +141,92 @@ def job_detail(request, slug):
 
 def category_detail(request, slug):
     form = SearchForm()
-    category =  Category.objects.get(slug=slug)
     context = {}
 
-    jobs = Jobs.objects.filter(category__slug=slug)[:20]
-    context['jobs'] = jobs
-    context['category'] = category
-    context['form'] = form
+    #
+    #
+    # if request.method == 'POST':
+    #     form = SearchForm(request.POST)
+    #     if form.is_valid():
+    #         search = form.cleaned_data.get('title')
+    #         type = form.cleaned_data.get('type')
+    #         region = form.cleaned_data.get('region')
+    #
+    #         context['jobs'] = searching(search,type,region)
+    #         return render(request, 'category-detail.html', context)
+    #     else:
+    #         messages.error(request,'Ошибка запроса')
+    #         context['form'] = form
+    #         return render(request, 'category-detail.html', context)
 
-    if request.method == 'POST':
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = SearchForm(request.POST)
         if form.is_valid():
             search = form.cleaned_data.get('title')
             type = form.cleaned_data.get('type')
             region = form.cleaned_data.get('region')
+            category = Category.objects.get(slug=slug)
 
-            context['jobs'] = searching(search,type,region)
-            return render(request, 'category-detail.html', context)
+            jobs = searching(search, type, region)
+            data = []
+            if len(jobs) > 0:
+                for item in jobs:
+                    if item.category.slug == category.slug:
+                        val = {
+                            'title':item.title,
+                            'city':item.city,
+                            'logo':item.company.companyLogo.url,
+                            'slug':item.slug,
+                            'salary':item.salary,
+                            'type':item.type,
+                            'company':item.company.title
+                        }
+                        data.append(val)
+            return JsonResponse({'data':data},status=200)
         else:
-            messages.error(request,'Ошибка запроса')
-            context['form'] = form
-            return render(request, 'category-detail.html', context)
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        form = SearchForm()
+        category = Category.objects.get(slug=slug)
+        jobs = Jobs.objects.filter(category__slug=slug)
+        context['jobs'] = jobs
+        context['category'] = category
+        context['form'] = form
 
     return render(request, 'category-detail.html', context)
 
 def category_list(request):
-    categ_list = Category.objects.all()
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search = form.cleaned_data.get('title')
 
-    return render(request, 'category-list.html', {'category_list': categ_list})
+            categ_list = Category.objects.filter(title__icontains=search)
+
+            data = []
+            if len(categ_list) > 0:
+                for item in categ_list:
+                    val = {
+                        'title':item.title,
+                        'logo':item.categoryImage.url,
+                        'slug':item.slug,
+                        'description':item.description,
+                        }
+                    data.append(val)
+            return JsonResponse({'data':data},status=200)
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        context = {}
+        categ_list = Category.objects.all()
+        context['category_list'] = categ_list
+        form = SearchForm()
+        context['form'] = form
+
+    return render(request, 'category-list.html', context)
 
 
 @login_required

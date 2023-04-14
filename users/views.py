@@ -320,7 +320,7 @@ def forgot_password(request):
 @login_required
 def add_to_favorites(request,job_id):
     job = Jobs.objects.get(id=job_id)
-    Favorite.objects.get_or_create(job=job, user=request.user)
+    Favorite.objects.create(job=job, user=request.user)
     context={}
     context['job'] = job
     context['applicants'] = len(Applicant.objects.filter(job=job))

@@ -26,10 +26,65 @@
 
  <section class="site-section services-section bg-light block__62849" id="next-section">
       <div class="container">
+          <form method="POST" class="search-jobs-form" id="search">
+              {% csrf_token %}
+              <div class="row mb-5">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  {{form.title}}
+                </div>
 
-        <div class="row">
+                {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <button type="submit" class="btn btn-primary btn-lg btn-block text-white btn-search btn-color"><span class="icon-search icon mr-2"></span>Найти</button>
+                </div>
+              </div>
+            </form>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				  <script>
+					  $(document).ready(function () {
+						  // отслеживаем событие отправки формы
+						  $('#search').submit(function () {
+							  // создаем AJAX-вызов
+							  $.ajax({
+								  data: $(this).serialize(), // получаем данные формы
+								  type: $(this).attr('method'), // GET или POST
+								  url: "{% url 'category-list' %}",
+								  // если успешно, то
+								  success: function (response) {
+									  console.log(response.data);
+                                      let data = response.data;
+                                       $("#categories").empty();
+                                      data.forEach((categ) => {
+                                          $("#categories").append(`<a href="${categ.slug}" class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5 block__16443 text-center d-block h-100">
+                                          <img src="${categ.logo}" alt="${categ.title}" style="width: 100px">
+                                          <h3>${categ.title}</h3>
+                                          <p>${categ.description}</p>
+                                        </a>`);
+                                      })
+
+								  },
+								  // если ошибка, то
+								  error: function (response) {
+									  // предупредим об ошибке
+									  alert("Ошибка ввода данных");
+									  console.log(response.responseJSON.errors)
+								  }
+							  });
+							  return false;
+						  });
+					  })
+				  </script>
+
+        <div class="row" id="categories">
             {% for category in category_list %}
-          <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
+          <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5" id="category-list">
 
             <a href="{% url 'category-detail' category.slug %}" class="block__16443 text-center d-block h-100">
               <img src="{{ category.categoryImage.url }}" alt="{{category.title}}" style="width: 100px">
