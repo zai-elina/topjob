@@ -14,6 +14,8 @@ from jobs.models import Applicant,Jobs
 
 from jobs.jobforms import SearchForm
 
+from jobs.models import Company
+
 
 def register(request):
     if request.method == 'GET':
@@ -397,3 +399,11 @@ def resume_list(request):
     context['resume_list'] = resume
 
     return render(request, 'resume-list.html', context)
+
+@login_required
+def delete_company(request):
+    company = Company.objects.filter(user=request.user)
+    company.delete()
+    messages.success(request, 'Компания удалена')
+
+    return redirect('profile')

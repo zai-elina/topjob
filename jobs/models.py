@@ -34,6 +34,10 @@ class Company(models.Model):
         self.slug=slugify('Company {} {}'.format(self.title,self.uniqueId))
         self.seoKeywords = '{}, Вакансии,Подать заявку на работу, Найти работу'.format(self.title)
         self.seoDescription = 'Подать онлайн заявку на работу в {}'.format(self.title)
+
+        if self.companyLogo == 'default.png':
+            self.companyLogo = 'company.png'
+
         super(Company,self).save(*args,**kwargs)
 
 
@@ -42,7 +46,7 @@ class Category(models.Model):
     title = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     uniqueId = models.CharField(max_length=100, null=True, blank=True)
-    categoryImage = models.ImageField(default='category.png',upload_to='category-image')
+    categoryImage = models.ImageField(default='category.jpg',upload_to='category-image')
     slug = models.SlugField(null=True, blank=True, unique=True, max_length=500)
     seoDescription = models.CharField(null=True, blank=True, max_length=500)
     seoKeywords = models.CharField(null=True, blank=True, max_length=500)
@@ -159,7 +163,6 @@ class Jobs(models.Model):
     uniqueId = models.CharField(max_length=100,null=True,blank=True)
     type = models.CharField(max_length=100,choices=TYPE_CHOICES, default=FULL_TIME)
     experience = models.CharField(max_length=100, choices=EXP_CHOICES, default=TIER1)
-    summary = models.TextField(null=True)
     description = models.TextField(null=True,blank=True)
     requirements = models.TextField(null=True,blank=True)
     duties = models.TextField(null=True,blank=True)

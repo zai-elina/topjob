@@ -364,3 +364,9 @@ def resume_view(request,slug_resume):
     context['experiences'] = experiences
 
     return render(request, 'resume-view.html', context)
+
+
+@login_required
+def delete_apply(request,slug,apply_id,):
+    Applicant.objects.filter(id=apply_id).delete()
+    return redirect('get-applicants',slug)

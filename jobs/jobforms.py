@@ -196,7 +196,6 @@ class JobForm(forms.ModelForm):
         attrs={'class': 'form-control resume'}))
     type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'nice-select rounded'}))
     experience = forms.ChoiceField(choices=EXP_CHOICES, widget=forms.Select(attrs={'class': 'nice-select rounded'}))
-    summary = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control'}))
     description = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control'}))
     requirements = forms.CharField( widget=forms.Textarea(attrs={'class':'form-control'}))
     duties = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control'}))
@@ -208,7 +207,7 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = Jobs
-        fields = ['title','category','city','region' ,'salary','type' ,'experience','summary','description'  ,
+        fields = ['title','category','city','region' ,'salary','type' ,'experience','description'  ,
                   'requirements'  ,'duties','note','closingDate',
         ]
 

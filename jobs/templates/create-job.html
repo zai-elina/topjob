@@ -163,19 +163,7 @@
                                 {% endif %}
                             </div>
 
-                            <div class="col-md-8">
-                                <div class="from-group app-label">
-                                    <label class="text-muted">Краткое описание:</label>
-                                    {{form.summary}}
-                                </div>
-                                {% if form.summary.errors %}
-                                  {% for error in form.summary.errors %}
-                                      <div class="alert alert-danger">
-                                        <strong>{{ error|escape }}</strong>
-                                      </div>
-                                  {% endfor %}
-                                {% endif %}
-                            </div>
+
 
                             <div class="col-md-8">
                                 <div class="from-group app-label">
