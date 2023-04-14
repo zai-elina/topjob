@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from .models import *
@@ -94,26 +95,54 @@ def home(request):
 def job_list(request):
     form = SearchForm()
     context={}
-    jobs_list = Jobs.objects.filter(filled=False).order_by('dateCreated')
 
-    context['form'] = form
-    context['jobs'] = jobs_list
 
-    if request.method == 'POST':
+    # if request.method == 'POST':
+    #     form = SearchForm(request.POST)
+    #     if form.is_valid():
+    #         search = form.cleaned_data.get('title')
+    #         type = form.cleaned_data.get('type')
+    #         region = form.cleaned_data.get('region')
+    #
+    #         context['jobs'] = searching(search,type,region)
+    #
+    #         return render(request, 'jobs.html', context)
+    #     else:
+    #         messages.error(request, 'Ошибка запроса')
+    #         context['form'] = form
+    #         return render(request, 'jobs.html', context)
+
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = SearchForm(request.POST)
         if form.is_valid():
             search = form.cleaned_data.get('title')
             type = form.cleaned_data.get('type')
             region = form.cleaned_data.get('region')
 
-            context['jobs'] = searching(search,type,region)
-
-            return render(request, 'jobs.html', context)
+            jobs = searching(search, type, region)
+            data = []
+            if len(jobs) > 0:
+                for item in jobs:
+                    val = {
+                        'title':item.title,
+                        'city':item.city,
+                        'logo':item.company.companyLogo.url,
+                        'slug':item.slug,
+                        'salary':item.salary,
+                        'type':item.type,
+                        'company':item.company.title
+                    }
+                    data.append(val)
+            return JsonResponse({'data':data},status=200)
         else:
-            messages.error(request, 'Ошибка запроса')
-            context['form'] = form
-            return render(request, 'jobs.html', context)
-
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        form = SearchForm()
+        jobs = Jobs.objects.filter(filled=False).order_by('dateCreated')
+        context['form'] = form
+        context['jobs'] = jobs
 
     return render(request, 'jobs.html', context)
 

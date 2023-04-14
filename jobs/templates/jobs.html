@@ -17,7 +17,7 @@
               <h1 class="text-white font-weight-bold">Начни искать работу своей мечты</h1>
               <p>Работа, которую мы делаем охотно, исцеляет боли.</p>
             </div>
-           <form method="POST" class="search-jobs-form" name='search'>
+           <form method="POST" class="search-jobs-form" name='search' id="search">
               {% csrf_token %}
               <div class="row mb-5">
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
@@ -58,6 +58,60 @@
                 </div>
               </div>
             </form>
+				  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				  <script>
+					  $(document).ready(function () {
+						  // отслеживаем событие отправки формы
+						  $('#search').submit(function () {
+							  // создаем AJAX-вызов
+							  $.ajax({
+								  data: $(this).serialize(), // получаем данные формы
+								  type: $(this).attr('method'), // GET или POST
+								  url: "{% url 'job-list' %}",
+								  // если успешно, то
+								  success: function (response) {
+									  console.log(response.data);
+                                      let data = response.data;
+                                       $("#count").text(`${data.length} вакансий`);
+                                       $(".job-listings").empty();
+                                      data.forEach((job) => {
+                                          $(".job-listings").append(`<li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                                            <a href="${job.slug}"></a>
+                                            <div class="job-listing-logo">
+                                              <img src="${job.logo}" alt="{{job.company.title}}" class="img-fluid">
+                                            </div>
+
+                                            <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                                              <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                                                <h2>${job.title}</h2>
+                                                <strong>${job.company}</strong>
+                                              </div>
+                                              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                                                <span class="icon-room"></span> ${job.city}
+                                              </div>
+                                              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                                                <span class="icon-money"></span> ${job.salary}
+                                              </div>
+                                              <div class="job-listing-meta">
+                                                <span class="badge badge-danger">${job.type}</span>
+                                              </div>
+                                            </div>
+
+                                          </li>`);
+                                      })
+
+								  },
+								  // если ошибка, то
+								  error: function (response) {
+									  // предупредим об ошибке
+									  alert("Ошибка ввода данных");
+									  console.log(response.responseJSON.errors)
+								  }
+							  });
+							  return false;
+						  });
+					  })
+				  </script>
           </div>
         </div>
       </div>
@@ -72,7 +126,7 @@
 
         <div class="row mb-5 justify-content-center">
           <div class="col-md-7 text-center">
-            <h2 class="section-title mb-2">{{jobs|length}} вакансий</h2>
+            <h2 class="section-title mb-2 " id="count">{{jobs|length}} вакансий</h2>
           </div>
         </div>
 
