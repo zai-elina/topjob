@@ -18,31 +18,32 @@
             </div>
            <form method="POST" class="search-jobs-form" name='search'>
               {% csrf_token %}
-              <div class="row mb-5">
+              <div class="mb-5 row">
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                  {{form.title}}
+                  {{form.profession}}
                 </div>
 
-                {% if form.title.errors %}
-                {% for error in form.title.errors %}
+                {% if form.profession.errors %}
+                {% for error in form.profession.errors %}
                       <div class="alert alert-danger">
                         <strong>{{ error|escape }}</strong>
                       </div>
                   {% endfor %}
                 {% endif %}
 
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
-                  {{form.type}}
+                  <div class="col-12 col-sm-6 col-md-6 col-lg-2 mb-4 mb-lg-0">
+                  {{form.skills}}
                 </div>
-                {% if form.type.errors %}
-                {% for error in form.type.errors %}
+
+                {% if form.skills.errors %}
+                {% for error in form.skills.errors %}
                       <div class="alert alert-danger">
                         <strong>{{ error|escape }}</strong>
                       </div>
                   {% endfor %}
                 {% endif %}
 
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0" style="margin-right: -20px;">
                   {{form.region}}
                 </div>
                 {% if form.region.errors %}
@@ -52,7 +53,18 @@
                       </div>
                   {% endfor %}
                 {% endif %}
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-2 mb-4 mb-lg-0">
+                  {{form.city}}
+                </div>
+                {% if form.city.errors %}
+                {% for error in form.city.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+                <div class="col-12 col-sm-6 col-md-6 col-lg-2 mb-4 mb-lg-0">
                   <button type="submit" class="btn btn-primary btn-lg btn-block text-white btn-search btn-color"><span class="icon-search icon mr-2"></span>Найти</button>
                 </div>
               </div>

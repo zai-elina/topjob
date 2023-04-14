@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .email_func import WelcomeEmail,sendEmail, ForgotPassword
@@ -342,38 +342,7 @@ def delete_in_favorites(request,job_id):
 
     return render(request, "job-detail.html",context)
 
-def searching(search,type,region):
-    jobs = []
-    if len(search.split()) > 1:
-        search_list = search.split()
-        val_list = []
-        for i in search_list:
-            if (type != '' and region != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type,
-                                       region=region)
-            elif (type != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type)
-            elif (region != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search),
-                                       region=region)
-            else:
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search))
-            for j in result:
-                val_list.append(j)
-        [jobs.append(i) for i in val_list if i not in jobs]
-        return jobs
-    else:
-        if (type != '' and region != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
-                                       region=region)
-        elif (type != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
-        elif (region != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
-                                       region=region)
-        else:
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
-        return jobs_list
+
 
 @login_required
 def favorites_job(request):
@@ -393,10 +362,85 @@ def applies_job(request):
 
     return render(request, 'apply-job.html', context)
 
+
+def searching(search,region,city,skills):
+    resume_list = []
+    if len(search.split()) > 1:
+        search_list = search.split()
+        val_list = []
+        for i in search_list:
+            if (region != '' and city !='' and skills!=''):
+                result = Resume.objects.filter(profession__icontains=i, region=region,
+                                       city__icontains=city,skills__icontains=skills)
+            elif (region != '' and city !=''):
+                result = Resume.objects.filter(profession__icontains=i, region=region,city__icontains=city)
+            elif (city !='' and skills!=''):
+                result = Resume.objects.filter(profession__icontains=i, skills__icontains=skills,city__icontains=city)
+            elif (region !='' and skills!=''):
+                result = Resume.objects.filter(profession__icontains=i, region=region,skills__icontains=skills)
+            elif (skills!=''):
+                result = Resume.objects.filter(profession__icontains=i, skills__icontains=skills)
+            elif (region !=''):
+                result = Resume.objects.filter(profession__icontains=i, region=region)
+            elif (city!=''):
+                result = Resume.objects.filter(profession__icontains=i,city__icontains=city)
+            else:
+                result = Resume.objects.filter(profession__icontains=i)
+            for j in result:
+                val_list.append(j)
+        [resume_list.append(i) for i in val_list if i not in resume_list]
+        return resume_list
+    else:
+        if (region != '' and city !='' and skills!=''):
+            resume_list = Resume.objects.filter(profession__icontains=search, region=region,
+                                   city__icontains=city,skills__icontains=skills)
+        elif (region != '' and city !=''):
+            resume_list = Resume.objects.filter(profession__icontains=search, region=region,city__icontains=city)
+        elif (city !='' and skills!=''):
+            resume_list = Resume.objects.filter(profession__icontains=search, skills__icontains=skills,city__icontains=city)
+        elif (region !='' and skills!=''):
+            resume_list = Resume.objects.filter(profession__icontains=search, region=region,skills__icontains=skills)
+        elif (skills!=''):
+            resume_list = Resume.objects.filter(profession__icontains=search, skills__icontains=skills)
+        elif (region !=''):
+            resume_list = Resume.objects.filter(profession__icontains=search, region=region)
+        elif (city!=''):
+            resume_list = Resume.objects.filter(profession__icontains=search,city__icontains=city)
+        else:
+            resume_list = Resume.objects.filter(profession__icontains=search)
+        return resume_list
+
 def resume_list(request):
-    resume = Resume.objects.all().order_by('date_created')
-    context={}
-    context['resume_list'] = resume
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = SearchFormResume(request.POST)
+        if form.is_valid():
+            search = form.cleaned_data.get('profession')
+            region = form.cleaned_data.get('region')
+            city = form.cleaned_data.get('city')
+            skills = form.cleaned_data.get('skills')
+
+            resume_list = searching(search, region, city, skills)
+
+            data = []
+            if len(resume_list) > 0:
+                for item in resume_list:
+                    val = {
+                        'profession':item.profession,
+                        'region':item.region,
+                        'city':item.city,
+                        }
+                    data.append(val)
+            return JsonResponse({'data':data},status=200)
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        resume = Resume.objects.all().order_by('date_created')
+        context = {}
+        context['resume_list'] = resume
+        form = SearchFormResume()
+        context['form'] = form
+
 
     return render(request, 'resume-list.html', context)
 

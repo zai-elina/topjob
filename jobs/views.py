@@ -143,23 +143,6 @@ def category_detail(request, slug):
     form = SearchForm()
     context = {}
 
-    #
-    #
-    # if request.method == 'POST':
-    #     form = SearchForm(request.POST)
-    #     if form.is_valid():
-    #         search = form.cleaned_data.get('title')
-    #         type = form.cleaned_data.get('type')
-    #         region = form.cleaned_data.get('region')
-    #
-    #         context['jobs'] = searching(search,type,region)
-    #         return render(request, 'category-detail.html', context)
-    #     else:
-    #         messages.error(request,'Ошибка запроса')
-    #         context['form'] = form
-    #         return render(request, 'category-detail.html', context)
-
-
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = SearchForm(request.POST)
         if form.is_valid():
