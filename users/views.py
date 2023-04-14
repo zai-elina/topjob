@@ -12,7 +12,6 @@ from django.db.models import Q
 
 from jobs.models import Applicant,Jobs
 
-from jobs.jobforms import SearchForm
 
 from jobs.models import Company
 
@@ -362,32 +361,53 @@ def applies_job(request):
 
     return render(request, 'apply-job.html', context)
 
+def split_search(val_list,search,region,city,skills):
+    if (region != '' and city != '' and skills != ''):
+        result = Resume.objects.filter(profession__icontains=search, region=region,
+                                       city__icontains=city, skills__icontains=skills)
+    elif (region != '' and city != ''):
+        result = Resume.objects.filter(profession__icontains=search, region=region, city__icontains=city)
+    elif (city != '' and skills != ''):
+        result = Resume.objects.filter(profession__icontains=search, skills__icontains=skills, city__icontains=city)
+    elif (region != '' and skills != ''):
+        result = Resume.objects.filter(profession__icontains=search, region=region, skills__icontains=skills)
+    elif (skills != ''):
+        result = Resume.objects.filter(profession__icontains=search, skills__icontains=skills)
+    elif (region != ''):
+        result = Resume.objects.filter(profession__icontains=search, region=region)
+    elif (city != ''):
+        result = Resume.objects.filter(profession__icontains=search, city__icontains=city)
+    else:
+        result = Resume.objects.filter(profession__icontains=search)
+    for j in result:
+        val_list.append(j)
+    return val_list
 
 def searching(search,region,city,skills):
     resume_list = []
-    if len(search.split()) > 1:
+    if len(search.split()) > 1 and len(skills.split()) > 1:
+        search_list = search.split()
+        skills_list =skills.split()
+        val_list = []
+        for i in search_list:
+            for j in skills_list:
+                val_list = split_search(val_list,i,region,city,j)
+
+        [resume_list.append(i) for i in val_list if i not in resume_list]
+        return resume_list
+    elif len(search.split()) > 1:
         search_list = search.split()
         val_list = []
         for i in search_list:
-            if (region != '' and city !='' and skills!=''):
-                result = Resume.objects.filter(profession__icontains=i, region=region,
-                                       city__icontains=city,skills__icontains=skills)
-            elif (region != '' and city !=''):
-                result = Resume.objects.filter(profession__icontains=i, region=region,city__icontains=city)
-            elif (city !='' and skills!=''):
-                result = Resume.objects.filter(profession__icontains=i, skills__icontains=skills,city__icontains=city)
-            elif (region !='' and skills!=''):
-                result = Resume.objects.filter(profession__icontains=i, region=region,skills__icontains=skills)
-            elif (skills!=''):
-                result = Resume.objects.filter(profession__icontains=i, skills__icontains=skills)
-            elif (region !=''):
-                result = Resume.objects.filter(profession__icontains=i, region=region)
-            elif (city!=''):
-                result = Resume.objects.filter(profession__icontains=i,city__icontains=city)
-            else:
-                result = Resume.objects.filter(profession__icontains=i)
-            for j in result:
-                val_list.append(j)
+            val_list = split_search(val_list, i, region, city, skills)
+
+        [resume_list.append(i) for i in val_list if i not in resume_list]
+        return resume_list
+    elif len(skills.split()) > 1:
+        skills_list =skills.split()
+        val_list = []
+        for i in skills_list:
+            val_list = split_search(val_list, search, region, city, i)
         [resume_list.append(i) for i in val_list if i not in resume_list]
         return resume_list
     else:
@@ -426,8 +446,10 @@ def resume_list(request):
                 for item in resume_list:
                     val = {
                         'profession':item.profession,
-                        'region':item.region,
+                        'region':item.suburb,
                         'city':item.city,
+                        'slug': item.slug,
+                        'image':item.user.profile.image.url,
                         }
                     data.append(val)
             return JsonResponse({'data':data},status=200)

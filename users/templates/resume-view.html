@@ -13,12 +13,7 @@
             <h1 class="text-white font-weight-bold">Резюме {{object.user.username}}</h1>
             <div class="custom-breadcrumbs">
                 <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
-                <a href="{% url 'profile' %}">Профиль</a> <span class="mx-2 slash">/</span>
-                {% if request.user.is_authenticated %}
-                  {% if request.user.profile.kind != "Соискатель" %}
-                  <a href="{% url 'published-jobs' %}">Список опубликованных вакансий</a> <span class="mx-2 slash">/</span>
-                  {% endif %}
-                {% endif %}
+                <a href="{% url 'resume-list' %}">Список резюме</a> <span class="mx-2 slash">/</span>
                 <span class="text-white"><strong>Резюме {{object.user.username}}</strong></span>
             </div>
           </div>

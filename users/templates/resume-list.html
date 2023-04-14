@@ -16,7 +16,7 @@
             <div class="mb-5 text-center">
               <h1 class="text-white font-weight-bold">Поиск кандидатов</h1>
             </div>
-           <form method="POST" class="search-jobs-form" name='search'>
+           <form method="POST" class="search-jobs-form" name='search' id="search">
               {% csrf_token %}
               <div class="mb-5 row">
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
@@ -43,7 +43,7 @@
                   {% endfor %}
                 {% endif %}
 
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0" style="margin-right: -20px;">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0" style="margin-right: -15px;">
                   {{form.region}}
                 </div>
                 {% if form.region.errors %}
@@ -69,21 +69,72 @@
                 </div>
               </div>
             </form>
+
+              <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				  <script>
+					  $(document).ready(function () {
+						  // отслеживаем событие отправки формы
+						  $('#search').submit(function () {
+							  // создаем AJAX-вызов
+							  $.ajax({
+								  data: $(this).serialize(), // получаем данные формы
+								  type: $(this).attr('method'), // GET или POST
+								  url: "{% url 'resume-list' %}",
+								  // если успешно, то
+								  success: function (response) {
+									  console.log(response.data);
+                                      let data = response.data;
+                                       $("#count").text(`${data.length} резюме`);
+                                       $(".job-listings").empty();
+                                      data.forEach((resume) => {
+                                          $(".job-listings").append(`<li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+                                        <a href="${resume.slug}"></a>
+                                        <div class="job-listing-logo">
+                                          <img src="${resume.image}" alt="${resume.profession}" class="img-fluid">
+                                        </div>
+
+                                        <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+                                          <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                                            <h2>${resume.profession}</h2>
+                                          </div>
+                                          ${ resume.region?
+                                          `<div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                                            <span class="icon-room"></span> ${resume.region}
+                                          </div>`:''}
+                                          ${ resume.city?
+                                          `<div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                                            <span class="icon-location_city"></span> ${resume.city}
+                                          </div>`:''}
+                                        </div>
+
+                                      </li>`);
+                                      })
+
+								  },
+								  // если ошибка, то
+								  error: function (response) {
+									  // предупредим об ошибке
+									  alert("Ошибка ввода данных");
+									  console.log(response.responseJSON.errors)
+								  }
+							  });
+							  return false;
+						  });
+					  })
+				  </script>
           </div>
         </div>
       </div>
 
-      <a href="#next" class="scroll-button smoothscroll">
-        <span class=" icon-keyboard_arrow_down"></span>
-      </a>
+
     </section>
 
 <section class="site-section" id="next">
       <div class="container" id="block">
 
-        <div class="row mb-5 justify-content-center">
-          <div class="col-md-7 text-center">
-            <h2 class="section-title mb-2">{{resume_list|length}} резюме</h2>
+        <div class="row mb-5">
+          <div class="col-md-7">
+            <h2 class="section-title mb-2" id="count">{{resume_list|length}} резюме</h2>
           </div>
         </div>
 
