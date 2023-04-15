@@ -65,7 +65,8 @@
                   {% endif %}
                 </ul>
               </li>
-              <li><a href="{% url 'resume-list' %}">Резюме</a></li>
+
+
               {% if request.user.is_authenticated %}
                   {% if request.user.profile.kind == "Соискатель" %}
               <li class="has-children">
@@ -79,7 +80,11 @@
                   {% endif %}
                 </ul>
               </li>
-                {% endif %}
+                {% else %}
+                <li><a href="{% url 'resume-list' %}">Резюме</a></li>
+              {% endif %}
+              {% else %}
+                <li><a href="{% url 'resume-list' %}">Резюме</a></li>
               {% endif %}
 
               {% if request.user.is_authenticated %}

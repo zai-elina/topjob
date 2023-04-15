@@ -10,6 +10,8 @@ from django.apps import apps
 
 from users.models import Favorite
 
+from chat.models import Thread
+
 Resume = apps.get_model('users', 'Resume')
 Education = apps.get_model('users', 'Education')
 Experience = apps.get_model('users', 'Experience')
@@ -131,11 +133,13 @@ def job_list(request):
     return render(request, 'jobs.html', context)
 
 def job_detail(request, slug):
+    form = CoverLetterForm()
     job = Jobs.objects.get(slug=slug)
     context ={}
     context['applicants'] = len(Applicant.objects.filter(job=job))
     context['favorite'] = len(Favorite.objects.filter(job=job))
     context['job'] = job
+    context['form'] = form
 
     return render(request, 'job-detail.html', context)
 
@@ -294,20 +298,7 @@ def published_jobs(request):
     return render(request, 'published-jobs.html', context)
 
 
-@login_required
-def add_respond(request,slug):
-    context={}
-    user = request.user
-    job= Jobs.objects.get(slug=slug)
-    context['job'] = job
 
-    Applicant.objects.create(user=user,job=job)
-    messages.success(request, 'Вы откликнулись')
-    context['applicants'] = len(Applicant.objects.filter(job=job))
-    context['favorite'] = len(Favorite.objects.filter(job=job))
-
-
-    return render(request, "job-detail.html",context )
 
 @login_required
 def get_applicants(request,slug):
@@ -325,6 +316,7 @@ def get_applicants(request,slug):
 def delete_job(request,slug):
     job = Jobs.objects.get(slug=slug)
     job.delete()
+    messages.success(request, 'Вакансия удалена')
     return  redirect('published-jobs')
 
 @login_required
@@ -332,7 +324,6 @@ def job_filled(request,slug):
     job = Jobs.objects.get(slug=slug)
     job.filled = not job.filled
     job.save()
-
     return redirect('published-jobs')
 
 
@@ -352,4 +343,38 @@ def resume_view(request,slug_resume):
 @login_required
 def delete_apply(request,slug,apply_id,):
     Applicant.objects.filter(id=apply_id).delete()
+    messages.success(request, 'Соискатель удален')
     return redirect('get-applicants',slug)
+
+
+@login_required
+def send_cover_letter(request,slug):
+    context = {}
+    user = request.user
+    job = Jobs.objects.get(slug=slug)
+    context['job'] = job
+    context['applicants'] = len(Applicant.objects.filter(job=job))
+    context['favorite'] = len(Favorite.objects.filter(job=job))
+
+    if request.method == 'POST':
+        form = CoverLetterForm(request.POST)
+        if form.is_valid():
+            Applicant.objects.create(user=user, job=job)
+
+            first_user = User.objects.get(id=user.id)
+            second_user = User.objects.get(id=job.company.user.id)
+            thread = Thread.objects.create(first_person=first_user, second_person=second_user)
+
+            obj = form.save(commit=False)
+            obj.thread = thread
+            obj.user = user
+            obj.save()
+
+            messages.success(request, 'Вы откликнулись')
+            return redirect('chat')
+        else:
+            messages.error(request, 'Ошибка заполнения')
+            context = {'form': form}
+            return render(request, "job-detail.html", context)
+
+    return render(request, "job-detail.html", context)

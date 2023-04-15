@@ -97,6 +97,15 @@
             </div>
             {% endif %}
 
+            {% if object.soft_skills %}
+            <div class="col-lg-8">
+            <div class="mb-5">
+              <h3 class="h5 d-flex align-items-center mb-4 " style="color: #DEB887;"><span class="icon-stars mr-3" ></span>Личностные качества</h3>
+              <p>{{object.soft_skills|linebreaks}}</p>
+            </div>
+            </div>
+            {% endif %}
+
         </div>
 
         <div class="mb-5">

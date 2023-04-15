@@ -1,6 +1,9 @@
 from django import forms
 from .models import *
 
+from django.apps import apps
+ChatMessage = apps.get_model('chat', 'ChatMessage')
+
 class DateInput(forms.DateInput):
     input_type = 'date'
 
@@ -220,3 +223,10 @@ class ApplyJobForm(forms.ModelForm):
     class Meta:
         model = Applicant
         fields = ('job',)
+
+
+class CoverLetterForm(forms.ModelForm):
+    message = forms.CharField(required=True,widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Сообщение'}))
+    class Meta:
+        model = ChatMessage
+        fields = ['message',]

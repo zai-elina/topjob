@@ -16,5 +16,6 @@ urlpatterns = [
     path('resume-list/<slug:slug_resume>',views.resume_view,name='resume-view'),
     path('published-jobs/<slug:slug>/applicants/delete-applicant/<int:apply_id>',views.delete_apply,name='delete-apply'),
     path('published-jobs/<slug:slug>/job-filled',views.job_filled,name='job-filled'),
-    path('jobs/respond/<slug:slug>/',views.add_respond, name='respond'),
+    # path('jobs/respond/<slug:slug>/',views.add_respond, name='respond'),
+    path('jobs/<slug:slug>/apply',views.send_cover_letter, name='send-cover-letter'),
 ]

@@ -186,7 +186,7 @@
 
                             <div class="col-md-6">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Город:<span class="text-danger">*</span>:</label>
+                                    <label class="text-muted">Город:</label>
                                     {{form.city}}
                                 </div>
                                 {% if form.city.errors %}
@@ -200,7 +200,7 @@
 
                             <div class="col-md-6">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Номер телефона:<span class="text-danger">*</span>:</label>
+                                    <label class="text-muted">Номер телефона:</label>
                                     {{form.phoneNumber}}
                                 </div>
                                 {% if form.phoneNumber.errors %}
@@ -215,7 +215,7 @@
 
                             <div class="col-md-6">
                                 <div class="from-group app-label">
-                                    <label class="text-muted">Развернутая профессиональная биография:<span class="text-danger">*</span>:</label>
+                                    <label class="text-muted">Развернутая профессиональная биография:</label>
                                     {{form.cv}}
                                 </div>
                                 {% if form.cv.errors %}
@@ -245,6 +245,19 @@
                 {% endif %}
             </div>
 
+            <div class="col-md-6">
+                <div class="from-group app-label">
+                    <label class="text-muted">Личностные качества:</label>
+                    {{form.soft_skills}}
+                </div>
+                {% if form.soft_skills.errors %}
+                  {% for error in form.soft_skills.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
 
             <div class="row">
                 <div class="col-12 m-4">

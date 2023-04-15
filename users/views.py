@@ -228,18 +228,23 @@ def resume_detail(request,slug):
 def resume_delete(request,slug):
     obj = Resume.objects.filter(slug=slug)
     obj.delete()
+    messages.success(request, 'Резюме удалено')
     return redirect('profile')
 
 @login_required
 def delete_exp(request,slug,pk):
     exp = Experience.objects.filter(pk=pk)
     exp.delete()
+    messages.success(request, 'Опыт удален')
     return redirect('resume-detail',slug=slug)
+
 @login_required
 def delete_ed(request,slug,pk):
     ed = Education.objects.filter(pk=pk)
     ed.delete()
+    messages.success(request, 'Образование удалено')
     return redirect('resume-detail',slug=slug)
+
 @login_required
 def edit_education(request,slug,pk):
     ed = Education.objects.get(pk=pk)
@@ -260,6 +265,7 @@ def edit_education(request,slug,pk):
         return render(request,'edit-education.html',context)
 
     return render(request,'edit-education.html',{})
+
 @login_required
 def edit_exp(request,slug,pk):
     ex = Experience.objects.get(pk=pk)
@@ -327,6 +333,8 @@ def add_to_favorites(request,job_id):
     context['applicants'] = len(Applicant.objects.filter(job=job))
     context['favorite'] = len(Favorite.objects.filter(job=job))
 
+    messages.success(request, 'Вакансия сохранена')
+
     return render(request, "job-detail.html",context)
 
 @login_required
@@ -338,6 +346,8 @@ def delete_in_favorites(request,job_id):
     context['job'] = job
     context['applicants'] = len(Applicant.objects.filter(job=job))
     context['favorite'] = len(Favorite.objects.filter(job=job))
+
+    messages.success(request, 'Вакансия удалена из сохраненных')
 
     return render(request, "job-detail.html",context)
 
@@ -360,6 +370,7 @@ def applies_job(request):
         context['applies'] = appl
 
     return render(request, 'apply-job.html', context)
+
 
 def split_search(val_list,search,region,city,skills):
     if (region != '' and city != '' and skills != ''):

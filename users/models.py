@@ -144,8 +144,8 @@ class Resume(models.Model):
 
 
     user = models.OneToOneField(User, on_delete = models.CASCADE)
-    profession = models.CharField(null=True, max_length=100,blank=True)
-    uniqueId = models.CharField(null=True, max_length=100,blank=True)
+    profession = models.CharField(max_length=100)
+    uniqueId = models.CharField(max_length=100)
     email_confirmed = models.BooleanField(default=False)
     date_birth  = models.DateField(blank=True,null=True)
     sex = models.CharField(choices=SEX_CHOICES, default=OTHER,max_length=100)
@@ -159,7 +159,8 @@ class Resume(models.Model):
     date_created = models.DateTimeField(default=timezone.now)
     last_updated = models.DateTimeField(blank=True,null=True)
     cv = models.FileField(upload_to='resumes',null=True,blank=True)
-    skills = models.TextField()
+    skills = models.TextField(null=True,blank=True)
+    soft_skills = models.TextField(null=True,blank=True)
 
     def __str__(self):
         return '{} {} {}'.format(self.user.first_name,self.user.last_name, self.uniqueId)

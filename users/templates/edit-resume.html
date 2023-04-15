@@ -111,6 +111,20 @@
                                 {% endif %}
                             </div>
 
+                            <div class="col-md-6">
+                            <div class="from-group app-label">
+                                <label class="text-muted">Личностные качества:</label>
+                                {{form.soft_skills}}
+                            </div>
+                            {% if form.soft_skills.errors %}
+                              {% for error in form.soft_skills.errors %}
+                                  <div class="alert alert-danger">
+                                    <strong>{{ error|escape }}</strong>
+                                  </div>
+                              {% endfor %}
+                            {% endif %}
+                            </div>
+
                         </div>
                     </div>
                 </div>

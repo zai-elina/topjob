@@ -168,17 +168,18 @@ class ResumeForm(forms.ModelForm):
     addressLine2 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите адрес прописки:'}))
     suburb = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class':'selectpicker bg-white p-2 rounded','title':'Регион','id':'selectorreg'}))
     city = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите город:'}))
-    phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
+    phoneNumber =forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     skills = forms.CharField(required=True,
-                             widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши навыки'}))
-
+                             widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши профессиональные навыки'}))
+    soft_skills = forms.CharField(required=True,
+                             widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши сильные стороны'}))
 
     class Meta:
         model = Resume
         fields=[
             'profession','date_birth','sex','material_status','addressLine1',
-            'addressLine2','suburb','city','phoneNumber','cv','skills'
+            'addressLine2','suburb','city','phoneNumber','cv','skills','soft_skills'
         ]
 
 class ResumeEditForm(forms.ModelForm):
@@ -274,17 +275,19 @@ class ResumeEditForm(forms.ModelForm):
     addressLine2 = forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите адрес прописки:'}))
     suburb = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class':'selectpicker bg-white p-2 rounded','title':'Регион','id':'selectorreg'}))
     city = forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите город:'}))
-    phoneNumber =forms.CharField(required=True, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
+    phoneNumber =forms.CharField(required=False, widget=forms.TextInput(attrs={'class':'form-control resume','placeholder':'Введите номер телефона:'}))
     cv = forms.FileField(required=False,widget=forms.FileInput(attrs={'class':'form-control'}))
     skills = forms.CharField(required=True,
                              widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Ваши навыки'}))
-
+    soft_skills = forms.CharField(required=True,
+                                  widget=forms.Textarea(
+                                      attrs={'class': 'form-control', 'placeholder': 'Ваши сильные стороны'}))
 
     class Meta:
         model = Resume
         fields=[
             'profession','sex','material_status','addressLine1',
-            'addressLine2','suburb','city','phoneNumber','cv', 'skills'
+            'addressLine2','suburb','city','phoneNumber','cv', 'skills','soft_skills'
         ]
 
 class EducationForm(forms.ModelForm):
