@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'chat.apps.ChatConfig',
     'channels',
+    'planning.apps.PlanningConfig',
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,108 @@
+{% extends 'layout1.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Запланировать собеседование</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="{% static 'app/css/interview.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Запланировать собеседование</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Список задач</strong></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+<section class="m-4" id="next-section">
+      <div class="container">
+          <h2 style="margin-bottom:20px">У вас <i>{{count}}</i> запланированных собеседования</h2>
+
+        <form method="GET" class="search-jobs-form mb-4" id="search">
+            <div class="row">
+            <input type="text" name="search-area" class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0" value="{{search_input}}">
+             <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <input type="submit" value="Найти" class="btn btn-primary btn-lg btn-block text-white btn-search btn-color">
+             </div>
+            </div>
+        </form>
+          {% if interviews|length > 0 %}
+            <a id="add-link" href="{% url 'interview-create' %}">Добавить&#x2b;</a>
+         {% endif %}
+          <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+
+
+<!--<div id="search-add-wrapper">-->
+<!--    <form method="GET" style="display: flex;">-->
+<!--        <input type='text' name='search-area' placeholder="Search your task" value="{{search_input}}">-->
+<!--        <input class="button" type="submit" value='Search'>-->
+<!--    </form>-->
+
+<!--</div>-->
+
+
+<div id="tasklist" class="task-items-wrapper mt-4">
+    {% for interview in interviews %}
+    <div class="task-wrapper" data-position="{{task.pk}}">
+        <div class="task-title">
+            {% if interview.complete %}
+            <div class="task-complete-icon"></div>
+            <i><s><a href="{% url 'interview-edit' interview.id %}">{{interview}}</a></s></i>
+            {% else %}
+            <div class="task-incomplete-icon"></div>
+            <a href="{% url 'interview-edit' interview.id %}">{{interview}}</a> {% endif %}
+        </div>
+        <div class="task-controls">
+            <a class="delete-link" href="{% url 'interview-delete' interview.id %}">&#215;</a>
+            <span class="handle">&nbsp;&#10247;</span>
+        </div>
+    </div>
+
+    {% empty %}
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
+        <h3>No new tasks are created.</h3>
+        <h3>Create a <a style="text-decoration: none; color: #e53935;" href="{% url 'interview-create' %}">New task</a> ! </h3>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    var taskList = document.getElementById("tasklist");
+    var reorderForm = document.getElementById("reorderForm");
+    var positionInput = document.getElementById("positionInput");
+
+    let sortable = Sortable.create(taskList, {
+        handle: '.handle',
+        ghostClass: 'dropArea',
+        chosenClass: 'selectedTask',
+
+    });
+
+    function reordering() {
+        const rows = document.getElementsByClassName("task-wrapper");
+        let pos = [];
+        for (let row of rows) {
+            pos.push(row.dataset.position);
+        }
+        console.log(pos.join(","))
+        positionInput.value = pos.join(',');
+        reorderForm.submit();
+    }
+
+    document.ondrop = reordering
+</script>
+
+      </div>
+</section>
+
+{% endblock %}

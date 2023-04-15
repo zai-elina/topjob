@@ -1,0 +1,94 @@
+{% extends 'layout1.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Изменить</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="{% static 'app/css/interview.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Изменить</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Список задач</strong></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+<section>
+    <div class="container">
+        <a href="{% url 'interview-planning' %}">&#8592; Назад</a>
+    <div class="card-body">
+
+<div class="card-body">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="col">
+                <div class="from-group app-label">
+                    <label class="text-muted">Название:</label>
+                    {{form.title}}
+                </div>
+                {% if form.title.errors %}
+                  {% for error in form.title.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
+        <div class="col">
+                <div class="from-group app-label">
+                    <label class="text-muted">Описание:</label>
+                    <div class="">{{form.description}}</div>
+                </div>
+                {% if form.description.errors %}
+                  {% for error in form.description.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
+        <div class="col">
+                <div class="from-group app-label">
+                    <label class="text-muted">Выполнена:</label>
+                    {{form.complete}}
+                </div>
+                {% if form.complete.errors %}
+                  {% for error in form.complete.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
+        <div class="col">
+                <div class="from-group app-label">
+                    <label class="text-muted">Дата собеседования:</label>
+                    {{form.task_date}}
+                </div>
+                {% if form.task_date.errors %}
+                  {% for error in form.task_date.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+            </div>
+        <button type="submit" class="submitBtn btn btn-primary btn-color m-4">Cохранить</button>
+    </form>
+</div>
+    </div>
+    </div>
+</section>
+
+
+{% endblock %}

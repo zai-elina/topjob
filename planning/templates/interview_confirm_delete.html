@@ -1,0 +1,40 @@
+{% extends 'layout1.html' %}
+{% load static %}
+
+{% block meta %}
+    <title>Удалить</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <link rel="stylesheet" href="{% static 'app/css/interview.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Удалить</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Список задач</strong></span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+<section>
+    <div class="container">
+        <a href="{% url 'interview-planning' %}">&#8592; Назад</a>
+    <div class="card-body">
+    <form method="POST">
+        {% csrf_token %}
+        <p>Вы действительно хотите удалить? <b>"{{interview}}"</b> </p>
+        <input class="button" type="submit" value="Удалить" class="submitBtn btn btn-danger btn-color"/>
+    </form>
+    </div>
+    </div>
+</section>
+
+
+{% endblock %}
