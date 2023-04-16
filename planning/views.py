@@ -1,12 +1,16 @@
-from django.shortcuts import render
+from django.db import transaction
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+
+from .forms import *
 from .models import *
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 class InterviewPlanning(LoginRequiredMixin,ListView):
     model = Interview
@@ -33,9 +37,10 @@ class InterviewDetail(LoginRequiredMixin,DetailView):
 
 
 class InterviewCreate(LoginRequiredMixin,CreateView):
+    form_class = InterviewForm
     model = Interview
-    fields = ['title', 'description', 'complete','task_date']
     success_url = reverse_lazy('interview-planning')
+    template_name = 'interview_form.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -43,8 +48,8 @@ class InterviewCreate(LoginRequiredMixin,CreateView):
 
 
 class InterviewEdit(LoginRequiredMixin,UpdateView):
+    form_class = InterviewForm
     model = Interview
-    fields = ['title', 'description', 'complete','task_date']
     success_url = reverse_lazy('interview-planning')
     template_name = 'interview_form.html'
 
@@ -60,14 +65,3 @@ class InterviewDelete(LoginRequiredMixin,DeleteView):
         return self.model.objects.filter(user=owner)
 
 
-# class InterviewReorder(View):
-#     def post(self, request):
-#         form = PositionForm(request.POST)
-#
-#         if form.is_valid():
-#             positionList = form.cleaned_data["position"].split(',')
-#
-#             with transaction.atomic():
-#                 self.request.user.set_task_order(positionList)
-#
-#         return redirect(reverse_lazy('tasks'))

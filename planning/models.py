@@ -13,6 +13,6 @@ class Interview(models.Model):
         return self.title
 
     class Meta:
-        ordering =['complete']
+        ordering =['task_date']
         verbose_name = "Задача"
         verbose_name_plural = "Задачи"
