@@ -7,4 +7,5 @@ urlpatterns = [
     path('interview-planning/interview-create', InterviewCreate.as_view(), name='interview-create'),
     path('interview-planning/interview-delete/<int:pk>', InterviewDelete.as_view(), name='interview-delete'),
     path('interview-planning/interview-edit/<int:pk>', InterviewEdit.as_view(), name='interview-edit'),
+    path('interview-planning/interview-complete/<int:pk>', interview_complete, name='interview-complete'),
 ]

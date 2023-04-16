@@ -47,11 +47,13 @@
     <div class="task-wrapper" data-position="{{task.pk}}">
         <div class="task-title">
             {% if interview.complete %}
-            <div class="task-complete-icon"></div>
-            <i><s><a href="{% url 'interview-edit' interview.id %}">{{interview}} | {{interview.task_date}}</a></s></i>
+            <a href="{% url 'interview-complete' interview.pk %}" type="submit" class="complete-item task-complete-icon"></a>
+            <a href="{% url 'interview-edit' interview.id %}"><span class="strike">{{interview}} {% if interview.task_date %}| {{interview.task_date}}{% endif %}</span></a>
             {% else %}
-            <div class="task-incomplete-icon"></div>
-            <a href="{% url 'interview-edit' interview.id %}">{{interview}} | {{interview.task_date}}</a> {% endif %}
+            <a href="{% url 'interview-complete' interview.pk %}" class="complete-item task-incomplete-icon"></a>
+            <a href="{% url 'interview-edit' interview.id %}">{{interview}} {% if interview.task_date %}| {{interview.task_date}}{% endif %}</a>
+
+            {% endif %}
         </div>
         <div class="task-controls">
             <div class="m-3"><a class="delete-link" href="{% url 'interview-delete' interview.id %}">&#215;</a></div>
