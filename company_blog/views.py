@@ -27,7 +27,7 @@ class PostDetail(View):
         context={}
         company = Company.objects.get(slug=slug_company)
         post = Post.objects.get(slug=slug_post)
-        comments = Comments.objects.filter(post=post)
+        comments = Comment.objects.filter(post=post,parent=None)
         context['comments'] = comments
         context['company'] = company
         context['post']=post
@@ -102,12 +102,54 @@ def add_comment(request,slug_company,slug_post):
             obj = form.save(commit=False)
             obj.user = request.user
             obj.post = post
+            parent_obj = None
+            try:
+                parent_id = int(request.POST.get('parent_id'))
+            except:
+                parent_id = None
+
+            if parent_id:
+                parent_qs = Comment.objects.filter(id=parent_id)
+                if parent_qs.exists() and parent_qs.count() == 1:
+                    parent_obj = parent_qs.first()
+
+            obj.parent = parent_obj
             obj.save()
             name = request.user.first_name
             return JsonResponse({'name':name},status=200)
         else:
             errors = form.errors.as_json()
             return JsonResponse({'errors': errors}, status=400)
+
+
+    return redirect('company-blog-detail',slug_company,slug_post)
+
+
+@login_required
+def add_reply_comment(request,slug_company,slug_post):
+    post = Post.objects.get(slug=slug_post)
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.post = post
+            parent_obj = None
+            try:
+                parent_id = int(request.POST.get('parent_id'))
+            except:
+                parent_id = None
+
+            if parent_id:
+                parent_qs = Comment.objects.filter(id=parent_id)
+                if parent_qs.exists() and parent_qs.count() == 1:
+                    parent_obj = parent_qs.first()
+
+            obj.parent = parent_obj
+            obj.save()
+            return redirect('company-blog-detail',slug_company,slug_post)
+        else:
+            return redirect('company-blog-detail',slug_company,slug_post)
 
 
     return redirect('company-blog-detail',slug_company,slug_post)

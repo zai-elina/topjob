@@ -73,37 +73,12 @@
                         <input type="submit" value="Оставить комментарий" class="btn btn-primary btn-md btn-color">
                       </div>
                     </form>
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-				  <script>
-					  $(document).ready(function () {
-						  // отслеживаем событие отправки формы
-						  $('#comment').submit(function () {
-							  // создаем AJAX-вызов
-							  $.ajax({
-								  data: $(this).serialize(), // получаем данные формы
-								  type: $(this).attr('method'), // GET или POST
-								  url: "{% url 'add-comment' company.slug post.slug %}",
-								  // если успешно, то
-								  success: function (response) {
-									  $ ('#comment')[0].reset ();
-									  $("#block").load("{% url 'add-comment' company.slug post.slug %} #block");
-								  },
-								  // если ошибка, то
-								  error: function (response) {
-									  // предупредим об ошибке
-									  alert("Ошибка ввода данных");
-									  console.log(response.responseJSON.errors)
-								  }
-							  });
-							  return false;
-						  });
-					  })
-				  </script>
+
             {% endif %}
           {% endif %}
-              <div class="pt-5">
+              <div class="pt-5" id="block">
               <h3 class="mb-5">{{comments.count}} комментариев</h3>
-              <ul class="comment-list" id="block">
+              <ul class="comment-list" >
                 {% for comment in comments %}
                 <li class="comment">
                   <div class="vcard bio">
@@ -113,7 +88,34 @@
                     <h3>{{comment.user.first_name}} {{comment.user.last_name}}</h3>
                     <div class="meta">{{comment.date}}</div>
                     <p>{{comment.text_comments}}</p>
-                    <p><a href="#" class="reply">Ответить</a></p>
+
+                      <ul class="children" id="block1">
+                      {% for child_comment in comment.children %}
+                          <li class="comment">
+                            <div class="vcard bio">
+                              <img src="{{child_comment.user.profile.image.url}}" alt="Image placeholder">
+                            </div>
+                            <div class="comment-body">
+                              <h3>{{child_comment.user.first_name}} {{child_comment.user.last_name}}</h3>
+                              <div class="meta">{{child_comment.date}}</div>
+                              <p>{{child_comment.text_comments}}</p>
+                            </div>
+                          </li>
+
+                        {% endfor %}
+                          </ul>
+
+                      <form method="POST" class="" action="{% url 'add-reply-comment' company.slug post.slug %}" id="comment-reply">
+                        {% csrf_token %}
+                      <div class="form-group">
+                        <label>{{form.text_comments}}</label>
+                      </div>
+                      <div class="form-group">
+                          <input type="hidden" name="parent_id" value="{{comment.id}}">
+                          <input type="submit" value="Ответить" class="reply">
+                      </div>
+                    </form>
+
                   </div>
                 </li>
 
@@ -122,10 +124,45 @@
               </ul>
 
           </div>
-        </div>
       </div>
+              </div>
+          </div>
 </section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+            var scrollpos = localStorage.getItem('scrollpos');
+            if (scrollpos) window.scrollTo(0, scrollpos);
+        });
 
+        window.onbeforeunload = function(e) {
+            localStorage.setItem('scrollpos', window.scrollY);
+        };
+    $(document).ready(function () {
+      // отслеживаем событие отправки формы
+      $('#comment').submit(function () {
+          // создаем AJAX-вызов
+          $.ajax({
+              data: $(this).serialize(), // получаем данные формы
+              type: $(this).attr('method'), // GET или POST
+              url: "{% url 'add-comment' company.slug post.slug %}",
+              // если успешно, то
+              success: function (response) {
+                  $ ('#comment')[0].reset();
+                  $("#block").load("{% url 'add-comment' company.slug post.slug %} #block");
+              },
+              // если ошибка, то
+              error: function (response) {
+                  // предупредим об ошибке
+                  alert("Ошибка ввода данных");
+                  console.log(response.responseJSON.errors)
+              }
+          });
+          return false;
+      });
+  })
+
+</script>
 
 {% endblock %}

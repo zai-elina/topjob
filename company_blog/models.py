@@ -34,17 +34,29 @@ class Post(models.Model):
         verbose_name_plural = 'Записи'
 
 
-class Comments(models.Model):
+class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     text_comments = models.TextField('Текст комментария', max_length=2000)
     post = models.ForeignKey(Post, verbose_name='Публикация', on_delete=models.CASCADE)
     date = models.DateTimeField(default=timezone.now)
+    parent = models.ForeignKey("self",null=True,blank=True,on_delete=models.CASCADE)
 
 
     def __str__(self):
         return f'{self.user.username}, {self.post}'
 
+
+    def children(self):
+        return Comment.objects.filter(parent=self)
+
+    @property
+    def is_parent(self):
+        if self.parent is not None:
+            return False
+        return True
+
     class Meta:
+        ordering = ['-date']
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
 
