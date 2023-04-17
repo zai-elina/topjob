@@ -1,0 +1,49 @@
+{% extends 'layout1.html' %}
+{% block meta %}
+    <title>Блоги</title>
+    <meta name="description" content="" />
+{% endblock %}
+
+{% block content %}
+{% load static %}
+{% load is_already_applied %}
+ <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Компании</h1>
+            <div class="custom-breadcrumbs">
+                <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+                <span class="text-white"><strong>Все компании</strong></span>
+            </div>
+          </div>
+        </div>
+      </div>
+ </section>
+
+    <section>
+        <div class="container">
+            <div class="row">
+                {% for company in company_list %}
+                <div class="col-md-4">
+
+                  <div class="card p-3 py-4 mt-3 mb-5">
+
+                      <div class="text-center">
+                        <a href="{% url 'company-blog-list' company.slug %}"><img src="{{company.companyLogo.url}}" alt="{{company.title}}" class="img-fluid rounded mb-4" style="width: 200px"></a>
+                      </div>
+
+                      <div class="text-center mt-3">
+                          <a href="{% url 'company-blog-list' company.slug %}" class="mt-2 mb-0">{{company.title}}</a>
+                          <div><span>Постов {{company.post_set.count}}</span></div>
+                      </div>
+                      </div>
+
+                 </div>
+
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

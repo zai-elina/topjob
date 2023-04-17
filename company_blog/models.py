@@ -28,8 +28,21 @@ class Post(models.Model):
 
         super(Post,self).save(*args,**kwargs)
 
+
     class Meta:
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
 
+
+class Comments(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    text_comments = models.TextField('Текст комментария', max_length=2000)
+    post = models.ForeignKey(Post, verbose_name='Публикация', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.user.username}, {self.post}'
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 

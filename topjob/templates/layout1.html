@@ -83,11 +83,12 @@
                 {% else %}
                 <li><a href="{% url 'resume-list' %}">Резюме</a></li>
               {% if request.user.company.slug %}
-              <li><a href="{% url 'company-blog-list' request.user.company.slug %}">Блог</a></li>
+              <li><a href="{% url 'company-blog-list' request.user.company.slug %}">Мой блог</a></li>
               {% endif %}
               {% endif %}
               {% else %}
-                <li><a href="{% url 'resume-list' %}">Резюме</a></li>
+              <li><a href="{% url 'company-blogs' %}">Все блоги</a></li>
+              <li><a href="{% url 'resume-list' %}">Резюме</a></li>
               {% endif %}
 
               {% if request.user.is_authenticated %}
