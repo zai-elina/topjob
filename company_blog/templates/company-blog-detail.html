@@ -11,17 +11,36 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
+              <div class="custom-breadcrumbs">
+                <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+                <a href="{% url 'company-blog-list' company.slug %}">Все посты</a>
+            </div>
             <div class="custom-breadcrumbs mb-0">
               <span class="slash">Опубликовано</span> {{company.title}}</a>
               <span class="mx-2 slash">&bullet;</span>
               <span class="text-white"><strong>{{post.date}}</strong></span>
             </div>
+
             <h1 class="text-white">{{post.title}}</h1>
           </div>
         </div>
       </div>
  </section>
+{% if messages %}
+  {% for message in messages %}
 
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
 
 <section class="site-section">
       <div class="container">

@@ -4,6 +4,8 @@ from .views import *
 urlpatterns = [
     path('company-blog/<slug:slug>/', PostView.as_view() , name='company-blog-list'),
     path('company-blog/<slug:slug_company>/<slug:slug_post>', PostDetail.as_view() , name='company-blog-detail'),
+    path('company-blog/<slug:slug_company>/<slug:slug>/post-delete', post_delete , name='post-delete'),
+    path('company-blog/<slug:slug_company>/<slug:slug>/post-edit', post_edit, name='post-edit'),
     path('company-blogs/', company_blogs, name='company-blogs'),
     path('company-blogs/create-post', create_post, name='create-post'),
 ]

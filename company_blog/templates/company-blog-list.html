@@ -21,6 +21,21 @@
         </div>
       </div>
  </section>
+{% if messages %}
+  {% for message in messages %}
+
+  {% if message.tags == 'error' %}
+  <div class="alert alert-danger">
+    {{message}}
+  </div>
+  {% else %}
+  <div class="alert alert-{{message.tags}}">
+    {{message}}
+  </div>
+  {% endif %}
+
+{% endfor %}
+{% endif %}
 
 <section class="site-section">
       <div class="container">
@@ -53,7 +68,17 @@
           <div class="col-md-6 col-lg-4 mb-5">
             <a href="{% url 'company-blog-detail' company.slug post.slug %}"><img src="{{post.image.url}}" alt="{{post.title}}" class="img-fluid rounded mb-4"></a>
             <h3><a href="{% url 'company-blog-detail' company.slug post.slug %}" class="text-black">{{post.title}}</a></h3>
-            <div>{{post.date}} <span class="mx-2">|</span> <a href="#">2 Comments</a></div>
+            <div>{{post.date}} <span class="mx-2">|</span>
+<!--             <a href="#">2 Comments</a>-->
+            </div>
+              {% if request.user.is_authenticated %}
+                  {% if request.user.profile.kind != "Соискатель" %}
+              <div class="mt-2 text-center">
+                  <a href="{% url 'post-delete' company.slug post.slug %}" class="btn-danger p-1 rounded">Удалить пост</a>
+                <a href="{% url 'post-edit' company.slug post.slug %}" class="btn-light p-1 rounded">Редактировать</a>
+              </div>
+                {% endif %}
+          {% endif %}
           </div>
           {% endfor %}
         </div>
