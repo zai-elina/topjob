@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.base import View
@@ -26,8 +27,11 @@ class PostDetail(View):
         context={}
         company = Company.objects.get(slug=slug_company)
         post = Post.objects.get(slug=slug_post)
+        comments = Comments.objects.filter(post=post)
+        context['comments'] = comments
         context['company'] = company
         context['post']=post
+        context['form'] = CommentForm()
 
         return render(request, 'company-blog-detail.html', context)
 
@@ -88,3 +92,22 @@ def post_edit(request,slug_company,slug):
         return render(request, 'post_form.html', context)
 
     return render(request, 'post_form.html', {})
+
+@login_required
+def add_comment(request,slug_company,slug_post):
+    post = Post.objects.get(slug=slug_post)
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.post = post
+            obj.save()
+            name = request.user.first_name
+            return JsonResponse({'name':name},status=200)
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+
+
+    return redirect('company-blog-detail',slug_company,slug_post)

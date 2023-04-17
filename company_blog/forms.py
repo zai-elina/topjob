@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.admin import widgets
-from .models import Post
+from .models import Post,Comments
 
 class PostForm(forms.ModelForm):
     title = forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control form-control-lg','placeholder':'Заголовок'}))
@@ -10,3 +10,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'description', 'image']
+
+
+class CommentForm(forms.ModelForm):
+    text_comments = forms.CharField(required=True, widget=forms.Textarea(attrs={'class':'form-control','placeholder':'Комментарий'}))
+
+    class Meta:
+        model = Comments
+        fields = ['text_comments']

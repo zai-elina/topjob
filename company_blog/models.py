@@ -35,9 +35,11 @@ class Post(models.Model):
 
 
 class Comments(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     text_comments = models.TextField('Текст комментария', max_length=2000)
     post = models.ForeignKey(Post, verbose_name='Публикация', on_delete=models.CASCADE)
+    date = models.DateTimeField(default=timezone.now)
+
 
     def __str__(self):
         return f'{self.user.username}, {self.post}'

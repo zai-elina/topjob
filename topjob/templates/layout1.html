@@ -80,6 +80,7 @@
                   {% endif %}
                 </ul>
               </li>
+              <li><a href="{% url 'company-blogs' %}">Все блоги</a></li>
                 {% else %}
                 <li><a href="{% url 'resume-list' %}">Резюме</a></li>
               {% if request.user.company.slug %}
