@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'chat.apps.ChatConfig',
     'channels',
     'planning.apps.PlanningConfig',
+    'company_blog.apps.CompanyBlogConfig',
 ]
 
 MIDDLEWARE = [

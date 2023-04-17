@@ -82,6 +82,9 @@
               </li>
                 {% else %}
                 <li><a href="{% url 'resume-list' %}">Резюме</a></li>
+              {% if request.user.company.slug %}
+              <li><a href="{% url 'company-blog-list' request.user.company.slug %}">Блог</a></li>
+              {% endif %}
               {% endif %}
               {% else %}
                 <li><a href="{% url 'resume-list' %}">Резюме</a></li>
@@ -89,6 +92,7 @@
 
               {% if request.user.is_authenticated %}
                 <li><a href="{% url 'chat' %}">Диалоги</a></li>
+                <li><a href="{% url 'interview-planning' %}">Собеседования</a></li>
               {% endif %}
 
               {% if request.user.is_authenticated %}

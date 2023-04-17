@@ -11,9 +11,8 @@
 {% block content %}
 <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
-        <div class="row">
+        <div class="m-3">
           <div class="col-md-7">
-            <h1 class="text-white font-weight-bold">Запланировать собеседование</h1>
             <div class="custom-breadcrumbs">
               <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
               <span class="text-white"><strong>Список задач</strong></span>
@@ -23,9 +22,9 @@
 
       </div>
     </section>
-<section class="m-4" id="next-section">
+<section class="m-4 site-section" id="next-section">
       <div class="container">
-          <h2 style="margin-bottom:20px">У вас <i>{{count}}</i> запланированных собеседования</h2>
+          <h2 style="margin-bottom:20px">Запланированных собеседований: <i>{{count}}</i></h2>
 
         <form method="GET" class="search-jobs-form mb-4" id="search">
             <div class="row">
@@ -62,8 +61,8 @@
 
     {% empty %}
     <div style="text-align: center; padding-bottom: 10px; line-height: 1em;">
-        <h3>Нет такого запланированного собеседования.</h3>
-        <h3>Создать<a style="text-decoration: none; color: rgb(105, 192, 105);" href="{% url 'interview-create' %}">собеседование</a> ! </h3>
+        <h3>Нет запланированного собеседования.</h3>
+        <h3>Создать<a style="text-decoration: none; color: rgb(105, 192, 105);" href="{% url 'interview-create' %}"> собеседование</a> ! </h3>
     </div>
     {% endfor %}
 </div>

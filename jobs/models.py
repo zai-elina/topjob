@@ -9,7 +9,7 @@ class Company(models.Model):
     title = models.CharField(max_length=200, null=True, blank=True,unique=True)
     description = models.TextField(null=True, blank=True)
     uniqueId = models.CharField(max_length=100, null=True, blank=True)
-    companyLogo = models.ImageField(default='default.png',upload_to='company_logo')
+    companyLogo = models.ImageField(default='company.png',upload_to='company_logo')
     slug = models.SlugField(null=True, blank=True, unique=True, max_length=500)
     seoDescription = models.CharField(null=True, blank=True, max_length=500)
     seoKeywords = models.CharField(null=True, blank=True, max_length=500)
@@ -34,9 +34,6 @@ class Company(models.Model):
         self.slug=slugify('Company {} {}'.format(self.title,self.uniqueId))
         self.seoKeywords = '{}, Вакансии,Подать заявку на работу, Найти работу'.format(self.title)
         self.seoDescription = 'Подать онлайн заявку на работу в {}'.format(self.title)
-
-        if self.companyLogo == 'default.png':
-            self.companyLogo = 'company.png'
 
         super(Company,self).save(*args,**kwargs)
 
