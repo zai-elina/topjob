@@ -13,3 +13,13 @@ class PostView(View):
         context['posts'] = posts
 
         return render(request, 'company-blog-list.html', context)
+
+class PostDetail(View):
+    def get(self, request, slug_company,slug_post):
+        context={}
+        company = Company.objects.get(slug=slug_company)
+        post = Post.objects.get(slug=slug_post)
+        context['company'] = company
+        context['post']=post
+
+        return render(request, 'company-blog-detail.html', context)

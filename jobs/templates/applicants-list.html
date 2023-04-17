@@ -61,12 +61,7 @@
                       <div class="text-center mt-3">
                           <h5 class="mt-2 mb-0">{{applicant.user.first_name}} {{applicant.user.last_name}}</h5>
                           <span>{{applicant.user.email}}</span>
-                          {% is_already_write user.id applicant.user.id as is_write %}
-                          {% if not is_write %}
-                          <div><a href="{% url 'create-chat' user.id applicant.user.id %}" class="btn btn-primary btn-color">Написать</a></div>
-                          {% else %}
                           <div><a href="{% url 'chat'%}" class="btn btn-primary btn-color">Перейти в диалог</a></div>
-                          {% endif %}
                           {% if applicant.user.resume %}
                           <div><a href="{% url 'resume-view' applicant.user.resume.slug %}">Резюме</a></div>
                           {% endif %}

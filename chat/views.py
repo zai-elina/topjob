@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import *
+from jobs.models import Applicant
 
 
 @login_required
