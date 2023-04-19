@@ -216,7 +216,6 @@ class JobForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(JobForm, self).__init__(*args, **kwargs)
-        self.fields['summary'].required = False
         self.fields['note'].required = False
 
 class ApplyJobForm(forms.ModelForm):

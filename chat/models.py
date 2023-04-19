@@ -21,6 +21,7 @@ class Thread(models.Model):
     objects = ThreadManager()
 
     class Meta:
+
         unique_together = ['first_person', 'second_person']
         verbose_name = "Диалог"
         verbose_name_plural = "Диалоги"

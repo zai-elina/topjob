@@ -6,7 +6,7 @@ from jobs.models import Applicant
 
 @login_required
 def chat_message(request):
-    threads = Thread.objects.by_user(user=request.user).prefetch_related('chatmessage_thread').order_by('timestamp')
+    threads = Thread.objects.by_user(user=request.user).prefetch_related('chatmessage_thread').order_by('-timestamp')
     context = {
         'threads': threads
     }

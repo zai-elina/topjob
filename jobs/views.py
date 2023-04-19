@@ -363,9 +363,15 @@ def send_cover_letter(request,slug):
 
             first_user = User.objects.get(id=user.id)
             second_user = User.objects.get(id=job.company.user.id)
-            thread = Thread.objects.create(first_person=first_user, second_person=second_user)
+            if not Thread.objects.filter(first_person=first_user, second_person=second_user).first() and not Thread.objects.filter(second_person=first_user,first_person=second_user).first():
+                thread = Thread.objects.create(first_person=first_user, second_person=second_user)
+            else:
+                thread = Thread.objects.filter(first_person=first_user, second_person=second_user).first() or Thread.objects.filter(second_person=first_user,first_person=second_user).first()
+
 
             obj = form.save(commit=False)
+            text = form.cleaned_data.get('message')
+            obj.message = f"Отклик на вакансию \"{job.title}\""+ '\n' + text
             obj.thread = thread
             obj.user = user
             obj.save()
