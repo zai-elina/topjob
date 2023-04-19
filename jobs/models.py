@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from uuid import uuid4
+from hitcount.models import HitCountMixin, HitCount
+from django.contrib.contenttypes.fields import GenericRelation
 
 class Company(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -173,6 +175,8 @@ class Jobs(models.Model):
     seoKeywords = models.CharField(null=True,blank=True,max_length=500)
     urlLink = models.CharField(null=True,blank=True,max_length=500)
     filled = models.BooleanField(default=False)
+    hit_count_generic = GenericRelation(HitCount, object_id_field='object_pk',
+                                        related_query_name='hit_count_generic_relation')
 
     def __str__(self):
         return '{} - {} - {}'.format(self.company,self.title,self.region)

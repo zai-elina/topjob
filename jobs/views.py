@@ -2,6 +2,7 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from django.views.generic.edit import FormMixin
 from hitcount.views import HitCountDetailView
 
 from .models import *
@@ -135,16 +136,33 @@ def job_list(request):
 
     return render(request, 'jobs.html', context)
 
-def job_detail(request, slug):
-    form = CoverLetterForm()
-    job = Jobs.objects.get(slug=slug)
-    context ={}
-    context['applicants'] = len(Applicant.objects.filter(job=job))
-    context['favorite'] = len(Favorite.objects.filter(job=job))
-    context['job'] = job
-    context['form'] = form
+# def job_detail(request, slug):
+#     form = CoverLetterForm()
+#     job = Jobs.objects.get(slug=slug)
+#     context ={}
+#     context['applicants'] = len(Applicant.objects.filter(job=job))
+#     context['favorite'] = len(Favorite.objects.filter(job=job))
+#     context['job'] = job
+#     context['form'] = form
+#
+#     return render(request, 'job-detail.html', context)
 
-    return render(request, 'job-detail.html', context)
+class JobDetailView(FormMixin,HitCountDetailView):
+    model = Jobs
+    template_name = 'job-detail.html'
+    context_object_name = 'job'
+    slug_url_kwarg = 'slug'
+    form_class = CoverLetterForm
+    count_hit = True
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        job = self.get_object()
+        context['applicants'] = len(Applicant.objects.filter(job=job))
+        context['favorite'] = len(Favorite.objects.filter(job=job))
+        context['form'] = self.get_form()
+        return context
+
 
 def category_detail(request, slug):
     form = SearchForm()

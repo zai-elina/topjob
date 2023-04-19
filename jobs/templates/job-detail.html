@@ -9,7 +9,7 @@
 {% block content %}
 {% load static %}
 {% load is_already_applied %}
-
+{% load hitcount_tags %}
  <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
         <div class="row">
@@ -55,6 +55,7 @@
                 <div class="">
                   <span class="ml-0 mr-2 mb-2"><span class="icon-person mr-2"></span>Откликов: {{applicants}}</span>
                   <span class="ml-0 mr-2 mb-2 ml-5"><span class="icon-heart mr-2"></span>Сохранили: {{favorite}}</span>
+                  <span class="ml-0 mr-2 mb-2 ml-5">Просмотров: {%get_hit_count for job%}<span class="icon-eye mr-2"></span></span>
                 </div>
                 <div>
                   <span class="ml-0 mr-2 mb-2"><span class="icon-briefcase mr-2"></span>{{job.company.title}}</span>
