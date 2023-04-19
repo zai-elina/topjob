@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'channels',
     'planning.apps.PlanningConfig',
     'company_blog.apps.CompanyBlogConfig',
+    'hitcount',
 ]
 
 MIDDLEWARE = [

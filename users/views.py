@@ -1,7 +1,10 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from hitcount.views import HitCountDetailView
+
 from .email_func import WelcomeEmail,sendEmail, ForgotPassword
 from .forms import *
 from .models import *
@@ -9,6 +12,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import DetailView
 from datetime import datetime
 from django.db.models import Q
+
+from hitcount.utils import get_hitcount_model
+from hitcount.views import HitCountMixin
 
 from jobs.models import Applicant,Jobs
 
@@ -171,58 +177,120 @@ def edit_resume(request,slug):
 
     return render(request,'edit-resume.html',{})
 
-@login_required
-def resume_detail(request,slug):
-    obj = Resume.objects.get(slug=slug)
+# @login_required
+# def resume_detail(request,slug):
+#     object = Resume.objects.get(slug=slug)
+#
+#     educations = Education.objects.filter(resume=object)
+#     experiences = Experience.objects.filter(resume=object)
+#     context ={}
+#     context['object'] = object
+#     context['educations']=educations
+#     context['experiences'] = experiences
+#
+#
+#     hits = object.hit_count.hits
+#     context['hitcount'] = {'pk': object.hit_count.pk}
+#     hit_count_response = HitCountMixin.hit_count(request, object.hit_count)
+#
+#     if hit_count_response.hit_counted:
+#         hits = hits + 1
+#         context['hitcount']['hit_counted'] = hit_count_response.hit_counted
+#         context['hitcount']['hit_message'] = hit_count_response.hit_message
+#     context['hitcount']['total_hits'] = hits
+#
+#
+#     if request.method == "POST" and 'btnEducation' in request.POST:
+#         edu_form = EducationForm(request.POST)
+#         if edu_form.is_valid():
+#             new = edu_form.save(commit=False)
+#             new.resume = object
+#             new.save()
+#
+#             messages.success(request,'Резюме обновлено')
+#             return redirect('resume-detail',slug=slug)
+#         else:
+#             messages.error(request,'Ошибка запроса')
+#             context['edu_form']=edu_form
+#             return render(request,'resume-detail.html',context)
+#
+#
+#     if request.method == "POST" and 'btnExperience' in request.POST:
+#         exp_form = ExperienceForm(request.POST)
+#         if exp_form.is_valid():
+#             new = exp_form.save(commit=False)
+#             new.resume = object
+#             new.save()
+#
+#             messages.success(request,'Резюме обновлено')
+#             return redirect('resume-detail',slug=slug)
+#         else:
+#             messages.error(request,'Ошибка запроса')
+#             context['exp_form']=exp_form
+#             return render(request,'resume-detail.html',context)
+#
+#
+#
+#     if request.method == 'GET':
+#         edu_form = EducationForm()
+#         context['edu_form'] = edu_form
+#         exp_form = ExperienceForm()
+#         context['exp_form'] = exp_form
+#         return render(request, 'resume-detail.html', context)
+#
+#
+#
+#     return render(request, 'resume-detail.html', context)
 
-    educations = Education.objects.filter(resume=obj)
-    experiences = Experience.objects.filter(resume=obj)
-    context ={}
-    context['object'] = obj
-    context['educations']=educations
-    context['experiences'] = experiences
 
-    if request.method == "POST" and 'btnEducation' in request.POST:
-        edu_form = EducationForm(request.POST)
-        if edu_form.is_valid():
-            new = edu_form.save(commit=False)
-            new.resume = obj
-            new.save()
+class ResumeDetailView(LoginRequiredMixin, HitCountDetailView):
+    model = Resume
+    template_name = 'resume-detail.html'
+    count_hit = True
 
-            messages.success(request,'Резюме обновлено')
-            return redirect('resume-detail',slug=slug)
-        else:
-            messages.error(request,'Ошибка запроса')
-            context['edu_form']=edu_form
-            return render(request,'resume-detail.html',context)
+    def get(self, request, slug, *args, **kwargs):
+        object = self.get_object()
+        educations = Education.objects.filter(resume=object)
+        experiences = Experience.objects.filter(resume=object)
+        context = {
+            'object': object,
+            'educations': educations,
+            'experiences': experiences,
+            'edu_form': EducationForm(),
+            'exp_form': ExperienceForm(),
+        }
+        return render(request, self.template_name, context)
+
+    def post(self, request, slug, *args, **kwargs):
+        object = self.get_object()
+
+        if 'btnEducation' in request.POST:
+            edu_form = EducationForm(request.POST)
+            if edu_form.is_valid():
+                new = edu_form.save(commit=False)
+                new.resume = object
+                new.save()
+                messages.success(request, 'Резюме обновлено')
+            else:
+                messages.error(request, 'Ошибка запроса')
+            return redirect('resume-detail', slug=slug)
+
+        if 'btnExperience' in request.POST:
+            exp_form = ExperienceForm(request.POST)
+            if exp_form.is_valid():
+                new = exp_form.save(commit=False)
+                new.resume = object
+                new.save()
+                messages.success(request, 'Резюме обновлено')
+            else:
+                messages.error(request, 'Ошибка запроса')
+            return redirect('resume-detail', slug=slug)
+
+    def get_object(self):
+        obj = self.model.objects.get(slug=self.kwargs['slug'])
+        return obj
 
 
-    if request.method == "POST" and 'btnExperience' in request.POST:
-        exp_form = ExperienceForm(request.POST)
-        if exp_form.is_valid():
-            new = exp_form.save(commit=False)
-            new.resume = obj
-            new.save()
-
-            messages.success(request,'Резюме обновлено')
-            return redirect('resume-detail',slug=slug)
-        else:
-            messages.error(request,'Ошибка запроса')
-            context['exp_form']=exp_form
-            return render(request,'resume-detail.html',context)
-
-
-
-    if request.method == 'GET':
-        edu_form = EducationForm()
-        context['edu_form'] = edu_form
-        exp_form = ExperienceForm()
-        context['exp_form'] = exp_form
-        return render(request, 'resume-detail.html', context)
-
-
-
-    return render(request, 'resume-detail.html', context)
 
 @login_required
 def resume_delete(request,slug):

@@ -2,6 +2,8 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Q
+from hitcount.views import HitCountDetailView
+
 from .models import *
 from .jobforms import *
 from django.contrib.auth.decorators import login_required
@@ -15,6 +17,7 @@ from chat.models import Thread
 Resume = apps.get_model('users', 'Resume')
 Education = apps.get_model('users', 'Education')
 Experience = apps.get_model('users', 'Experience')
+
 
 
 
@@ -327,17 +330,33 @@ def job_filled(request,slug):
     return redirect('published-jobs')
 
 
-def resume_view(request,slug_resume):
-    obj = Resume.objects.get(slug=slug_resume)
-    educations = Education.objects.filter(resume=obj)
-    experiences = Experience.objects.filter(resume=obj)
+# def resume_view(request,slug_resume):
+#     obj = Resume.objects.get(slug=slug_resume)
+#     educations = Education.objects.filter(resume=obj)
+#     experiences = Experience.objects.filter(resume=obj)
+#
+#     context = {}
+#     context['object'] = obj
+#     context['educations'] = educations
+#     context['experiences'] = experiences
+#
+#     return render(request, 'resume-view.html', context)
 
-    context = {}
-    context['object'] = obj
-    context['educations'] = educations
-    context['experiences'] = experiences
+class ResumeDetailView(HitCountDetailView):
+    model = Resume
+    template_name = 'resume-view.html'
+    context_object_name = 'object'
+    slug_url_kwarg = 'slug_resume'
+    count_hit = True
 
-    return render(request, 'resume-view.html', context)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = self.get_object()
+        educations = Education.objects.filter(resume=obj)
+        experiences = Experience.objects.filter(resume=obj)
+        context['educations'] = educations
+        context['experiences'] = experiences
+        return context
 
 
 @login_required

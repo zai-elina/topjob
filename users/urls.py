@@ -7,7 +7,7 @@ urlpatterns = [
     path('profile/',views.profile, name='profile'),
     path('profile/create/',views.create_resume, name='create-resume'),
     path('profile/delete/',views.delete_user, name='delete-user'),
-    path('profile/view/<slug:slug>/', views.resume_detail, name='resume-detail'),
+    path('profile/view/<slug:slug>/', views.ResumeDetailView.as_view(), name='resume-detail'),
     path('profile/view/delete-company', views.delete_company, name='delete-company'),
     path('profile/view/<slug:slug>/delete', views.resume_delete, name='resume-delete'),
     path('profile/view/<slug:slug>/<int:pk>/delete-exp', views.delete_exp, name='delete-exp'),
@@ -22,4 +22,5 @@ urlpatterns = [
     path('favorites/', views.favorites_job, name='favorites-job'),
     path('applies/', views.applies_job, name='applies-job'),
     path('resume-list/',views.resume_list,name='resume-list'),
+
 ]

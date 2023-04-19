@@ -8,6 +8,10 @@ from django.template.defaultfilters import slugify as django_slugify
 
 from jobs.models import Jobs
 
+from hitcount.models import HitCount
+from django.contrib.contenttypes.fields import GenericRelation
+
+
 alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i',
             'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
             'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e', 'ю': 'yu',
@@ -54,6 +58,7 @@ class Profile(models.Model):
     class Meta:
         verbose_name ="Профиль"
         verbose_name_plural = "Профили"
+
 
 class Resume(models.Model):
     REGION = [('Республика Адыгея', 'Республика Адыгея'), ('Республика Алтай', 'Республика Алтай'),
@@ -161,6 +166,11 @@ class Resume(models.Model):
     cv = models.FileField(upload_to='resumes',null=True,blank=True)
     skills = models.TextField(null=True,blank=True)
     soft_skills = models.TextField(null=True,blank=True)
+    hit_count_generic = GenericRelation(
+        HitCount, object_id_field='object_pk',
+        related_query_name='hit_count_generic_relation')
+
+
 
     def __str__(self):
         return '{} {} {}'.format(self.user.first_name,self.user.last_name, self.uniqueId)

@@ -7,6 +7,7 @@
 {% block content %}
 {% load static %}
 {% load is_already_write %}
+{% load hitcount_tags %}
  <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
         <div class="row">
@@ -37,6 +38,7 @@
                           <h5 class="mt-2 mb-0">{{object.profession}}</h5>
                           <h5 class="mt-2 mb-0">{{object.user.first_name}} {{object.user.last_name}}</h5>
                           <span>{{object.user.email}}</span>
+                          <div class=""> <span class="ml-0 mr-2 mb-2 ml-5">Просмотров: {%get_hit_count for object%}<span class="icon-eye mr-2"></span></span></div>
                       </div>
                   </div>
               </div>
