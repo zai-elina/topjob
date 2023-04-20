@@ -462,6 +462,39 @@
 
                 {% endif %}
         </div>
+
+        {% if request.user == object.user %}
+        {% if user_hits %}
+            <h6 style="color: #DEB887;">Компании, которые просматривали резюме</h6>
+            {% endif %}
+            {% for user_hit in user_hits %}
+            {% if user_hit.profile.kind == "Работодатель" %}
+            <div class="col-md-3">
+
+                  <div class="card p-3 py-4 mt-3 mb-5">
+
+                      <div class="text-center">
+                          <img src="{{user_hit.company.companyLogo.url}}" height="50" class="rounded-circle" alt="Фото {{user_hit.company.title}}">
+                      </div>
+
+                      <div class="text-center mt-3">
+                          <p class="mt-2 mb-0" style="font-size: 15px">{{user_hit.company.title}}</p>
+                          {% if user_hit.company.job %}
+                          <div><a href="">Вакансии</a></div>
+                          {% endif %}
+                      </div>
+                      </div>
+
+                 </div>
+        {% else %}
+        <p>Ни одна компания пока не смотрела ваше резюме</p>
+        {% endif %}
+
+        {% endfor %}
+            {% endif %}
+
+
+
         <div class="m-3"><a href="{% url 'resume-delete' object.slug %}" class="btn btn-dark">Удалить резюме</a></div>
 
     </div>

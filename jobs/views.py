@@ -170,7 +170,6 @@ class JobDetailView(FormMixin,HitCountDetailView):
             if user != 'Anonymous':
                 user_list.append(User.objects.get(username=user))
         context['user_hits'] = user_list
-        print(context['user_hits'])
         return context
 
 

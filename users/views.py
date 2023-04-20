@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
+from hitcount.models import Hit
 from hitcount.views import HitCountDetailView
 
 from .email_func import WelcomeEmail,sendEmail, ForgotPassword
@@ -259,6 +260,13 @@ class ResumeDetailView(LoginRequiredMixin, HitCountDetailView):
             'edu_form': EducationForm(),
             'exp_form': ExperienceForm(),
         }
+        latest_hit = Hit.objects.filter(hitcount__object_pk=self.get_object().pk)
+        user_hits = [hit.user.username if hit.user else 'Anonymous' for hit in latest_hit]
+        user_list = []
+        for user in user_hits:
+            if user != 'Anonymous':
+                user_list.append(User.objects.get(username=user))
+        context['user_hits'] = user_list
         return render(request, self.template_name, context)
 
     def post(self, request, slug, *args, **kwargs):
