@@ -3,7 +3,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.db.models import Q
 from django.views.generic.edit import FormMixin
+from hitcount.models import Hit
 from hitcount.views import HitCountDetailView
+
 
 from .models import *
 from .jobforms import *
@@ -161,6 +163,14 @@ class JobDetailView(FormMixin,HitCountDetailView):
         context['applicants'] = len(Applicant.objects.filter(job=job))
         context['favorite'] = len(Favorite.objects.filter(job=job))
         context['form'] = self.get_form()
+        latest_hit = Hit.objects.filter(hitcount__object_pk=self.get_object().pk)
+        user_hits = [hit.user.username if hit.user else 'Anonymous' for hit in latest_hit]
+        user_list =[]
+        for user in user_hits:
+            if user != 'Anonymous':
+                user_list.append(User.objects.get(username=user))
+        context['user_hits'] = user_list
+        print(context['user_hits'])
         return context
 
 
