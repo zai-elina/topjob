@@ -467,6 +467,7 @@
         {% if user_hits %}
             <h6 style="color: #DEB887;">Компании, которые просматривали резюме</h6>
         {% endif %}
+        <div class="d-flex">
         {% for user_hit in user_hits %}
         {% if user_hit.profile.kind == "Работодатель" %}
             <div class="col-md-3">
@@ -488,6 +489,7 @@
         {% endif %}
 
         {% endfor %}
+            </div>
         {% endif %}
 
 

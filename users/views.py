@@ -22,6 +22,8 @@ from jobs.models import Applicant,Jobs
 
 from jobs.models import Company
 
+from jobs.jobforms import SearchForm
+
 
 def register(request):
     if request.method == 'GET':
@@ -427,20 +429,82 @@ def delete_in_favorites(request,job_id):
 
     return render(request, "job-detail.html",context)
 
-
+def searching_job(search,type,region):
+    jobs = []
+    if len(search.split()) > 1:
+        search_list = search.split()
+        val_list = []
+        for i in search_list:
+            if (type != '' and region != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type,
+                                       region=region)
+            elif (type != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type)
+            elif (region != ''):
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search),
+                                       region=region)
+            else:
+                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search))
+            for j in result:
+                val_list.append(j)
+        [jobs.append(i) for i in val_list if i not in jobs]
+        return jobs
+    else:
+        if (type != '' and region != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
+                                       region=region)
+        elif (type != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
+        elif (region != ''):
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
+                               region=region)
+        else:
+            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
+        return jobs_list
 
 @login_required
 def favorites_job(request):
-    fav = Favorite.objects.filter(user=request.user)
+    favorites = Favorite.objects.filter(user=request.user,job__filled=False)
     context={}
-    if fav:
-        context['favorites'] = fav
+    if favorites:
+        context['favorites'] = favorites
+
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search = form.cleaned_data.get('title')
+            type = form.cleaned_data.get('type')
+            region = form.cleaned_data.get('region')
+
+            jobs = searching_job(search, type, region)
+            data = []
+            if len(jobs) > 0:
+                for item in jobs:
+                    for favorite in favorites:
+                        if favorite.job == item:
+                            val = {
+                                'title': item.title,
+                                'city': item.city,
+                                'logo': item.company.companyLogo.url,
+                                'slug': item.slug,
+                                'salary': item.salary,
+                                'type': item.type,
+                                'company': item.company.title
+                            }
+                            data.append(val)
+            return JsonResponse({'data': data}, status=200)
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        form = SearchForm()
+        context['form'] = form
 
     return render(request, 'favorite-job.html', context)
 
 @login_required
 def applies_job(request):
-    appl = Applicant.objects.filter(user=request.user)
+    appl = Applicant.objects.filter(user=request.user,job__filled=False)
     context={}
     if appl:
         context['applies'] = appl
@@ -470,7 +534,7 @@ def split_search(val_list,search,region,city,skills):
         val_list.append(j)
     return val_list
 
-def searching(search,region,city,skills):
+def searching_resume(search,region,city,skills):
     resume_list = []
     if len(search.split()) > 1 and len(skills.split()) > 1:
         search_list = search.split()
@@ -526,7 +590,7 @@ def resume_list(request):
             city = form.cleaned_data.get('city')
             skills = form.cleaned_data.get('skills')
 
-            resume_list = searching(search, region, city, skills)
+            resume_list = searching_resume(search, region, city, skills)
 
             data = []
             if len(resume_list) > 0:
