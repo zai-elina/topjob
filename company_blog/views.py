@@ -8,6 +8,7 @@ from django.views.generic.base import View
 from .models import *
 from jobs.models import Company
 from .forms import *
+from jobs.jobforms import CompanyForm
 
 
 class PostView(View):
@@ -153,3 +154,27 @@ def add_reply_comment(request,slug_company,slug_post):
 
 
     return redirect('company-blog-detail',slug_company,slug_post)
+
+
+
+@login_required
+def company_edit(request,slug):
+    company = Company.objects.get(slug=slug)
+    if request.method == 'POST':
+        form = CompanyForm(request.POST, request.FILES,instance=company)
+        if form.is_valid():
+            obj = form.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            messages.success(request, 'Изменения внесены')
+            return redirect('company-blog-list',slug)
+        else:
+            messages.error(request, 'Ошибка заполнения')
+            context = {'form': form}
+            return render(request, 'create-company.html', context)
+    if request.method == 'GET':
+        form = CompanyForm(instance=company)
+        context = {'form': form}
+        return render(request, 'create-company.html', context)
+
+    return render(request, 'create-company.html', {})

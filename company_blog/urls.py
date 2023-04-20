@@ -10,4 +10,5 @@ urlpatterns = [
     path('company-blog/<slug:slug_company>/<slug:slug_post>/add-reply-comment', add_reply_comment, name='add-reply-comment'),
     path('company-blogs/', company_blogs, name='company-blogs'),
     path('company-blogs/create-post', create_post, name='create-post'),
+    path('company-blogs/company-edit/<slug:slug>', company_edit, name='company-edit'),
 ]
