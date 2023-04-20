@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home_page'),
     path('jobs/', views.job_list, name='job-list'),
+    path('jobs/company-jobs/<slug:slug>', views.company_jobs, name='company-jobs'),
     path('jobs/<slug:slug>/', views.JobDetailView.as_view(), name='job-detail'),
     path('category-list/',views.category_list,name='category-list'),
     path('category-list/<slug:slug>/',views.category_detail,name='category-detail'),
@@ -16,6 +17,5 @@ urlpatterns = [
     path('resume-list/<slug:slug_resume>',views.ResumeDetailView.as_view(),name='resume-view'),
     path('published-jobs/<slug:slug>/applicants/delete-applicant/<int:apply_id>',views.delete_apply,name='delete-apply'),
     path('published-jobs/<slug:slug>/job-filled',views.job_filled,name='job-filled'),
-    # path('jobs/respond/<slug:slug>/',views.add_respond, name='respond'),
     path('jobs/<slug:slug>/apply',views.send_cover_letter, name='send-cover-letter'),
 ]

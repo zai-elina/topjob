@@ -430,3 +430,12 @@ def send_cover_letter(request,slug):
             return render(request, "job-detail.html", context)
 
     return render(request, "job-detail.html", context)
+
+
+def company_jobs(request,slug):
+    company = Company.objects.get(slug=slug)
+    jobs = Jobs.objects.filter(company=company)
+    context = {}
+    context['jobs'] = jobs
+    context['company'] = company
+    return render(request, "company-jobs.html", context)

@@ -1,0 +1,89 @@
+{% extends 'layout1.html' %}
+
+{% block meta %}
+    <title>Topjob {{company.title}}</title>
+    <meta name="description" content="{{category.seoDescription}}" />
+    <meta name="keywords" content="{{category.seoKeywords}}">
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-7">
+            <h1 class="text-white font-weight-bold">Подай заявку на вакансию Topjob</h1>
+            <div class="custom-breadcrumbs">
+              <a href="{% url 'home_page' %}">Главная</a> <span class="mx-2 slash">/</span>
+              <a href="/jobs">Вакансии</a> <span class="mx-2 slash">/</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+<section class="site-section" id="next">
+      <div class="container">
+
+
+        <div class="row mb-5">
+          <div class="col-md-7">
+            <h2 class="section-title mb-2" id="count">{{jobs|length}} вакансий</h2>
+          </div>
+        </div>
+
+        <ul class="job-listings mb-5">
+          {% for job in jobs %}
+          <li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
+            <a href="{% url 'job-detail' job.slug %}"></a>
+            <div class="job-listing-logo">
+              <img src="{{job.company.companyLogo.url}}" alt="{{job.company.title}}" class="img-fluid">
+            </div>
+
+            <div class="job-listing-about d-sm-flex custom-width w-100 justify-content-between mx-4">
+              <div class="job-listing-position custom-width w-50 mb-3 mb-sm-0">
+                <h2>{{job.title}}</h2>
+                <strong>{{job.company.title}}</strong>
+              </div>
+              {% if job.city %}
+              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                <span class="icon-room"></span> {{job.city}}
+              </div>
+              {% endif %}
+              {% if job.salary %}
+              <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
+                <span class="icon-money"></span> {{job.salary}}
+              </div>
+              {% endif %}
+              {% if job.type %}
+              <div class="job-listing-meta">
+                <span class="badge badge-danger">{{job.type}}</span>
+              </div>
+              {% endif %}
+            </div>
+
+          </li>
+          {% endfor %}
+        </ul>
+
+      </div>
+    </section>
+
+    {% if not request.user.is_authenticated %}
+    <section class="py-5 bg-image overlay-primary fixed overlay" style="background-image: url('images/hero_1.jpg');">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <h2 class="text-white">Ищешь работу?</h2>
+            <p class="mb-0 text-white lead">Регистрируйся и смотри актуальные предложения</p>
+          </div>
+          <div class="col-md-3 ml-auto">
+            <a href="{% url 'register' %}" class="btn btn-warning btn-block btn-lg">Зарегистрироваться</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    {% endif %}
+
+{% endblock %}
