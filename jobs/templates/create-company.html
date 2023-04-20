@@ -107,6 +107,74 @@
                                 {% endif %}
                             </div>
 
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Адрес:</label>
+                                    {{form.addressLine}}
+                                </div>
+                                {% if form.addressLine.errors %}
+                                  {% for error in form.addressLine.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">Сайт:</label>
+                                    {{form.url}}
+                                </div>
+                                {% if form.url.errors %}
+                                  {% for error in form.url.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">ИНН <span class="text-danger">*</span>:</label>
+                                    {{form.inn}}
+                                </div>
+                                {% if form.inn.errors %}
+                                  {% for error in form.inn.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+
+
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">ОГРН <span class="text-danger">*</span>:</label>
+                                    {{form.ogrn}}
+                                </div>
+                                {% if form.ogrn.errors %}
+                                  {% for error in form.ogrn.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <div class="from-group app-label">
+                                    <label class="text-muted">ОГРНИП <span class="text-danger">*</span>:</label>
+                                    {{form.ogrnip}}
+                                </div>
+                                {% if form.ogrnip.errors %}
+                                  {% for error in form.ogrnip.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
 
 
 

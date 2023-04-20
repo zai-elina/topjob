@@ -4,6 +4,8 @@ from .models import *
 from django.apps import apps
 ChatMessage = apps.get_model('chat', 'ChatMessage')
 
+from django.core.exceptions import ValidationError
+
 class DateInput(forms.DateInput):
     input_type = 'date'
 
@@ -94,16 +96,30 @@ class SearchForm(forms.ModelForm):
         self.fields['type'].required = False
         self.fields['region'].required = False
 
+def validate_both_fields(value):
+    inn = value.get('inn')
+    ogrn = value.get('ogrn')
+    ogrnip = value.get('ogrnip')
+    if not inn and (not ogrn and not ogrnip):
+        raise ValidationError("Вы должны заполнить поля ИНН или ОГРН(ОГРНИП)")
 
 class CompanyForm(forms.ModelForm):
     title = forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control form-control-lg','placeholder':'Название компании'}))
     description = forms.CharField(required=True, widget=forms.Textarea(attrs={'class':'form-control','placeholder':'Описание компании'}))
     companyLogo = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class':'form-control'}))
+    url = forms.URLField(required=False,widget=forms.TextInput(attrs={'class': 'form-control form-control-lg','placeholder':'Сайт'}))
+    addressLine = forms.CharField(required=False,widget=forms.TextInput(attrs={'class': 'form-control form-control-lg','placeholder':'Адрес компании'}))
+    inn = forms.DecimalField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg','placeholder':'ИНН'}))
+    ogrn = forms.DecimalField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg','placeholder':'ОГРН'}))
+    ogrnip = forms.DecimalField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg','placeholder':'ОГРНИП'}))
 
     class Meta:
         model = Company
-        fields = ['title','description','companyLogo']
+        fields = ['title','description','companyLogo','url','addressLine','inn','ogrn','ogrnip']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        validate_both_fields(cleaned_data)
 
 class JobForm(forms.ModelForm):
     FULL_TIME='Полный'

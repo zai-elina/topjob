@@ -41,7 +41,7 @@
       <div class="container">
 
           <div class="row align-items-center mb-5">
-          <div class="col-lg-8 mb-4 mb-lg-0">
+          <div class="col-lg-12 mb-4 mb-lg-0">
             <div class="d-flex align-items-center">
               <div class="border p-2 d-inline-block mr-3 rounded">
                 <img src="{{company.companyLogo.url}}" alt="{{company.title}}" style="width:200px;">
@@ -50,7 +50,24 @@
               <h3 class="mb-4 h4 border-bottom">{{company.title}}</h3>
               <p class="mb-0">{{company.description}}</p>
               <div><a href="{% url 'company-jobs' company.slug %}" class="text-black">Вакансии компании</a></div>
-            </div>
+                  {% if company.url %}
+               <div><a href="{{company.url}}" target="_blank" class="text-black">Перейти на сайт компании</a></div>
+                 {% endif %}
+                  {% if company.addressLine %}
+               <p class="mb-0">Адрес:{{company.addressLine}}</p>
+                 {% endif %}
+                  {% if company.inn %}
+               <p class="mb-0">ИНН:{{company.inn}}</p>
+                 {% endif %}
+                  {% if company.ogrn %}
+               <p class="mb-0">ОГРН:{{company.ogrn}}</p>
+                 {% endif %}
+                  {% if company.ogrnip %}
+               <p class="mb-0">ОГРНИП:{{company.ogrnip}}</p>
+                 {% endif %}
+
+                  <div>Вы можете проверить компанию введя её ИНН или ОГРН(ОГРИП) на <a href="https://egrul.nalog.ru/index.html" target="_blank" >egrul.nalog.ru</a></div>
+              </div>
             </div>
           </div>
         </div>
@@ -74,12 +91,14 @@
 <!--             <a href="#">2 Comments</a>-->
             </div>
               {% if request.user.is_authenticated %}
-                  {% if request.user.profile.kind != "Соискатель" %}
+              {% if request.user == company.user %}
+                  {% if request.user.profile.kind == "Работодатель" %}
               <div class="mt-2 text-center">
                   <a href="{% url 'post-delete' company.slug post.slug %}" class="btn-danger p-1 rounded">Удалить пост</a>
                 <a href="{% url 'post-edit' company.slug post.slug %}" class="btn-light p-1 rounded">Редактировать</a>
               </div>
                 {% endif %}
+              {% endif %}
           {% endif %}
           </div>
           {% endfor %}

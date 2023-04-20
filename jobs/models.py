@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
@@ -15,6 +16,11 @@ class Company(models.Model):
     slug = models.SlugField(null=True, blank=True, unique=True, max_length=500)
     seoDescription = models.CharField(null=True, blank=True, max_length=500)
     seoKeywords = models.CharField(null=True, blank=True, max_length=500)
+    url = models.URLField("Ссылка на сайт",max_length=128,unique=True,blank=True,null=True)
+    addressLine = models.CharField(null=True, max_length=200, blank=True)
+    inn = models.DecimalField('ИНН', max_digits=10, decimal_places=0, validators=[MinValueValidator(10**9), MaxValueValidator(10**10 - 1)],blank=True, null=True)
+    ogrn = models.DecimalField('ОГРН',max_digits=13, decimal_places=0, validators=[MinValueValidator(10**12), MaxValueValidator(10**13 - 1)],blank=True, null=True)
+    ogrnip = models.DecimalField('ОГРНИП', max_digits=15, decimal_places=0, validators=[MinValueValidator(10**14), MaxValueValidator(10**15 - 1)],blank=True, null=True)
 
 
     def __str__(self):
