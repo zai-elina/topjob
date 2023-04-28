@@ -51,6 +51,12 @@ class RegisterForm(UserCreationForm):
         # Свойство назначения полей
         fields = ('image','username','first_name', 'last_name','email', 'password1', 'password2','kind')
 
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if email and User.objects.filter(email=email).count() > 0:
+            raise forms.ValidationError(u'Пользователь с данной почтой уже существует')
+        return email
+
 
 class ProfileChangeForm(UserChangeForm):
     image = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control'}))

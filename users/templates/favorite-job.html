@@ -73,7 +73,7 @@
 								  success: function (response) {
 									  console.log(response.data);
                                       let data = response.data;
-                                       $("#count").text(`${data.length} вакансий`);
+                                       $("#count").text(`Вакансий :${data.length}`);
                                        $(".job-listings").empty();
                                       data.forEach((job) => {
                                           $(".job-listings").append(`<li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">

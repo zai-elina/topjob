@@ -65,7 +65,7 @@ def home(request):
     context['jobs_count'] = len(jobs_list)
     users = User.objects.all()
     company = Company.objects.all()
-    jobs_list=jobs_list[:4]
+    jobs_list=jobs_list[:3]
 
     context['jobs'] = jobs_list
     context['users'] = len(users)
@@ -428,6 +428,8 @@ def send_cover_letter(request,slug):
             messages.error(request, 'Ошибка заполнения')
             context = {'form': form}
             return render(request, "job-detail.html", context)
+    else:
+        context['form'] = CoverLetterForm()
 
     return render(request, "job-detail.html", context)
 

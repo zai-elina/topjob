@@ -37,16 +37,6 @@ jQuery(function($) {
 
     }, 1000);
 
-		$('body').on('click', '.arrow-collapse', function(e) {
-      var $this = $(this);
-      if ( $this.closest('li').find('.collapse').hasClass('show') ) {
-        $this.removeClass('active');
-      } else {
-        $this.addClass('active');
-      }
-      e.preventDefault();  
-      
-    });
 
 		$(window).resize(function() {
 			var $this = $(this),
@@ -100,34 +90,6 @@ jQuery(function($) {
 		});
 	};
 	// sitePlusMinus();
-
-   var siteIstotope = function() {
-  	/* activate jquery isotope */
-	  var $container = $('#posts').isotope({
-	    itemSelector : '.item',
-	    isFitWidth: true
-	  });
-
-	  $(window).resize(function(){
-	    $container.isotope({
-	      columnWidth: '.col-sm-3'
-	    });
-	  });
-	  
-	  $container.isotope({ filter: '*' });
-
-	    // filter items on button click
-	  $('#filters').on( 'click', 'button', function(e) {
-	  	e.preventDefault();
-	    var filterValue = $(this).attr('data-filter');
-	    $container.isotope({ filter: filterValue });
-	    $('#filters button').removeClass('active');
-	    $(this).addClass('active');
-	  });
-  }
-
-  siteIstotope();
-
   var fancyBoxInit = function() {
 	  $('.fancybox').on('click', function() {
 		  var visibleLinks = $('.fancybox');
@@ -190,7 +152,6 @@ jQuery(function($) {
 					$('.number').each(function(){
 						var $this = $(this),
 							num = $this.data('number');
-							console.log(num);
 						$this.animateNumber(
 						  {
 						    number: num,
@@ -212,18 +173,7 @@ jQuery(function($) {
 	}
 	selectPickerInit();
 
-	var owlCarouselFunction = function() {
-		$('.single-carousel').owlCarousel({
-	    loop:true,
-	    margin:0,
-	    nav:true,
-	    autoplay: true,
-	    items:1,
-	    smartSpeed: 1000
-		});
 
-	}
-	owlCarouselFunction();
 
 	var quillInit = function() {
 

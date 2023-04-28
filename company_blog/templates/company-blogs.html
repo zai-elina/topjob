@@ -23,7 +23,71 @@
 
     <section>
         <div class="container">
-            <div class="row">
+            <form method="POST" class="search-jobs-form mt-5" id="search">
+              {% csrf_token %}
+              <div class="row mb-5">
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  {{form.title}}
+                </div>
+
+                {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <button type="submit" class="btn btn-primary btn-lg btn-block text-white btn-search btn-color"><span class="icon-search icon mr-2"></span>Найти</button>
+                </div>
+              </div>
+            </form>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+				  <script>
+					  $(document).ready(function () {
+						  // отслеживаем событие отправки формы
+						  $('#search').submit(function () {
+							  // создаем AJAX-вызов
+							  $.ajax({
+								  data: $(this).serialize(), // получаем данные формы
+								  type: $(this).attr('method'), // GET или POST
+								  url: "{% url 'company-blogs' %}",
+								  // если успешно, то
+								  success: function (response) {
+                                      let data = response.data;
+                                       $("#companies").empty();
+                                      data.forEach((company) => {
+                                          $("#companies").append(`<div class="col-md-4">
+
+                                              <div class="card p-3 py-4 mt-3 mb-5">
+
+                                                  <div class="text-center">
+                                                    <a href="${company.slug}"><img src="${company.logo}" alt="${company.title}" class="img-fluid rounded mb-4" style="width: 200px"></a>
+                                                  </div>
+
+                                                  <div class="text-center mt-3">
+                                                      <a href="${company.slug}" class="mt-2 mb-0">${company.title}</a>
+                                                      <div><span>Постов ${company.posts}</span></div>
+                                                  </div>
+                                                  </div>
+
+                                             </div>`);
+                                      })
+
+								  },
+								  // если ошибка, то
+								  error: function (response) {
+									  // предупредим об ошибке
+									  alert("Ошибка ввода данных");
+									  console.log(response.responseJSON.errors)
+								  }
+							  });
+							  return false;
+						  });
+					  })
+				  </script>
+            <div class="row" id="companies">
                 {% for company in company_list %}
                 <div class="col-md-4">
 

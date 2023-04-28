@@ -17,18 +17,21 @@
   <div class="container">
     <div class="row">
       <div class="col-md-7">
-        <h1 class="text-white font-weight-bold">Профиль {{user.username}}</h1>
+        <h1 class="text-white font-weight-bold">Диалоги {{user.username}}</h1>
         <div class="custom-breadcrumbs">
           <a href="{% url 'home_page' %}">Главная</a>
           <span class="mx-2 slash">/</span>
-          <span class="text-white"><strong>Профиль</strong></span>
+          <span class="text-white"><strong>Диалоги</strong></span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-{% if messages %}
+
+
+<section style="background-color: #deb887">
+  {% if messages %}
   {% for message in messages %}
 
   {% if message.tags == 'error' %}
@@ -47,8 +50,6 @@
 {% if user.is_authenticated %}
 <input type="hidden" value="{{ user.id }}" id="logged-in-user">
 {% endif %}
-
-<section style="background-color: #deb887">
   <div class="container py-5">
     {% if threads %}
     <div class="row">

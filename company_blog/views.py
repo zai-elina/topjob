@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
+from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -8,8 +9,7 @@ from django.views.generic.base import View
 from .models import *
 from jobs.models import Company
 from .forms import *
-from jobs.jobforms import CompanyForm
-
+from jobs.jobforms import CompanyForm,SearchForm
 
 class PostView(View):
     def get(self, request,slug):
@@ -61,9 +61,34 @@ def create_post(request):
 
 
 def company_blogs(request):
-    context={}
-    company_list= Company.objects.all()
-    context['company_list'] = company_list
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search = form.cleaned_data.get('title')
+
+            company_list = Company.objects.filter(title__icontains=search)
+
+            data = []
+            if len(company_list) > 0:
+                for item in company_list:
+                    val = {
+                        'title': item.title,
+                        'logo': item.companyLogo.url,
+                        'slug': item.slug,
+                        'posts': item.post_set.count()
+                    }
+                    data.append(val)
+            return JsonResponse({'data': data}, status=200)
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        context = {}
+        company_list = Company.objects.all().annotate(num_post=Count('post')).order_by('-num_post')
+        context['company_list'] = company_list
+        form = SearchForm()
+        context['form'] = form
+
 
     return render(request, 'company-blogs.html', context)
 

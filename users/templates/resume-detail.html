@@ -54,7 +54,7 @@
                           <h5 class="mt-2 mb-0">{{object.user.first_name}} {{object.user.last_name}}</h5>
                           <span>{{object.user.email}}</span>
                           <h5></h5>
-                         <div> <span class="ml-0 mr-2 mb-2 ml-5">Просмотров: {%get_hit_count for object%}<span class="icon-eye mr-2"></span></span></div>
+                         <div> <span class="mr-2 mb-2">Просмотров: {%get_hit_count for object%}<span class="icon-eye mr-2"></span></span></div>
                       </div>
                   </div>
               </div>
@@ -69,7 +69,9 @@
                 <li class="mb-2"><strong class="text-black">Дата рождения:</strong> {{object.date_birth}}</li>
                 <li class="mb-2"><strong class="text-black">Пол:</strong> {{object.sex}}</li>
                 <li class="mb-2"><strong class="text-black">Семейное положение:</strong> {{object.material_status}}</li>
+                  {% if object.phoneNumber %}
                 <li class="mb-2"><strong class="text-black">Телефон:</strong> {{object.phoneNumber}}</li>
+                  {% endif %}
                   {% if object.last_updated %}
                 <li class="mb-2"><strong class="text-black">Последнее обновление:</strong> {{object.last_updated}}</li>
                   {% endif %}
@@ -81,7 +83,9 @@
               <h3 class="mt-3 h5 pl-3 mb-3 " style="color: #DEB887;">Контактная информация</h3>
               <ul class="list-unstyled pl-3 mb-0">
                 <li class="mb-2"><strong class="text-black">Адрес проживания:</strong> {{object.addressLine1}}</li>
+                  {% if object.addressLine2 %}
                 <li class="mb-2"><strong class="text-black">Адрес прописки:</strong> {{object.addressLine2}}</li>
+                  {% endif %}
                 <li class="mb-2"><strong class="text-black">Республики, область или край:</strong> {{object.suburb}}</li>
                 <li class="mb-2"><strong class="text-black">Город:</strong> {{object.city}}</li>
                 {% if object.cv %}
@@ -269,7 +273,7 @@
                               <div class="col">
                                 <a
                                   href="{% url 'delete-ed' object.user.resume.slug education.pk%}"
-                                  class="btn-dark text-decoration-none p-2"
+                                  class="btn-danger text-decoration-none p-2"
                                   >Удалить</a>
                                   <a
                                   href="{% url 'edit-ed' object.user.resume.slug education.pk%}"
@@ -444,7 +448,7 @@
                               <div class="col">
                                 <a
                                   href="{% url 'delete-exp' slug=object.user.resume.slug pk=exp.pk%}"
-                                  class="btn-dark text-decoration-none p-2"
+                                  class="btn-danger text-decoration-none p-2"
                                   >Удалить</a
                                 >
                                   <a
