@@ -171,9 +171,9 @@
                 {% if job.city%}
                 <li class="mb-2"><strong class="text-black">Расположение:</strong>{{job.city}}</li>
                 {% endif %}
-                  {% if job.salary %}
-                <li class="mb-2"><strong class="text-black">Зарплата:</strong>{{job.salary}}</li>
-                  {% endif %}
+                <li class="mb-2"><strong class="text-black">Зарплата:</strong>{% if job.min_salary %}{{job.min_salary}} - {% if job.max_salary %}{{job.max_salary}} {% endif %}
+                 {% else %} {% if job.max_salary %}{{job.max_salary}}{% endif %}
+                  {% endif %}</li>
                   {% if job.closingDate %}
                 <li class="mb-2"><strong class="text-black">Крайний срок подачи заявок:</strong> {{job.closingDate}}</li>
                   {% endif %}

@@ -105,6 +105,8 @@ def post_edit(request,slug_company,slug):
         form = PostForm(request.POST, instance=post)
         if form.is_valid():
             obj = form.save(commit=False)
+            if 'image' in request.FILES:
+                obj.image = request.FILES['image']
             obj.save()
             messages.success(request, 'Изменения внесены')
             return redirect('company-blog-detail',slug_company,obj.slug)
@@ -190,6 +192,8 @@ def company_edit(request,slug):
         if form.is_valid():
             obj = form.save(commit=False)
             obj.user = request.user
+            if 'image' in request.FILES:
+                obj.image = request.FILES['image']
             obj.save()
             messages.success(request, 'Изменения внесены')
             return redirect('company-blog-list',slug)

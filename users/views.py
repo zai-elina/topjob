@@ -24,6 +24,8 @@ from jobs.models import Company
 
 from jobs.jobforms import SearchForm
 
+from jobs.views import JobFilter
+
 
 def register(request):
     if request.method == 'GET':
@@ -179,71 +181,6 @@ def edit_resume(request,slug):
         return render(request,'edit-resume.html',context)
 
     return render(request,'edit-resume.html',{})
-
-# @login_required
-# def resume_detail(request,slug):
-#     object = Resume.objects.get(slug=slug)
-#
-#     educations = Education.objects.filter(resume=object)
-#     experiences = Experience.objects.filter(resume=object)
-#     context ={}
-#     context['object'] = object
-#     context['educations']=educations
-#     context['experiences'] = experiences
-#
-#
-#     hits = object.hit_count.hits
-#     context['hitcount'] = {'pk': object.hit_count.pk}
-#     hit_count_response = HitCountMixin.hit_count(request, object.hit_count)
-#
-#     if hit_count_response.hit_counted:
-#         hits = hits + 1
-#         context['hitcount']['hit_counted'] = hit_count_response.hit_counted
-#         context['hitcount']['hit_message'] = hit_count_response.hit_message
-#     context['hitcount']['total_hits'] = hits
-#
-#
-#     if request.method == "POST" and 'btnEducation' in request.POST:
-#         edu_form = EducationForm(request.POST)
-#         if edu_form.is_valid():
-#             new = edu_form.save(commit=False)
-#             new.resume = object
-#             new.save()
-#
-#             messages.success(request,'Резюме обновлено')
-#             return redirect('resume-detail',slug=slug)
-#         else:
-#             messages.error(request,'Ошибка запроса')
-#             context['edu_form']=edu_form
-#             return render(request,'resume-detail.html',context)
-#
-#
-#     if request.method == "POST" and 'btnExperience' in request.POST:
-#         exp_form = ExperienceForm(request.POST)
-#         if exp_form.is_valid():
-#             new = exp_form.save(commit=False)
-#             new.resume = object
-#             new.save()
-#
-#             messages.success(request,'Резюме обновлено')
-#             return redirect('resume-detail',slug=slug)
-#         else:
-#             messages.error(request,'Ошибка запроса')
-#             context['exp_form']=exp_form
-#             return render(request,'resume-detail.html',context)
-#
-#
-#
-#     if request.method == 'GET':
-#         edu_form = EducationForm()
-#         context['edu_form'] = edu_form
-#         exp_form = ExperienceForm()
-#         context['exp_form'] = exp_form
-#         return render(request, 'resume-detail.html', context)
-#
-#
-#
-#     return render(request, 'resume-detail.html', context)
 
 
 class ResumeDetailView(LoginRequiredMixin, HitCountDetailView):
@@ -429,38 +366,7 @@ def delete_in_favorites(request,job_id):
 
     return render(request, "job-detail.html",context)
 
-def searching_job(search,type,region):
-    jobs = []
-    if len(search.split()) > 1:
-        search_list = search.split()
-        val_list = []
-        for i in search_list:
-            if (type != '' and region != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type,
-                                       region=region)
-            elif (type != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type)
-            elif (region != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search),
-                                       region=region)
-            else:
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search))
-            for j in result:
-                val_list.append(j)
-        [jobs.append(i) for i in val_list if i not in jobs]
-        return jobs
-    else:
-        if (type != '' and region != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
-                                       region=region)
-        elif (type != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
-        elif (region != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
-                               region=region)
-        else:
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
-        return jobs_list
+
 
 @login_required
 def favorites_job(request):
@@ -469,29 +375,31 @@ def favorites_job(request):
     if favorites:
         context['favorites'] = favorites
 
+
     if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
         form = SearchForm(request.POST)
         if form.is_valid():
             search = form.cleaned_data.get('title')
-            type = form.cleaned_data.get('type')
-            region = form.cleaned_data.get('region')
 
-            jobs = searching_job(search, type, region)
+            favorites = Favorite.objects.filter(Q(job__title__icontains=search) | Q(job__company__title__icontains=search),
+                                                user=request.user, job__filled=False)
+            job_filter = JobFilter(request.POST, queryset=Jobs.objects.filter(id__in=[favorite.job.id for favorite in favorites]))
+            jobs = job_filter.qs
+
             data = []
-            if len(jobs) > 0:
-                for item in jobs:
-                    for favorite in favorites:
-                        if favorite.job == item:
-                            val = {
-                                'title': item.title,
-                                'city': item.city,
-                                'logo': item.company.companyLogo.url,
-                                'slug': item.slug,
-                                'salary': item.salary,
-                                'type': item.type,
-                                'company': item.company.title
-                            }
-                            data.append(val)
+            for item in jobs:
+                val = {
+                    'title': item.title,
+                    'city': item.city,
+                    'logo': item.company.companyLogo.url,
+                    'slug': item.slug,
+                    'max_salary': item.max_salary,
+                    'min_salary': item.min_salary,
+                    'type': item.type,
+                    'company': item.company.title
+                }
+                data.append(val)
+
             return JsonResponse({'data': data}, status=200)
         else:
             errors = form.errors.as_json()
@@ -514,18 +422,18 @@ def applies_job(request):
 
 def split_search(val_list,search,region,city,skills):
     if (region != '' and city != '' and skills != ''):
-        result = Resume.objects.filter(profession__icontains=search, region=region,
+        result = Resume.objects.filter(profession__icontains=search, suburb=region,
                                        city__icontains=city, skills__icontains=skills)
     elif (region != '' and city != ''):
-        result = Resume.objects.filter(profession__icontains=search, region=region, city__icontains=city)
+        result = Resume.objects.filter(profession__icontains=search, suburb=region, city__icontains=city)
     elif (city != '' and skills != ''):
         result = Resume.objects.filter(profession__icontains=search, skills__icontains=skills, city__icontains=city)
     elif (region != '' and skills != ''):
-        result = Resume.objects.filter(profession__icontains=search, region=region, skills__icontains=skills)
+        result = Resume.objects.filter(profession__icontains=search, suburb=region, skills__icontains=skills)
     elif (skills != ''):
         result = Resume.objects.filter(profession__icontains=search, skills__icontains=skills)
     elif (region != ''):
-        result = Resume.objects.filter(profession__icontains=search, region=region)
+        result = Resume.objects.filter(profession__icontains=search, suburb=region)
     elif (city != ''):
         result = Resume.objects.filter(profession__icontains=search, city__icontains=city)
     else:
@@ -563,18 +471,18 @@ def searching_resume(search,region,city,skills):
         return resume_list
     else:
         if (region != '' and city !='' and skills!=''):
-            resume_list = Resume.objects.filter(profession__icontains=search, region=region,
+            resume_list = Resume.objects.filter(profession__icontains=search, suburb=region,
                                    city__icontains=city,skills__icontains=skills)
         elif (region != '' and city !=''):
-            resume_list = Resume.objects.filter(profession__icontains=search, region=region,city__icontains=city)
+            resume_list = Resume.objects.filter(profession__icontains=search, suburb=region,city__icontains=city)
         elif (city !='' and skills!=''):
             resume_list = Resume.objects.filter(profession__icontains=search, skills__icontains=skills,city__icontains=city)
         elif (region !='' and skills!=''):
-            resume_list = Resume.objects.filter(profession__icontains=search, region=region,skills__icontains=skills)
+            resume_list = Resume.objects.filter(profession__icontains=search, suburb=region,skills__icontains=skills)
         elif (skills!=''):
             resume_list = Resume.objects.filter(profession__icontains=search, skills__icontains=skills)
         elif (region !=''):
-            resume_list = Resume.objects.filter(profession__icontains=search, region=region)
+            resume_list = Resume.objects.filter(profession__icontains=search, suburb=region)
         elif (city!=''):
             resume_list = Resume.objects.filter(profession__icontains=search,city__icontains=city)
         else:

@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'planning.apps.PlanningConfig',
     'company_blog.apps.CompanyBlogConfig',
     'hitcount',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

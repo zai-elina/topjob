@@ -79,7 +79,7 @@
                   {% endif %}
                 </ul>
               </li>
-              <li><a href="{% url 'company-blogs' %}">Все блоги</a></li>
+              <li><a href="{% url 'company-blogs' %}">Компании</a></li>
                 {% else %}
                 <li><a href="{% url 'resume-list' %}">Резюме</a></li>
               {% if request.user.company.slug %}
@@ -87,7 +87,7 @@
               {% endif %}
               {% endif %}
               {% else %}
-              <li><a href="{% url 'company-blogs' %}">Все блоги</a></li>
+              <li><a href="{% url 'company-blogs' %}">Компании</a></li>
               <li><a href="{% url 'resume-list' %}">Резюме</a></li>
               {% endif %}
 
@@ -142,7 +142,7 @@
               <li><a href="/">Главная</a></li>
               <li><a href="{% url 'job-list' %}">Вакансии</a></li>
               <li><a href="{% url 'resume-list' %}">Резюме</a></li>
-              <li><a href="{% url 'company-blogs' %}">Все блоги</a></li>
+              <li><a href="{% url 'company-blogs' %}">Компании</a></li>
             </ul>
           </div>
           <div class="col-6 col-md-3 mb-4 mb-md-0">

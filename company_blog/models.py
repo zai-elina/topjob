@@ -12,7 +12,7 @@ class Post(models.Model):
     description = models.TextField()
     company = models.ForeignKey(Company,on_delete =models.CASCADE, null=True,blank=True)
     date = models.DateField(default=timezone.now)
-    image = models.ImageField(default='post.jpg', upload_to='company-blog')
+    image = models.ImageField(default='post.jpg',upload_to='company_blog')
     slug = models.SlugField(null=True, blank=True, unique=True, max_length=500)
     uniqueId = models.CharField(max_length=100, null=True, blank=True)
 

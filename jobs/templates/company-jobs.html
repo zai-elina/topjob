@@ -51,11 +51,11 @@
                 <span class="icon-room"></span> {{job.city}}
               </div>
               {% endif %}
-              {% if job.salary %}
               <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
-                <span class="icon-money"></span> {{job.salary}}
+                {% if job.min_salary %}<span class="icon-money"></span>{{job.min_salary}} - {% if job.max_salary %}{{job.max_salary}} {% endif %}
+                 {% else %} {% if job.max_salary %} <span class="icon-money"></span>{{job.max_salary}}{% endif %}
+                  {% endif %}
               </div>
-              {% endif %}
               {% if job.type %}
               <div class="job-listing-meta">
                 <span class="badge badge-danger">{{job.type}}</span>

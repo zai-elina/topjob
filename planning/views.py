@@ -10,7 +10,7 @@ from .forms import *
 from .models import *
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.db.models import F, Case, When, Value, BooleanField
 
 class InterviewPlanning(LoginRequiredMixin,ListView):
     model = Interview
@@ -19,13 +19,19 @@ class InterviewPlanning(LoginRequiredMixin,ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['interviews'] = context['interviews'].filter(user=self.request.user).order_by('-task_date')
+        context['interviews'] = context['interviews'].filter(user=self.request.user).annotate(
+            is_true=Case(
+                When(complete=True, then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            )
+        ).order_by('task_date',F('is_true').desc(nulls_last=True))
         context['count'] = context['interviews'].filter(complete = False).count()
 
         search_input = self.request.GET.get('search-area') or ''
 
         if search_input:
-            context['interviews'] = context['interviews'].filter(title__icontains=search_input).order_by('-task_date')
+            context['interviews'] = context['interviews'].filter(title__icontains=search_input).order_by('task_date')
 
         context['search_input'] = search_input
         return context

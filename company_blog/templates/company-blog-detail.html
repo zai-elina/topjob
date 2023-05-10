@@ -77,7 +77,7 @@
             {% endif %}
           {% endif %}
               <div class="pt-5" id="block">
-              <h3 class="mb-5">{{comments.count}} комментариев</h3>
+              <h3 class="mb-5">Комментариев: {{comments.count}}</h3>
               <ul class="comment-list" >
                 {% for comment in comments %}
                 <li class="comment">
@@ -92,7 +92,8 @@
                       <ul class="children" id="block1">
                       {% for child_comment in comment.children %}
                           <li class="comment">
-                            <div class="vcard bio">
+                              {% if not child_comment.user.company %}
+                              <div class="vcard bio">
                               <img src="{{child_comment.user.profile.image.url}}" alt="Image placeholder">
                             </div>
                             <div class="comment-body">
@@ -100,6 +101,16 @@
                               <div class="meta">{{child_comment.date}}</div>
                               <p>{{child_comment.text_comments}}</p>
                             </div>
+                              {% else %}
+                              <div class="vcard bio">
+                              <img src="{{child_comment.user.company.companyLogo.url}}" alt="Image placeholder">
+                            </div>
+                            <div class="comment-body">
+                              <h3>{{child_comment.user.company.title}}</h3>
+                              <div class="meta">{{child_comment.date}}</div>
+                              <p>{{child_comment.text_comments}}</p>
+                            </div>
+                              {% endif %}
                           </li>
 
                         {% endfor %}

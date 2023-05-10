@@ -14,14 +14,16 @@ class SearchForm(forms.ModelForm):
     PART_TIME = 'Неполный'
     REMOTE = 'Удаленно'
     TYPE_CHOICES = [
+        ('', 'Форма занятости'),
         (FULL_TIME, 'Полная'),
         (PART_TIME, 'Неполная'),
         (REMOTE, 'Удаленно'),
     ]
-    REGION = [('Республика Адыгея', 'Республика Адыгея'), ('Республика Алтай', 'Республика Алтай'),
+    REGION = [  ('', 'Регион'),
+        ('Республика Адыгея', 'Республика Адыгея'), ('Республика Алтай', 'Республика Алтай'),
               ('Республика Башкортостан', 'Республика Башкортостан'), ('Республика Бурятия', 'Республика Бурятия'),
               ('Республика Дагестан', 'Республика Дагестан'), ('Республика Ингушетия', 'Республика Ингушетия'),
-              ('Кабардино-БалкарскаяРеспублика Республика', 'Кабардино-БалкарскаяРеспублика Республика'),
+              ('Кабардино-БалкарскаяРеспублика Республика', 'Кабардино-Балкарская'),
               ('Калмыкия Карачаево-Черкесская Республика', 'Калмыкия Карачаево-Черкесская Республика'),
               ('Республика Карелия', 'Республика Карелия'), ('Республика Коми', 'Республика Коми'),
               ('Республика Марий Эл', 'Республика Марий Эл'), ('Республика Мордовия', 'Республика Мордовия'),
@@ -54,7 +56,7 @@ class SearchForm(forms.ModelForm):
               ('Ульяновская область', 'Ульяновская область'), ('Владимирская область', 'Владимирская область'),
               ('Волгоградская область', 'Волгоградская область'), ('Вологодская область', 'Вологодская область'),
               ('Ярославская область', 'Ярославская область'), ('Амурская область', 'Амурская область'),
-              ('Архангельская областьАстраханская область', 'Архангельская областьАстраханская область'),
+              ('Архангельская область', 'Архангельская область'),
               ('Белгородская область', 'Белгородская область'), ('Брянская область', 'Брянская область'),
               ('Челябинская область', 'Челябинская область'), ('Воронежская область', 'Воронежская область'),
               ('Иркутская область', 'Иркутская область'), ('Ивановская область', 'Ивановская область'),
@@ -82,19 +84,39 @@ class SearchForm(forms.ModelForm):
               ('Ханты-Мансийский автономный округ', 'Ханты-Мансийский автономный округ'),
               ('Чукотский автономный округ', 'Чукотский автономный округ'),
               ('Ямало-Ненецкий автономный округ', 'Ямало-Ненецкий автономный округ')]
+    TIER1 = 'Меньше 2 лет'
+    TIER2 = '2-5 лет'
+    TIER3 = '5-10 лет'
+    TIER4 = '10-15 лет'
+    TIER5 = '>15 лет'
+    EXP_CHOICES = [
+        ('', 'Опыт работы'),
+        ('Нет опыта', 'Нет опыта'),
+        (TIER1, 'Меньше 2 лет'),
+        (TIER2, 'от 2 до 5 лет'),
+        (TIER3, 'от 5 до 10 лет'),
+        (TIER4, 'от 10 до 15 лет'),
+        (TIER5, 'Больше 15 лет'),
+    ]
 
-
-    title = forms.CharField(required=True,widget=forms.TextInput(attrs={'class': 'form-control form-control-lg','placeholder':'Вакансия, название компании'}))
-    type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class':'selectpicker bg-white p-2 rounded','title':'Форма занятости'}))
-    region = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class':'selectpicker bg-white p-2 rounded','title':'Регион','id':'selectorreg'}))
+    title = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control','placeholder':'Вакансия, название компании'}))
+    type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class':'form-select bg-white p-2 rounded','title':'Форма занятости'}))
+    region = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class':'form-select bg-white p-2 rounded','title':'Регион','id':'selectorreg'}))
+    category =forms.ModelChoiceField(queryset=Category.objects.all(), widget=forms.Select(attrs={'class':'form-select bg-white p-2 rounded','title':'Категория','id':'selectorreg'}))
+    experience = forms.ChoiceField(choices=EXP_CHOICES, widget=forms.Select(attrs={'class':'form-select bg-white p-2 rounded','placeholder':'Зарплата'}))
+    salary = forms.DecimalField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg','placeholder':'Зарплата'}))
     class Meta:
         model = Jobs
-        fields = ['title','type','region']
+        fields = ['title','type','region', 'category','experience','salary']
 
     def __init__(self, *args, **kwargs):
         super(SearchForm, self).__init__(*args, **kwargs)
         self.fields['type'].required = False
         self.fields['region'].required = False
+        self.fields['category'].required = False
+        self.fields['title'].required = False
+        self.fields['experience'].required = False
+        self.fields['salary'].required = False
 
 def validate_both_fields(value):
     inn = value.get('inn')
@@ -137,6 +159,7 @@ class JobForm(forms.ModelForm):
         (REMOTE, 'Удаленно'),
     ]
     EXP_CHOICES=[
+        ('Нет опыта', 'Нет опыта'),
         (TIER1, 'Меньше 2 лет'),
         (TIER2, 'от 2 до 5 лет'),
         (TIER3, 'от 5 до 10 лет'),
@@ -211,8 +234,8 @@ class JobForm(forms.ModelForm):
     city = forms.CharField(required=True, widget=forms.TextInput(
         attrs={'class': 'form-control resume', 'placeholder': 'Город'}))
     region = forms.ChoiceField(choices=REGION, widget=forms.Select(attrs={'class': 'nice-select rounded'}))
-    salary = forms.CharField(required=True, widget=forms.TextInput(
-        attrs={'class': 'form-control resume'}))
+    max_salary = forms.DecimalField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg','placeholder':'Зарплата от'}))
+    min_salary = forms.DecimalField(required=False,widget=forms.NumberInput(attrs={'class': 'form-control form-control-lg','placeholder':'Зарплата до'}))
     type = forms.ChoiceField(choices=TYPE_CHOICES, widget=forms.Select(attrs={'class': 'nice-select rounded'}))
     experience = forms.ChoiceField(choices=EXP_CHOICES, widget=forms.Select(attrs={'class': 'nice-select rounded'}))
     description = forms.CharField(widget=forms.Textarea(attrs={'class':'form-control'}))
@@ -226,8 +249,8 @@ class JobForm(forms.ModelForm):
 
     class Meta:
         model = Jobs
-        fields = ['title','category','city','region' ,'salary','type' ,'experience','description'  ,
-                  'requirements'  ,'duties','note','closingDate',
+        fields = ['title','category','city','region' ,'type' ,'experience','description'  ,
+                  'requirements'  ,'duties','note','closingDate', 'max_salary','min_salary'
         ]
 
     def __init__(self, *args, **kwargs):

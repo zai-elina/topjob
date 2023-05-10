@@ -6,8 +6,6 @@ from django.views.generic.edit import FormMixin
 from hitcount.models import Hit
 from hitcount.views import HitCountDetailView
 
-
-from .models import *
 from .jobforms import *
 from django.contrib.auth.decorators import login_required
 
@@ -21,41 +19,63 @@ Resume = apps.get_model('users', 'Resume')
 Education = apps.get_model('users', 'Education')
 Experience = apps.get_model('users', 'Experience')
 
+import django_filters
+
+class JobFilter(django_filters.FilterSet):
+    region = django_filters.CharFilter(field_name='region')
+    type = django_filters.CharFilter(field_name='type')
+    category = django_filters.ModelChoiceFilter(queryset=Category.objects.all())
+    experience = django_filters.CharFilter(field_name='experience')
+    salary = django_filters.CharFilter(method='filter_salary')
+    class Meta:
+        model = Jobs
+        fields = [ 'region', 'type', 'category','experience','salary']
+
+    def filter_salary(self, queryset, name, value):
+        return queryset.filter(Q(max_salary__gte=value) | Q(min_salary__gte=value))
 
 
+def job_list(request):
+    form = SearchForm()
+    context = {}
 
-def searching(search,type,region):
-    jobs = []
-    if len(search.split()) > 1:
-        search_list = search.split()
-        val_list = []
-        for i in search_list:
-            if (type != '' and region != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type,
-                                       region=region)
-            elif (type != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search), type=type)
-            elif (region != ''):
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search),
-                                       region=region)
-            else:
-                result = Jobs.objects.filter(Q(title__icontains=i) | Q(company__title__icontains=search))
-            for j in result:
-                val_list.append(j)
-        [jobs.append(i) for i in val_list if i not in jobs]
-        return jobs
-    else:
-        if (type != '' and region != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type,
-                                       region=region)
-        elif (type != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), type=type)
-        elif (region != ''):
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),
-                               region=region)
+    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
+        form = SearchForm(request.POST)
+        if form.is_valid():
+            search = form.cleaned_data.get('title')
+            salary = form.cleaned_data.get('salary')
+
+
+            jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),filled=False)
+            job_filter = JobFilter(request.POST, queryset=jobs)
+            jobs = job_filter.qs
+
+            data = []
+            for item in jobs:
+                val = {
+                    'title': item.title,
+                    'city': item.city,
+                    'logo': item.company.companyLogo.url,
+                    'slug': item.slug,
+                    'max_salary': item.max_salary,
+                    'min_salary': item.min_salary,
+                    'type': item.type,
+                    'company': item.company.title
+                }
+                data.append(val)
+
+            return JsonResponse({'data': data}, status=200)
         else:
-            jobs_list = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search),)
-        return jobs_list
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors}, status=400)
+    else:
+        form = SearchForm()
+        context['form'] = form
+        context['jobs'] = Jobs.objects.filter(filled=False).order_by('-dateCreated')
+
+    return render(request, 'jobs.html', context)
+
+
 
 def home(request):
     form = SearchForm()
@@ -85,10 +105,11 @@ def home(request):
         form = SearchForm(request.POST)
         if form.is_valid():
             search = form.cleaned_data.get('title')
-            type = form.cleaned_data.get('type')
-            region = form.cleaned_data.get('region')
 
-            context['jobs'] = searching(search, type, region)
+            jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), filled=False)
+            job_filter = JobFilter(request.POST, queryset=jobs)
+            jobs = job_filter.qs
+            context['jobs'] = jobs
 
             return render(request, 'jobs.html', context)
         else:
@@ -99,55 +120,6 @@ def home(request):
     return render(request, 'index.html', context)
 
 
-
-def job_list(request):
-    form = SearchForm()
-    context={}
-
-
-    if request.method == 'POST' and request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        form = SearchForm(request.POST)
-        if form.is_valid():
-            search = form.cleaned_data.get('title')
-            type = form.cleaned_data.get('type')
-            region = form.cleaned_data.get('region')
-
-            jobs = searching(search, type, region)
-            data = []
-            if len(jobs) > 0:
-                for item in jobs:
-                    val = {
-                        'title':item.title,
-                        'city':item.city,
-                        'logo':item.company.companyLogo.url,
-                        'slug':item.slug,
-                        'salary':item.salary,
-                        'type':item.type,
-                        'company':item.company.title
-                    }
-                    data.append(val)
-            return JsonResponse({'data':data},status=200)
-        else:
-            errors = form.errors.as_json()
-            return JsonResponse({'errors': errors}, status=400)
-    else:
-        form = SearchForm()
-        jobs = Jobs.objects.filter(filled=False).order_by('dateCreated')
-        context['form'] = form
-        context['jobs'] = jobs
-
-    return render(request, 'jobs.html', context)
-
-# def job_detail(request, slug):
-#     form = CoverLetterForm()
-#     job = Jobs.objects.get(slug=slug)
-#     context ={}
-#     context['applicants'] = len(Applicant.objects.filter(job=job))
-#     context['favorite'] = len(Favorite.objects.filter(job=job))
-#     context['job'] = job
-#     context['form'] = form
-#
-#     return render(request, 'job-detail.html', context)
 
 class JobDetailView(FormMixin,HitCountDetailView):
     model = Jobs
@@ -181,33 +153,35 @@ def category_detail(request, slug):
         form = SearchForm(request.POST)
         if form.is_valid():
             search = form.cleaned_data.get('title')
-            type = form.cleaned_data.get('type')
-            region = form.cleaned_data.get('region')
             category = Category.objects.get(slug=slug)
 
-            jobs = searching(search, type, region)
+            jobs = Jobs.objects.filter(Q(title__icontains=search) | Q(company__title__icontains=search), filled=False)
+            job_filter = JobFilter(request.POST, queryset=jobs)
+            jobs = job_filter.qs
+
             data = []
-            if len(jobs) > 0:
-                for item in jobs:
-                    if item.category.slug == category.slug:
-                        val = {
-                            'title':item.title,
-                            'city':item.city,
-                            'logo':item.company.companyLogo.url,
-                            'slug':item.slug,
-                            'salary':item.salary,
-                            'type':item.type,
-                            'company':item.company.title
-                        }
-                        data.append(val)
-            return JsonResponse({'data':data},status=200)
+            for item in jobs:
+                if item.category.slug == category.slug:
+                    val = {
+                        'title': item.title,
+                        'city': item.city,
+                        'logo': item.company.companyLogo.url,
+                        'slug': item.slug,
+                        'max_salary': item.max_salary,
+                        'min_salary': item.min_salary,
+                        'type': item.type,
+                        'company': item.company.title
+                    }
+                    data.append(val)
+
+            return JsonResponse({'data': data}, status=200)
         else:
             errors = form.errors.as_json()
             return JsonResponse({'errors': errors}, status=400)
     else:
         form = SearchForm()
         category = Category.objects.get(slug=slug)
-        jobs = Jobs.objects.filter(category__slug=slug)
+        jobs = Jobs.objects.filter(category__slug=slug,filled=False).order_by('-dateCreated')
         context['jobs'] = jobs
         context['category'] = category
         context['form'] = form
@@ -356,18 +330,6 @@ def job_filled(request,slug):
     job.save()
     return redirect('published-jobs')
 
-
-# def resume_view(request,slug_resume):
-#     obj = Resume.objects.get(slug=slug_resume)
-#     educations = Education.objects.filter(resume=obj)
-#     experiences = Experience.objects.filter(resume=obj)
-#
-#     context = {}
-#     context['object'] = obj
-#     context['educations'] = educations
-#     context['experiences'] = experiences
-#
-#     return render(request, 'resume-view.html', context)
 
 class ResumeDetailView(HitCountDetailView):
     model = Resume

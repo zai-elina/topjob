@@ -78,10 +78,41 @@
                 <p><a href="{% url 'delete-company' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Удалить компанию</a></p>
                 {% endif %}
                 <p><a href="{% url 'edit-profile' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Редактировать профиль</a></p>
-                <p><a href="{% url 'delete-user' %}" class="btn btn-block btn-success" style="background-color: #DEB887;">Удалить профиль</a></p>
+                <p><a href="#" class="btn btn-block btn-success" style="background-color: #DEB887;" data-toggle="modal" data-target="#deleteModal">Удалить профиль</a></p>
             </div>
     </div>
 
     </div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Удаление профиля</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Вы уверены, что хотите удалить профиль?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Отмена</button>
+        <a href="{% url 'delete-user' %}" class="btn btn-danger">Удалить</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+  $('#deleteModal').on('shown.bs.modal', function() {
+    $('.btn-danger').on('click', function() {
+      $('#deleteModal').modal('hide');
+      return true;
+    });
+  });
+});
+</script>
 
 {% endblock %}

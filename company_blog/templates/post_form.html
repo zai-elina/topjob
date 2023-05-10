@@ -6,7 +6,7 @@
 
 {% block content %}
 {% load static %}
-{% load is_already_applied %}
+
  <section class="section-hero overlay inner-page bg-image" style="background-image: url({% static 'app/images/hero_1.jpg' %});" id="home-section">
       <div class="container">
         <div class="row">
@@ -20,7 +20,7 @@
 <section>
     <div class="container">
 <div class="card-body">
-    <form method="POST" action="">
+    <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="col">
                 <div class="from-group app-label">

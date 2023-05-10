@@ -20,7 +20,7 @@
         </div>
           <form method="POST" class="search-jobs-form" name='search' id="search">
               {% csrf_token %}
-              <div class="row mb-5">
+              <div class="d-flex flex-wrap justify-content-center mb-5">
                 <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
                   {{form.title}}
                 </div>
@@ -33,7 +33,7 @@
                   {% endfor %}
                 {% endif %}
 
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="m-1">
                   {{form.type}}
                 </div>
                 {% if form.type.errors %}
@@ -44,7 +44,44 @@
                   {% endfor %}
                 {% endif %}
 
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+
+
+                  <div class="m-1">
+                  {{form.experience}}
+                </div>
+                {% if form.experience.errors %}
+                {% for error in form.experience.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+
+                  <div class="m-1">
+                  {{form.salary}}
+                </div>
+                {% if form.salary.errors %}
+                {% for error in form.salary.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+
+                  <div class="m-1">
+                  {{form.category}}
+                </div>
+                {% if form.category.errors %}
+                {% for error in form.category.errors %}
+                      <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                      </div>
+                  {% endfor %}
+                {% endif %}
+
+                  <div class="m-1">
                   {{form.region}}
                 </div>
                 {% if form.region.errors %}
@@ -54,7 +91,7 @@
                       </div>
                   {% endfor %}
                 {% endif %}
-                <div class="col-12 col-sm-6 col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="col-sm-6 col-md-6 col-lg-3 mb-5 mb-lg-0">
                   <button type="submit" class="btn btn-primary btn-lg btn-block text-white btn-search btn-color"><span class="icon-search icon mr-2"></span>Найти</button>
                 </div>
               </div>
@@ -71,9 +108,8 @@
 								  url: "{% url 'favorites-job' %}",
 								  // если успешно, то
 								  success: function (response) {
-									  console.log(response.data);
                                       let data = response.data;
-                                       $("#count").text(`Вакансий :${data.length}`);
+                                       $("#count").text(`Вакансий: ${data.length}`);
                                        $(".job-listings").empty();
                                       data.forEach((job) => {
                                           $(".job-listings").append(`<li class="job-listing d-block d-sm-flex pb-3 pb-sm-0 align-items-center">
@@ -91,7 +127,7 @@
                                                 <span class="icon-room"></span> ${job.city}
                                               </div>
                                               <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
-                                                <span class="icon-money"></span> ${job.salary}
+                                                <span class="icon-money"></span> ${job.min_salary? `${job.min_salary} - ${job.max_salary}`: job.max_salary}
                                               </div>
                                               <div class="job-listing-meta">
                                                 <span class="badge badge-danger">${job.type}</span>
@@ -121,7 +157,7 @@
 
         <div class="row mb-5 justify-content-center">
           <div class="col-md-7 text-center">
-            <h2 class="section-title mb-2" id="count">{{favorites|length}} вакансий</h2>
+            <h2 class="section-title mb-2" id="count">Вакансий: {{favorites|length}}</h2>
           </div>
         </div>
 
@@ -143,11 +179,11 @@
                 <span class="icon-room"></span> {{favorite.job.city}}
               </div>
               {% endif %}
-              {% if favorite.job.salary %}
               <div class="job-listing-location mb-3 mb-sm-0 custom-width w-25">
-                <span class="icon-money"></span> {{favorite.job.salary}}
+                {% if job.min_salary %}<span class="icon-money"></span>{{job.min_salary}} - {% if job.max_salary %}{{job.max_salary}} {% endif %}
+                 {% else %} {% if job.max_salary %} <span class="icon-money"></span>{{job.max_salary}}{% endif %}
+                  {% endif %}
               </div>
-              {% endif %}
               {% if favorite.job.type %}
               <div class="job-listing-meta">
                 <span class="badge badge-danger">{{favorite.job.type}}</span>

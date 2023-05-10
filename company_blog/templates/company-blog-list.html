@@ -57,13 +57,13 @@
                <p class="mb-0">Адрес:{{company.addressLine}}</p>
                  {% endif %}
                   {% if company.inn %}
-               <p class="mb-0">ИНН:{{company.inn}}</p>
+               <p class="mb-0">ИНН:{{company.inn|floatformat:0}}</p>
                  {% endif %}
                   {% if company.ogrn %}
-               <p class="mb-0">ОГРН:{{company.ogrn}}</p>
+               <p class="mb-0">ОГРН:{{company.ogrn|floatformat:0}}</p>
                  {% endif %}
                   {% if company.ogrnip %}
-               <p class="mb-0">ОГРНИП:{{company.ogrnip}}</p>
+               <p class="mb-0">ОГРНИП:{{company.ogrnip|floatformat:0}}</p>
                  {% endif %}
 
                   <div>Вы можете проверить компанию введя её ИНН или ОГРН(ОГРИП) на <a href="https://egrul.nalog.ru/index.html" target="_blank" >egrul.nalog.ru</a></div>

@@ -120,14 +120,28 @@
                                 {% endif %}
                             </div>
 
+                           <div class="col-md-6">
+                                <div class="form-group app-label">
+                                    <label class="text-muted">Заработная плата от<span class="text-danger">*</span></label>
+                                    <br>
+                                    {{form.min_salary}}
+                                </div>
+                                {% if form.min_salary.errors %}
+                                  {% for error in form.min_salary.errors %}
+                                      <div class="alert alert-danger">
+                                        <strong>{{ error|escape }}</strong>
+                                      </div>
+                                  {% endfor %}
+                                {% endif %}
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group app-label">
-                                    <label class="text-muted">Заработная плата<span class="text-danger">*</span></label>
+                                    <label class="text-muted">Заработная плата до<span class="text-danger">*</span></label>
                                     <br>
-                                    {{form.salary}}
+                                    {{form.max_salary}}
                                 </div>
-                                {% if form.salary.errors %}
-                                  {% for error in form.salary.errors %}
+                                {% if form.max_salary.errors %}
+                                  {% for error in form.max_salary.errors %}
                                       <div class="alert alert-danger">
                                         <strong>{{ error|escape }}</strong>
                                       </div>

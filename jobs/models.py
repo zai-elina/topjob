@@ -1,12 +1,14 @@
 from django.contrib.auth.models import User
-from django.core.validators import MinLengthValidator, MaxValueValidator, MinValueValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from uuid import uuid4
 from hitcount.models import HitCountMixin, HitCount
 from django.contrib.contenttypes.fields import GenericRelation
-
+digit_validator = RegexValidator(
+    r'^\d+$', 'Это поле должно содержать только цифры.'
+)
 class Company(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200, null=True, blank=True,unique=True)
@@ -16,11 +18,11 @@ class Company(models.Model):
     slug = models.SlugField(null=True, blank=True, unique=True, max_length=500)
     seoDescription = models.CharField(null=True, blank=True, max_length=500)
     seoKeywords = models.CharField(null=True, blank=True, max_length=500)
-    url = models.URLField("Ссылка на сайт",max_length=128,unique=True,blank=True,null=True)
+    url = models.URLField("Ссылка на сайт",max_length=128,blank=True,null=True)
     addressLine = models.CharField(null=True, max_length=200, blank=True)
-    inn = models.DecimalField('ИНН', max_digits=10, decimal_places=0, validators=[MinValueValidator(10**9), MaxValueValidator(10**10 - 1)],blank=True, null=True)
-    ogrn = models.DecimalField('ОГРН',max_digits=13, decimal_places=0, validators=[MinValueValidator(10**12), MaxValueValidator(10**13 - 1)],blank=True, null=True)
-    ogrnip = models.DecimalField('ОГРНИП', max_digits=15, decimal_places=0, validators=[MinValueValidator(10**14), MaxValueValidator(10**15 - 1)],blank=True, null=True)
+    inn =  models.CharField(max_length=10,validators=[digit_validator,MinLengthValidator(10)],blank=True,null=True)
+    ogrn = models.CharField(max_length=13,validators=[digit_validator,MinLengthValidator(13)],blank=True,null=True)
+    ogrnip = models.CharField(max_length=15,validators=[digit_validator,MinLengthValidator(15)],blank=True,null=True)
 
 
     def __str__(self):
@@ -94,6 +96,7 @@ class Jobs(models.Model):
         (REMOTE, 'Удаленно'),
     ]
     EXP_CHOICES=[
+        ('Нет опыта', 'Нет опыта'),
         (TIER1, 'Меньше 2 лет'),
         (TIER2, 'от 2 до 5 лет'),
         (TIER3, 'от 5 до 10 лет'),
@@ -164,15 +167,14 @@ class Jobs(models.Model):
     category = models.ForeignKey(Category,on_delete =models.CASCADE, null=True,blank=True)
     city = models.CharField(max_length=200,null=True,blank=True)
     region = models.CharField(choices=REGION,max_length=100)
-    salary = models.CharField(max_length=100,null=True,blank=True)
+    max_salary = models.DecimalField(max_digits=12, decimal_places=0,null=True,blank=True)
+    min_salary = models.DecimalField(max_digits=12, decimal_places=0,null=True,blank=True)
     uniqueId = models.CharField(max_length=100,null=True,blank=True)
     type = models.CharField(max_length=100,choices=TYPE_CHOICES, default=FULL_TIME)
     experience = models.CharField(max_length=100, choices=EXP_CHOICES, default=TIER1)
     description = models.TextField(null=True,blank=True)
     requirements = models.TextField(null=True,blank=True)
     duties = models.TextField(null=True,blank=True)
-    applications = models.TextField(null=True)
-    note = models.TextField(null=True)
     dateCreated = models.DateTimeField(default=timezone.now)
     closingDate = models.DateField(null=True,blank=True)
     datePosted = models.DateField(null=True,blank=True)
