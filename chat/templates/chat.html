@@ -119,9 +119,13 @@
                 </p>
               </div>
               <div class="card-body">
+                {% if chat.message_file %}
+                <a href="{{ chat.message_file.url }}" download>Скачать файл</a>
+                {% else %}
                 <p class="mb-0 ">
-                  {{chat.message|linebreaksbr}}
+                  {{chat.message_text|linebreaksbr}}
                   </p>
+                {% endif %}
               </div>
 
             </div>
@@ -148,15 +152,24 @@
                 </p>
               </div>
               <div class="card-body">
+                {% if chat.message_file %}
+                <a href="{{ chat.message_file.url }}" download>Скачать файл</a>
+                {% else %}
                 <p class="mb-0 ">
-                  {{chat.message|linebreaksbr}}
-                </p>
+                  {{chat.message_text|linebreaksbr}}
+                  </p>
+                {% endif %}
               </div>
             </div>
           </li>
           {% endif %}
         {% endfor %}
         </ul>
+        <form id="upload-form" action="{% url 'upload_file' thread.id %}" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{form.file}}
+          <button type="submit" class="btn btn-info btn-rounded float-end btn-success">Загрузить</button>
+        </form>
       </div>
         {% endfor %}
         <form action="" id="send-message-form">
@@ -173,6 +186,7 @@
             Отправить
           </button>
           </form>
+
       </div>
 
     </div>

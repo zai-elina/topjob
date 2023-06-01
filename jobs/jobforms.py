@@ -264,7 +264,7 @@ class ApplyJobForm(forms.ModelForm):
 
 
 class CoverLetterForm(forms.ModelForm):
-    message = forms.CharField(required=True,widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Сообщение'}))
+    message_text = forms.CharField(required=True,widget=forms.Textarea(attrs={'class': 'form-control', 'placeholder': 'Сообщение'}))
     class Meta:
         model = ChatMessage
-        fields = ['message',]
+        fields = ['message_text',]

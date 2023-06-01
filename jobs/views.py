@@ -378,8 +378,8 @@ def send_cover_letter(request,slug):
 
 
             obj = form.save(commit=False)
-            text = form.cleaned_data.get('message')
-            obj.message = f"Отклик на вакансию \"{job.title}\""+ '\n' + text
+            text = form.cleaned_data.get('message_text')
+            obj.message_text = f"Отклик на вакансию \"{job.title}\""+ '\n' + text
             obj.thread = thread
             obj.user = user
             obj.save()

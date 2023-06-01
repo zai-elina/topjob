@@ -30,8 +30,16 @@ class Thread(models.Model):
 class ChatMessage(models.Model):
     thread = models.ForeignKey(Thread, null=True, blank=True, on_delete=models.CASCADE, related_name='chatmessage_thread')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    message = models.TextField()
+    message_text = models.TextField(blank=True)
+    message_file = models.FileField(blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    def save_message(self, message_text=None, message_file=None):
+        if message_text:
+            self.message_text = message_text
+        if message_file:
+            self.message_file = message_file
+        self.save()
 
     class Meta:
         verbose_name = "Сообщение"

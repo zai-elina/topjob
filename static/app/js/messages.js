@@ -155,4 +155,3 @@ $('.contact-li').on('click', function (){
     $('.messages-wrapper.is_active').removeClass('is_active')
     $('.messages-wrapper[chat-id="' + chat_id +'"]').addClass('is_active')
 })
-
