@@ -136,10 +136,12 @@ class JobDetailView(FormMixin,HitCountDetailView):
         context['favorite'] = len(Favorite.objects.filter(job=job))
         context['form'] = self.get_form()
         latest_hit = Hit.objects.filter(hitcount__object_pk=self.get_object().pk)
-        user_hits = [hit.user.username if hit.user else 'Anonymous' for hit in latest_hit]
-        user_list =[]
-        for user in user_hits:
-            if user != 'Anonymous':
+        user_set = set()
+        user_list = []
+        for hit in latest_hit:
+            user = hit.user.username if hit.user else 'Anonymous'
+            if user != 'Anonymous' and user not in user_set:
+                user_set.add(user)
                 user_list.append(User.objects.get(username=user))
         context['user_hits'] = user_list
         return context
@@ -290,7 +292,7 @@ def edit_job(request,slug):
 @login_required
 def published_jobs(request):
     company = Company.objects.get(user=request.user)
-    jobs = Jobs.objects.filter(company=company)
+    jobs = Jobs.objects.filter(company=company).order_by("-dateCreated")
 
     for job in jobs:
         if job.closingDate <= timezone.now().date():
